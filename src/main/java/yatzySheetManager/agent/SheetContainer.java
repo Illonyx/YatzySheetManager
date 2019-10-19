@@ -25,7 +25,7 @@ public class SheetContainer {
 	}
 
 	//On vérifie bien qu'on arrive bien à récupérer la feuille
-	public void init() throws IOException, InvalidFormatException{
+	public void init() throws IOException {
 		File f = MainAgent.getInstance().file;
 		this.workbook = WorkbookFactory.create(f);
 		this.evaluator = workbook.getCreationHelper().createFormulaEvaluator();

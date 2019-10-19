@@ -6,9 +6,9 @@ import org.apache.poi.ss.usermodel.Cell;
 
 public class ScandinavianSheetPOI extends SheetPOI {
 	
-	private int SC_SCORE_ROW = 21;
-	private int SC_YATZY_ROW = 18;
-	private int SC_BONUS_ROW = 9;
+	private int SC_SCORE_ROW = 20;
+	private int SC_YATZY_ROW = 17;
+	private int SC_BONUS_ROW = 8;
 	private double UNEVALUABLE_CRITERIA = -1.0;
 	
 	public ScandinavianSheetPOI(org.apache.poi.ss.usermodel.Sheet sheet, org.apache.poi.ss.usermodel.FormulaEvaluator evaluator){
@@ -40,7 +40,7 @@ public class ScandinavianSheetPOI extends SheetPOI {
 		ArrayList<Cell> scoreCells = sba.readCells(this.sheet, SC_SCORE_ROW);
 		for(Cell c : scoreCells){
 			double valueEvaluated = this.evaluator.evaluate(c).getNumberValue();
-			bestScore = (valueEvaluated > bestScore) ? valueEvaluated : bestScore;
+			bestScore = Math.max(bestScore, valueEvaluated);
 		}
 		
 		return bestScore;

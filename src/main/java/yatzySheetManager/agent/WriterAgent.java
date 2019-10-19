@@ -51,8 +51,6 @@ public class WriterAgent {
 		 } catch(IOException e) {
 			 System.out.println("Error found IO" + e);
 			 
-		 } catch (InvalidFormatException e) {
-			 System.out.println("Error found Format" + e);
-		}
+		 }
 	}
 }

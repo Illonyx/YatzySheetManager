@@ -50,7 +50,8 @@ public class CollectDataAgent {
 			sc.init();
 			ArrayList<Sheet> sheetsToBrowse = sc.initSheetList(sheetsToImport);
 			
-			for(Sheet s : sheetsToBrowse){
+			for(Sheet s : sheetsToBrowse)
+			{
 				//Pour tous les joueurs
 				ArrayList<Criteria> criterias = initSheetCriterias(s);
 				
@@ -59,10 +60,6 @@ public class CollectDataAgent {
 				this.target.updateResults(results);
 			}
 			
-		} catch (InvalidFormatException e) {
-			System.out.println("Ici");
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (IOException e) {
 			System.out.println("Ici la");
 			// TODO Auto-generated catch block
