@@ -1,8 +1,8 @@
-package com.bigbeard.yatzystats.ui.settings;
+package com.bigbeard.yatzystats.ui;
 
 import com.bigbeard.yatzystats.config.UserConfigurationModel;
-import com.bigbeard.yatzystats.ui.settings.gamemode.GamemodeScene;
-import com.bigbeard.yatzystats.ui.settings.gamemode.GamesChoiceScene;
+import com.bigbeard.yatzystats.ui.settings.GamemodeScene;
+import com.bigbeard.yatzystats.ui.settings.GamesChoiceScene;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
@@ -39,6 +39,13 @@ public abstract class UiScene {
         int nextSceneOrder = ++currentSceneOrder;
         if(nextSceneOrder >= UiSceneRole.values().length) return null;
         else return UiSceneRole.fromValue(nextSceneOrder);
+    }
+
+    public UiSceneRole getLastScene(){
+        int currentSceneOrder = this.role.getOrder();
+        int lastSceneOrder = --currentSceneOrder;
+        if(lastSceneOrder < 0) return null;
+        else return UiSceneRole.fromValue(lastSceneOrder);
     }
 
     public UserConfigurationModel getModel(){

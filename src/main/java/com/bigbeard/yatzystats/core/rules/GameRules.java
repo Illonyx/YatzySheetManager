@@ -7,6 +7,10 @@ public class GameRules {
     private Integer yatzyRow;
     private Integer scoreRow;
 
+    //Scores
+    private Integer yatzyValue;
+    private Integer bonusValue;
+
     public GameRules() {
     }
 
@@ -32,5 +36,22 @@ public class GameRules {
 
     public void setScoreRow(Integer scoreRow) {
         this.scoreRow = scoreRow;
+    }
+
+
+    public Integer getYatzyValue() {
+        return yatzyValue;
+    }
+
+    public void setYatzyValue(Integer yatzyValue) {
+        this.yatzyValue = yatzyValue;
+    }
+
+    public Integer getBonusValue() {
+        return bonusValue;
+    }
+
+    public void setBonusValue(Integer bonusValue) {
+        this.bonusValue = bonusValue;
     }
 }

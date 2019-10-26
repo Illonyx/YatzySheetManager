@@ -1,5 +1,6 @@
 package com.bigbeard.yatzystats.core.sheets;
 
+import com.bigbeard.yatzystats.exceptions.CellNotFoundException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -18,16 +19,17 @@ public class ExcelSheetFacade {
 		return this.findCellIndex(sheet, 0, playerName);
 	}
 
-	public List<String> reachPlayersList(org.apache.poi.ss.usermodel.Sheet sheet){
+	public List<String> reachPlayersList(org.apache.poi.ss.usermodel.Sheet sheet) throws CellNotFoundException {
 
 		List<String> playersInGame = new ArrayList<String>();
 		Row initialRow = sheet.getRow(0);
+		if(initialRow == null) throw new CellNotFoundException("player", 0);
 		java.util.Iterator<Cell> it = initialRow.iterator();
 
 
 		while(it.hasNext()) {
 			Cell currentCell = it.next();
-			if(currentCell.getColumnIndex() != 0){
+			if(currentCell != null && currentCell.getColumnIndex() != 0){
 				playersInGame.add(currentCell.getStringCellValue());
 			}
 		}

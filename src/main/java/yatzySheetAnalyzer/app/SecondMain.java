@@ -20,7 +20,7 @@ public class SecondMain {
 			System.out.println("scoree " + rules.getScoreRow());
 
 			ExcelSheetLoader excelSheetLoader = new ExcelSheetLoader("src/test/resources/feuille_calcul_yatzee.xlsx");
-			System.out.println("da" + StringUtil.join(excelSheetLoader.getAllSheetNames().toArray(), ","));
+			//System.out.println("da" + StringUtil.join(excelSheetLoader.getAllSheetNames().toArray(), ","));
 
 		} catch (Exception ex) {
 			System.err.println("Oops! " + ex.getMessage());

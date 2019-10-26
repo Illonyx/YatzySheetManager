@@ -1,4 +1,4 @@
-package com.bigbeard.yatzystats.ui.settings;
+package com.bigbeard.yatzystats.ui;
 
 public enum UiSceneRole {
     GAME_MODE_SCENE(0), GAMES_CHOICE_SCENE(1);

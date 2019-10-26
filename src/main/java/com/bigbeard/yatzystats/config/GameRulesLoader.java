@@ -26,11 +26,18 @@ public class GameRulesLoader {
         Integer yatzyRow = Integer.parseInt(props.getProperty("YATZY_ROW"));
         Integer scoreRow = Integer.parseInt(props.getProperty("SCORE_ROW"));
 
+        Integer yatzyValue = Integer.parseInt(props.getProperty("YATZY_VALUE"));
+        Integer bonusValue = Integer.parseInt(props.getProperty("BONUS_VALUE"));
+
         //Initialize game rules
         this.gameRules = new GameRules();
         this.gameRules.setBonusRow(bonusRow);
         this.gameRules.setScoreRow(scoreRow);
         this.gameRules.setYatzyRow(yatzyRow);
+
+        this.gameRules.setYatzyValue(yatzyValue);
+        this.gameRules.setBonusValue(bonusValue);
+
 
     }
 

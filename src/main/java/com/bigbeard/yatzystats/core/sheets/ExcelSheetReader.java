@@ -1,11 +1,14 @@
 package com.bigbeard.yatzystats.core.sheets;
 
 import com.bigbeard.yatzystats.core.rules.GameRules;
+import com.bigbeard.yatzystats.exceptions.CellNotFoundException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.Sheet;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ExcelSheetReader implements SheetReader {
 
@@ -13,7 +16,6 @@ public class ExcelSheetReader implements SheetReader {
     private Sheet sheet;
     private FormulaEvaluator evaluator;
     private ExcelSheetFacade facade;
-    public final double UNEVALUABLE_CRITERIA = -1.0;
 
     public ExcelSheetReader(GameRules gameRules, Sheet sheet, FormulaEvaluator evaluator){
         this.gameRules = gameRules;
@@ -23,42 +25,41 @@ public class ExcelSheetReader implements SheetReader {
     }
 
     @Override
-    public double readYatzy(String targetName) {
-        final int playerIndex = facade.findPlayerIndex(this.sheet, targetName);
-        Cell cell = facade.readCell(this.sheet, this.gameRules.getYatzyRow(), playerIndex);
-        return (cell != null) ? cell.getNumericCellValue() : UNEVALUABLE_CRITERIA;
+    public List<String> readPlayerNames() throws CellNotFoundException {
+        return new ExcelSheetFacade().reachPlayersList(this.sheet);
     }
 
     @Override
-    public double readBonus(String targetName) {
+    public Integer readYatzy(String targetName) throws CellNotFoundException {
         final int playerIndex = facade.findPlayerIndex(this.sheet, targetName);
-        Cell cell = facade.readCell(this.sheet, this.gameRules.getBonusRow(), playerIndex);
-        return (cell != null) ? cell.getNumericCellValue() : UNEVALUABLE_CRITERIA;
-    }
-
-    @Override
-    public double readScore(String targetName) {
-        final int playerIndex = facade.findPlayerIndex(this.sheet, targetName);
-        Cell cell = facade.readCell(this.sheet, this.gameRules.getScoreRow(), playerIndex);
-        return (cell != null) ? cell.getNumericCellValue() : UNEVALUABLE_CRITERIA;
-    }
-
-    //FIXME : Pas de gestion du cas à null dans méthode readBestScore
-    @Override
-    public double readBestScore() {
-        double bestScore = 0.0;
-
-        List<Cell> scoreCells = facade.readCells(this.sheet, this.gameRules.getScoreRow());
-        for(Cell c : scoreCells){
-            double valueEvaluated = this.evaluator.evaluate(c).getNumberValue();
-            bestScore = Math.max(bestScore, valueEvaluated);
+        try {
+            Cell cell = facade.readCell(this.sheet, this.gameRules.getYatzyRow(), playerIndex);
+            return (int) cell.getNumericCellValue();
+        } catch(Exception e){
+            throw new CellNotFoundException("yatzy", this.gameRules.getYatzyRow());
         }
-
-        return bestScore;
     }
 
     @Override
-    public Boolean readIsPlayerWinning(String targetName) {
-        return this.readScore(targetName) == this.readBestScore();
+    public Integer readBonus(String targetName) throws CellNotFoundException {
+        final int playerIndex = facade.findPlayerIndex(this.sheet, targetName);
+        try {
+            Cell cell = facade.readCell(this.sheet, this.gameRules.getBonusRow(), playerIndex);
+            return (int) cell.getNumericCellValue();
+        } catch(Exception e){
+            throw new CellNotFoundException("bonus", this.gameRules.getBonusRow());
+        }
     }
+
+    @Override
+    public Integer readScore(String targetName) throws CellNotFoundException {
+        final int playerIndex = facade.findPlayerIndex(this.sheet, targetName);
+        try {
+            Cell cell = facade.readCell(this.sheet, this.gameRules.getScoreRow(), playerIndex);
+            return (int) cell.getNumericCellValue();
+        } catch(Exception e){
+            throw new CellNotFoundException("score", this.gameRules.getScoreRow());
+        }
+    }
+
 }

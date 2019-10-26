@@ -1,17 +1,18 @@
-package com.bigbeard.yatzystats.ui.settings.gamemode;
+package com.bigbeard.yatzystats.ui.settings;
 
 import com.bigbeard.yatzystats.config.UserConfigurationModel;
 import com.bigbeard.yatzystats.core.rules.SheetRulesIdentifiers;
 import com.bigbeard.yatzystats.exceptions.FileNotLoadedException;
 import com.bigbeard.yatzystats.exceptions.RulesNotLoadedException;
-import com.bigbeard.yatzystats.ui.settings.UiScene;
-import com.bigbeard.yatzystats.ui.settings.UiSceneRole;
+import com.bigbeard.yatzystats.ui.UiScene;
+import com.bigbeard.yatzystats.ui.UiSceneRole;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
@@ -19,7 +20,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import org.graalvm.compiler.lir.LIRInstruction;
 
 import java.io.File;
 import java.util.Arrays;
@@ -115,7 +115,7 @@ public class GamemodeScene extends UiScene {
     }
 
     private void nextSc(String file, String gameMode) {
-        System.out.println("d" + file);
+
         super.getModel().setYatzyFilePath(file);
         super.getModel().setChosenRules(SheetRulesIdentifiers.fromValue(gameMode));
 
@@ -123,17 +123,31 @@ public class GamemodeScene extends UiScene {
         try {
             getModel().loadGameRules();
             getModel().loadExcelSheet();
-            GamemodeScene.super.loadScene(GamemodeScene.super.getNextScene());
+            UiSceneRole nextScene = GamemodeScene.super.getNextScene();
+            GamemodeScene.super.loadScene(nextScene);
         } catch(RulesNotLoadedException exception) {
-
+            Alert alert = this.createErrorAlert("Mode de jeu non pris en compte", "Le mode de jeu demandé n'a pas été pris en compte",
+                    "Le fichier de règles pour le mode de jeu est inexistant ou n'a pas été trouvé sur le disque.");
+            alert.showAndWait();
         } catch(FileNotLoadedException fexception) {
-
+            Alert alert = this.createErrorAlert("Erreur d'ouverture du fichier", "Le fichier demandé n'a pas pu être ouvert",
+                    "Vérifiez bien si le fichier n'est pas ouvert sous Excel ou si l'extension est bonne");
+            alert.showAndWait();
         }
     }
 
     @Override
     public Scene getViewScene() {
         return new Scene(gridPane, 600,300);
+    }
+
+    //FIXME : Mettre ce code autre part
+    public Alert createErrorAlert(String title, String header, String content){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(content);
+        return alert;
     }
 
 

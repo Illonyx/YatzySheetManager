@@ -1,8 +1,10 @@
 package com.bigbeard.yatzystats.config;
 
+import com.bigbeard.yatzystats.core.rules.GameLoader;
 import com.bigbeard.yatzystats.core.rules.GameRules;
 import com.bigbeard.yatzystats.core.rules.SheetRulesIdentifiers;
-import com.bigbeard.yatzystats.core.sheets.ExcelSheetFacade;
+import com.bigbeard.yatzystats.core.sheets.SheetDto;
+
 import com.bigbeard.yatzystats.exceptions.FileNotLoadedException;
 import com.bigbeard.yatzystats.exceptions.RulesNotLoadedException;
 
@@ -20,7 +22,7 @@ public class UserConfigurationModel {
     private ExcelSheetLoader excelSheetLoader;
 
     //Infos 2eme ecran : Choix feuilles yatzee
-    private List<String> foundSheets;
+    private List<SheetDto> foundSheets;
     private List<String> selectedSheets;
 
     //Infos 3eme ecran : Choix des joueurs à analyser
@@ -49,7 +51,9 @@ public class UserConfigurationModel {
     public void loadExcelSheet() throws FileNotLoadedException {
         try {
             this.excelSheetLoader = new ExcelSheetLoader(this.yatzyFilePath);
-            this.foundSheets = this.excelSheetLoader.getAllSheetNames();
+            GameLoader gameLoader = new GameLoader(gameRules, this.excelSheetLoader.getFormulaEvaluator());
+            this.foundSheets = gameLoader.loadGamesFromMode(this.excelSheetLoader.getAllSheets());
+
         } catch(IOException ex) {
             System.err.println("IO Exc : " + ex);
             throw new FileNotLoadedException();
@@ -68,7 +72,7 @@ public class UserConfigurationModel {
 
     }
 
-    public List<String> getFoundSheets() {
+    public List<SheetDto> getFoundSheets() {
         return foundSheets;
     }
 }
