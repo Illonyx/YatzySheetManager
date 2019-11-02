@@ -23,6 +23,7 @@ public class UserConfigurationModel {
 
     //Infos 2eme ecran : Choix feuilles yatzee
     private List<SheetDto> foundSheets;
+    private List<String> loadingErrors;
     private List<String> selectedSheets;
 
     //Infos 3eme ecran : Choix des joueurs à analyser
@@ -53,6 +54,7 @@ public class UserConfigurationModel {
             this.excelSheetLoader = new ExcelSheetLoader(this.yatzyFilePath);
             GameLoader gameLoader = new GameLoader(gameRules, this.excelSheetLoader.getFormulaEvaluator());
             this.foundSheets = gameLoader.loadGamesFromMode(this.excelSheetLoader.getAllSheets());
+            this.loadingErrors = gameLoader.getErrors();
 
         } catch(IOException ex) {
             System.err.println("IO Exc : " + ex);

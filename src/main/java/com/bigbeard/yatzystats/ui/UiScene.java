@@ -4,6 +4,7 @@ import com.bigbeard.yatzystats.config.UserConfigurationModel;
 import com.bigbeard.yatzystats.ui.settings.GamemodeScene;
 import com.bigbeard.yatzystats.ui.settings.GamesChoiceScene;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 
 public abstract class UiScene {
@@ -52,6 +53,14 @@ public abstract class UiScene {
         return model;
     }
 
+    //FIXME : Mettre ce code autre part
+    public Alert createErrorAlert(String title, String header, String content){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(content);
+        return alert;
+    }
 
 
 

@@ -21,6 +21,7 @@ public class GameLoader {
 
     FormulaEvaluator evaluator;
     GameRules rules;
+    List<String> errors = new ArrayList<String>();
 
     public GameLoader(GameRules rules, FormulaEvaluator formulaEvaluator){
         this.rules = rules;
@@ -41,7 +42,8 @@ public class GameLoader {
                     playerResult.setPlayerName(playerName);
 
                     if(rules.getScoreRow() != null){
-                        playerResult.setScore(sheetReader.readScore(playerName));
+                        int playerScore = sheetReader.readScore(playerName);
+                        playerResult.setScore(playerScore);
                     }
 
                     if(rules.getYatzyRow() != null){
@@ -51,7 +53,10 @@ public class GameLoader {
                     if(rules.getBonusRow() != null){
                         playerResult.setHasBonus(sheetReader.readBonus(playerName) == this.rules.getBonusValue());
                     }
-                    playerResults.add(playerResult);
+                    //Ne pas ajouter la partie d'un joueur qui a 0 dans son score
+                    if(playerResult.getScore() > 0)
+                        playerResults.add(playerResult);
+
                 }
 
                 int bestScore = playerResults.stream().map(PlayerResult::getScore).max(Integer::compareTo).orElse(0);
@@ -65,14 +70,20 @@ public class GameLoader {
                 sheetDtoList.add(sheetDto);
 
             } catch (CellNotFoundException ex) {
-                System.err.println("Feuille non chargée : " + s.getSheetName() + " - raison :" + ex.getCellLabel());
+                String error = "Feuille non chargée : " + s.getSheetName() + " - raison :" + ex.getCellLabel();
+                System.err.println(error);
+                this.errors.add(error);
             }
 
         }
         return sheetDtoList;
     }
 
-//    //FIXME : Where to do this?
+    public List<String> getErrors() {
+        return errors;
+    }
+
+    //    //FIXME : Where to do this?
 //    public Map<String, Integer> getPlayersByGameNumber(List<Sheet> sheets) {
 //        Map<String, Integer> playersByGameNumber = new HashMap<>();
 //        for(Sheet s : sheets){

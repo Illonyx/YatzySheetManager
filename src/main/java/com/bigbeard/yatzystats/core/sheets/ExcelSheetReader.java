@@ -34,7 +34,11 @@ public class ExcelSheetReader implements SheetReader {
         final int playerIndex = facade.findPlayerIndex(this.sheet, targetName);
         try {
             Cell cell = facade.readCell(this.sheet, this.gameRules.getYatzyRow(), playerIndex);
-            return (int) cell.getNumericCellValue();
+            int yatzyVal = (int) cell.getNumericCellValue();
+
+            //On s'assure que la ligne du yathzee est bien valuée correctement, soit à 0, soit à la yatzy_value
+            if(yatzyVal != 0 && yatzyVal != this.gameRules.getYatzyValue()) throw new Exception();
+            return yatzyVal;
         } catch(Exception e){
             throw new CellNotFoundException("yatzy", this.gameRules.getYatzyRow());
         }
