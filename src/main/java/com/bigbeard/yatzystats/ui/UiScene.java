@@ -53,13 +53,16 @@ public abstract class UiScene {
         return model;
     }
 
-    //FIXME : Mettre ce code autre part
     public Alert createErrorAlert(String title, String header, String content){
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
         alert.setHeaderText(header);
         alert.setContentText(content);
         return alert;
+    }
+
+    public Stage getStage(){
+        return stage;
     }
 
 

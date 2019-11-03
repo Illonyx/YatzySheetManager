@@ -1,7 +1,6 @@
 package com.bigbeard.yatzystats.core.sheets;
 
 import com.bigbeard.yatzystats.core.players.PlayerResult;
-import yatzySheetManager.players.Player;
 
 import java.util.List;
 

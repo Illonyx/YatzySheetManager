@@ -43,7 +43,7 @@ public class GamemodeScene extends UiScene {
 
     private void initComponents() {
         this.gridPane = new GridPane();
-        this.gridPane.setMinSize(600,300);
+        this.gridPane.setMinSize(super.getStage().getMinWidth(),super.getStage().getMinHeight());
         this.gridPane.setPadding(new Insets(20));
         this.gridPane.setHgap(25);
         this.gridPane.setVgap(15);
@@ -138,7 +138,7 @@ public class GamemodeScene extends UiScene {
 
     @Override
     public Scene getViewScene() {
-        return new Scene(gridPane, 600,300);
+        return new Scene(gridPane, super.getStage().getMinWidth(),super.getStage().getMinHeight());
     }
 
 

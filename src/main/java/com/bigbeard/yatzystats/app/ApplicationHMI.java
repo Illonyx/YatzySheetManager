@@ -13,11 +13,14 @@ public class ApplicationHMI extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        //Creating a Scene
-        UiScene firstScene = new GamemodeScene(primaryStage, new UserConfigurationModel());
-
         //Setting title to the scene
         primaryStage.setTitle("Yatzy Statistics tool");
+        primaryStage.setMinWidth(600);
+        primaryStage.setMinHeight(300);
+
+
+        //Creating a Scene
+        UiScene firstScene = new GamemodeScene(primaryStage, new UserConfigurationModel());
 
         //Adding the scene to the stage
         primaryStage.setScene(firstScene.getViewScene());
