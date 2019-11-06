@@ -3,6 +3,7 @@ package com.bigbeard.yatzystats.ui;
 import com.bigbeard.yatzystats.config.UserConfigurationModel;
 import com.bigbeard.yatzystats.ui.settings.GamemodeScene;
 import com.bigbeard.yatzystats.ui.settings.GamesChoiceScene;
+import com.bigbeard.yatzystats.ui.statsmod.StatsModScene;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.stage.Stage;
@@ -30,6 +31,10 @@ public abstract class UiScene {
 
             case GAMES_CHOICE_SCENE:
                 sceneToLoad = new GamesChoiceScene(stage, model).getViewScene();
+                break;
+
+            case STATS_MODE_SCENE:
+                sceneToLoad = new StatsModScene(stage,model).getViewScene();
                 break;
         }
         stage.setScene(sceneToLoad);

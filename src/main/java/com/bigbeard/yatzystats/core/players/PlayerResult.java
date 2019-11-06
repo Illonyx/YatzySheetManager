@@ -53,7 +53,7 @@ public class PlayerResult {
     }
 
 //    public void printStats(){
-//        PlayerStatsCalculator psc = new PlayerStatsCalculator();
+//        StatsModule psc = new StatsModule();
 //        System.out.println("------------------------------------------------");
 //        System.out.println(this.name);
 //        System.out.println("------------------------------------------------");

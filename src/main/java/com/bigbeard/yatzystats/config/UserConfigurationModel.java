@@ -1,5 +1,6 @@
 package com.bigbeard.yatzystats.config;
 
+import com.bigbeard.yatzystats.core.players.PlayerResult;
 import com.bigbeard.yatzystats.core.rules.GameLoader;
 import com.bigbeard.yatzystats.core.rules.GameRules;
 import com.bigbeard.yatzystats.core.rules.SheetRulesIdentifiers;
@@ -9,7 +10,10 @@ import com.bigbeard.yatzystats.exceptions.FileNotLoadedException;
 import com.bigbeard.yatzystats.exceptions.RulesNotLoadedException;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class UserConfigurationModel {
 
@@ -24,26 +28,9 @@ public class UserConfigurationModel {
     //Infos 2eme ecran : Choix feuilles yatzee
     private List<SheetDto> foundSheets;
     private List<String> loadingErrors;
-    private List<String> selectedSheets;
 
     //Infos 3eme ecran : Choix des joueurs à analyser
     private List<String> selectedPlayers;
-
-    public String getYatzyFilePath() {
-        return yatzyFilePath;
-    }
-
-    public void setYatzyFilePath(String yatzyFilePath) {
-        this.yatzyFilePath = yatzyFilePath;
-    }
-
-    public SheetRulesIdentifiers getChosenRules() {
-        return chosenRules;
-    }
-
-    public void setChosenRules(SheetRulesIdentifiers chosenRules) {
-        this.chosenRules = chosenRules;
-    }
 
     // -----------------------------------------------------
     // -- 1ere etape : Validation path/mode de jeu
@@ -74,9 +61,55 @@ public class UserConfigurationModel {
 
     }
 
+    // -----------------------------------------------------
+    // -- 2eme etape : Choix des feuilles à analyser
+    // -----------------------------------------------------
+
+    public void loadStats(List<SheetDto> selectedSheets){
+        List<PlayerResult> playerResults = selectedSheets.stream()
+                .map(SheetDto::getPlayerList)
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
+        List<String> playerNames = playerResults.stream()
+                .map(PlayerResult::getPlayerName)
+                .distinct()
+                .collect(Collectors.toList());
+        System.out.println("dd" + String.join(",", playerNames));
+
+        Map<String, List<PlayerResult>> resultsPerPlayers = new HashMap<>();
+        playerNames.stream().forEach(playerName -> {
+            resultsPerPlayers.put(playerName, playerResults.stream()
+                    .filter(playerResult -> playerResult.getPlayerName().equals(playerName))
+                    .collect(Collectors.toList()));
+        });
+
+    }
+
+    // -----------------------------------------------------
+    // -- Gettlers / Settlers
+    // -----------------------------------------------------
+
+    public String getYatzyFilePath() {
+        return yatzyFilePath;
+    }
+
+    public void setYatzyFilePath(String yatzyFilePath) {
+        this.yatzyFilePath = yatzyFilePath;
+    }
+
+    public SheetRulesIdentifiers getChosenRules() {
+        return chosenRules;
+    }
+
+    public void setChosenRules(SheetRulesIdentifiers chosenRules) {
+        this.chosenRules = chosenRules;
+    }
+
     public List<SheetDto> getFoundSheets() {
         return foundSheets;
     }
+
+
 }
 
 
