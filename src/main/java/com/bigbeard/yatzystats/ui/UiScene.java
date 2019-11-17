@@ -1,11 +1,11 @@
 package com.bigbeard.yatzystats.ui;
 
 import com.bigbeard.yatzystats.config.UserConfigurationModel;
-import com.bigbeard.yatzystats.ui.settings.GamemodeScene;
-import com.bigbeard.yatzystats.ui.settings.GamesChoiceScene;
-import com.bigbeard.yatzystats.ui.statsmod.StatsModScene;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
 public abstract class UiScene {
@@ -13,50 +13,32 @@ public abstract class UiScene {
     private Stage stage;
     private UserConfigurationModel model;
     private UiSceneRole role;
+    private WindowNavigation windowNavigation;
 
-    public UiScene(Stage stage, UserConfigurationModel model, UiSceneRole role){
-        this.stage = stage;
-        this.model = model;
+    public UiScene(WindowNavigation windowNavigation, UiSceneRole role){
+        this.windowNavigation = windowNavigation;
         this.role = role;
     }
 
     public abstract Scene getViewScene();
+    public abstract boolean isViewValid();
 
-    protected void loadScene(UiSceneRole role){
-        Scene sceneToLoad = stage.getScene();
-        switch (role){
-            case GAME_MODE_SCENE:
-                sceneToLoad = new GamemodeScene(stage, model).getViewScene();
-                break;
-
-            case GAMES_CHOICE_SCENE:
-                sceneToLoad = new GamesChoiceScene(stage, model).getViewScene();
-                break;
-
-            case STATS_MODE_SCENE:
-                sceneToLoad = new StatsModScene(stage,model).getViewScene();
-                break;
-        }
-        stage.setScene(sceneToLoad);
-    }
-
-    public UiSceneRole getNextScene(){
-        int currentSceneOrder = this.role.getOrder();
-        int nextSceneOrder = ++currentSceneOrder;
-        if(nextSceneOrder >= UiSceneRole.values().length) return null;
-        else return UiSceneRole.fromValue(nextSceneOrder);
-    }
-
-    public UiSceneRole getLastScene(){
-        int currentSceneOrder = this.role.getOrder();
-        int lastSceneOrder = --currentSceneOrder;
-        if(lastSceneOrder < 0) return null;
-        else return UiSceneRole.fromValue(lastSceneOrder);
-    }
 
     public UserConfigurationModel getModel(){
-        return model;
+        return this.windowNavigation.getModel();
     }
+
+    public Stage getStage(){
+        return this.windowNavigation.getStage();
+    }
+
+    public UiSceneRole getRole(){
+        return this.role;
+    }
+
+    // --------------------------------------------------------
+    // Common UI components
+    // --------------------------------------------------------
 
     public Alert createErrorAlert(String title, String header, String content){
         Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -66,11 +48,25 @@ public abstract class UiScene {
         return alert;
     }
 
-    public Stage getStage(){
-        return stage;
+    //Méthode générique permettant de créer un bouton pour aller dans une autre vue
+    public Button getWindowNavigationButton(String buttonName, boolean needsValidation, UiSceneRole targetSceneRole){
+        Button navButton = new Button(buttonName);
+        navButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                if(!needsValidation || (needsValidation && isViewValid())) windowNavigation.loadScene(targetSceneRole);
+            }
+        });
+        return navButton;
     }
 
+    // Génére un bouton pour aller dans la vue précédente
+    public Button getLastSceneButton(){
+        return this.getWindowNavigationButton("<< Précedént", false, UiSceneRole.getLastScene(role));
+    }
 
-
-
+    // Génère un bouton pour aller dans la vue suivante
+    public Button getNextSceneButton(){
+        return this.getWindowNavigationButton(">> Suivant", true, UiSceneRole.getNextScene(role));
+    }
 }

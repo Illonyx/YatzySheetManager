@@ -3,6 +3,7 @@ package com.bigbeard.yatzystats.app;
 
 import com.bigbeard.yatzystats.config.UserConfigurationModel;
 import com.bigbeard.yatzystats.ui.UiScene;
+import com.bigbeard.yatzystats.ui.WindowNavigation;
 import com.bigbeard.yatzystats.ui.settings.GamemodeScene;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -18,15 +19,8 @@ public class ApplicationHMI extends Application {
         primaryStage.setMinWidth(600);
         primaryStage.setMinHeight(300);
 
-
-        //Creating a Scene
-        UiScene firstScene = new GamemodeScene(primaryStage, new UserConfigurationModel());
-
-        //Adding the scene to the stage
-        primaryStage.setScene(firstScene.getViewScene());
-
-        //Displaying the contents of a scene
-        primaryStage.show();
+        WindowNavigation navigation = new WindowNavigation(primaryStage);
+        navigation.initApp();
     }
 
     public static void main(String[] args) {

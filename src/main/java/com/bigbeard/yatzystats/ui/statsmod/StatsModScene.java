@@ -3,6 +3,7 @@ package com.bigbeard.yatzystats.ui.statsmod;
 import com.bigbeard.yatzystats.config.UserConfigurationModel;
 import com.bigbeard.yatzystats.ui.UiScene;
 import com.bigbeard.yatzystats.ui.UiSceneRole;
+import com.bigbeard.yatzystats.ui.WindowNavigation;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
@@ -15,8 +16,8 @@ public class StatsModScene extends UiScene {
     private UserConfigurationModel model;
     private GridPane gridPane;
 
-    public StatsModScene(Stage stage, UserConfigurationModel model){
-        super(stage, model, UiSceneRole.STATS_MODE_SCENE);
+    public StatsModScene(WindowNavigation navigation){
+        super(navigation, UiSceneRole.STATS_MODE_SCENE);
         this.initComponents();
     }
 
@@ -34,5 +35,10 @@ public class StatsModScene extends UiScene {
     @Override
     public Scene getViewScene() {
         return new Scene(gridPane, super.getStage().getMinWidth(),super.getStage().getMinHeight());
+    }
+
+    @Override
+    public boolean isViewValid() {
+        return false;
     }
 }

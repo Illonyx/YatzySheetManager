@@ -5,6 +5,10 @@ public enum UiSceneRole {
 
     private int order;
 
+    UiSceneRole(int order){
+        this.order = order;
+    }
+
     public int getOrder() {
         return order;
     }
@@ -16,7 +20,18 @@ public enum UiSceneRole {
         return null;
     }
 
-    UiSceneRole(int order){
-        this.order = order;
+    public static UiSceneRole getLastScene(UiSceneRole role){
+        int currentSceneOrder = role.getOrder();
+        int lastSceneOrder = --currentSceneOrder;
+        if(lastSceneOrder < 0) return null;
+        else return UiSceneRole.fromValue(lastSceneOrder);
     }
+
+    public static UiSceneRole getNextScene(UiSceneRole role){
+        int currentSceneOrder = role.getOrder();
+        int nextSceneOrder = ++currentSceneOrder;
+        if(nextSceneOrder >= UiSceneRole.values().length) return null;
+        else return UiSceneRole.fromValue(nextSceneOrder);
+    }
+
 }

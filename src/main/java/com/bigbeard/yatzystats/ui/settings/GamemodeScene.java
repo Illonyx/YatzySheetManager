@@ -6,6 +6,7 @@ import com.bigbeard.yatzystats.exceptions.FileNotLoadedException;
 import com.bigbeard.yatzystats.exceptions.RulesNotLoadedException;
 import com.bigbeard.yatzystats.ui.UiScene;
 import com.bigbeard.yatzystats.ui.UiSceneRole;
+import com.bigbeard.yatzystats.ui.WindowNavigation;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -36,8 +37,11 @@ public class GamemodeScene extends UiScene {
     private Stage stage;
     private UserConfigurationModel model;
 
-    public GamemodeScene(Stage stage, UserConfigurationModel model){
-        super(stage, model, UiSceneRole.GAME_MODE_SCENE);
+    private ComboBox gameModeComboBox;
+    private TextField selectedFilePathTextField;
+
+    public GamemodeScene(WindowNavigation navigation){
+        super(navigation, UiSceneRole.GAME_MODE_SCENE);
         this.initComponents();
     }
 
@@ -55,10 +59,63 @@ public class GamemodeScene extends UiScene {
         Text chooseFileLabel = new Text("Fichier de parties : ");
         this.gridPane.add(chooseFileLabel, 1,2, 2,1);
 
-        TextField selectedFilePathTextField = new TextField();
-        selectedFilePathTextField.setPrefSize(300,30);
-        this.gridPane.add(selectedFilePathTextField, 3,2, 5,1);
+        this.selectedFilePathTextField = new TextField();
+        this.selectedFilePathTextField.setPrefSize(300,30);
+        this.gridPane.add(this.selectedFilePathTextField, 3,2, 5,1);
 
+        Button selectFileButton = this.getBrowseButton();
+        this.gridPane.add(selectFileButton, 8, 2, 1 ,1);
+
+        //2. Choix du mode de jeu
+        Text selectGamemodeLabel = new Text("Choix du mode de jeu :");
+        this.gridPane.add(selectGamemodeLabel, 1,4, 2,1);
+
+        ObservableList<String> options =
+                FXCollections.observableList(
+                        Arrays.stream(SheetRulesIdentifiers.values())
+                                .map(SheetRulesIdentifiers::getValue)
+                                .collect(Collectors.toList())
+                );
+        this.gameModeComboBox = new ComboBox(options);
+        this.gameModeComboBox.setValue(SheetRulesIdentifiers.YATZY.getValue());
+        this.gameModeComboBox.setPrefSize(300,30);
+        this.gridPane.add(this.gameModeComboBox,3,4, 5,1);
+
+        //3. Boutons sur le footer du menu
+        this.gridPane.add(this.getNextSceneButton(), 8, 10,1,1);
+    }
+
+    @Override
+    public boolean isViewValid() {
+        String file = this.selectedFilePathTextField.getText();
+        String gameMode = (String) this.gameModeComboBox.getValue();
+        super.getModel().setYatzyFilePath(file);
+        super.getModel().setChosenRules(SheetRulesIdentifiers.fromValue(gameMode));
+
+        //TODO : Dialogues d exception à afficher
+        try {
+            getModel().loadGameRules();
+            getModel().loadExcelSheet();
+            return true;
+        } catch(RulesNotLoadedException exception) {
+            Alert alert = this.createErrorAlert("Mode de jeu non pris en compte", "Le mode de jeu demandé n'a pas été pris en compte",
+                    "Le fichier de règles pour le mode de jeu est inexistant ou n'a pas été trouvé sur le disque.");
+            alert.showAndWait();
+            return false;
+        } catch(FileNotLoadedException fexception) {
+            Alert alert = this.createErrorAlert("Erreur d'ouverture du fichier", "Le fichier demandé n'a pas pu être ouvert",
+                    "Vérifiez bien si le fichier n'est pas ouvert sous Excel ou si l'extension est bonne");
+            alert.showAndWait();
+            return false;
+        }
+    }
+
+    @Override
+    public Scene getViewScene() {
+        return new Scene(gridPane, super.getStage().getMinWidth(),super.getStage().getMinHeight());
+    }
+
+    private Button getBrowseButton(){
         Button selectFileButton = new Button("Parcourir");
         final FileChooser fileChooser = new FileChooser();
         selectFileButton.setOnAction(
@@ -83,63 +140,7 @@ public class GamemodeScene extends UiScene {
                         }
                     }
                 });
-        this.gridPane.add(selectFileButton, 8, 2, 1 ,1);
-
-        //2. Choix du mode de jeu
-        Text selectGamemodeLabel = new Text("Choix du mode de jeu :");
-        this.gridPane.add(selectGamemodeLabel, 1,4, 2,1);
-
-        ObservableList<String> options =
-                FXCollections.observableList(
-                        Arrays.stream(SheetRulesIdentifiers.values())
-                                .map(SheetRulesIdentifiers::getValue)
-                                .collect(Collectors.toList())
-                );
-        ComboBox gameModeComboBox = new ComboBox(options);
-        gameModeComboBox.setValue(SheetRulesIdentifiers.YATZY.getValue());
-        gameModeComboBox.setPrefSize(300,30);
-        this.gridPane.add(gameModeComboBox,3,4, 5,1);
-
-        //3. Boutons sur le footer du menu
-        Button nextSceneButton = new Button("Suivant");
-        UserConfigurationModel model1 = model;
-        nextSceneButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                nextSc(selectedFilePathTextField.getText(), (String) gameModeComboBox.getValue());
-            }
-        });
-        this.gridPane.add(nextSceneButton, 8, 10,1,1);
-
-
+        return selectFileButton;
     }
-
-    private void nextSc(String file, String gameMode) {
-
-        super.getModel().setYatzyFilePath(file);
-        super.getModel().setChosenRules(SheetRulesIdentifiers.fromValue(gameMode));
-
-        //TODO : Dialogues d exception à afficher
-        try {
-            getModel().loadGameRules();
-            getModel().loadExcelSheet();
-            UiSceneRole nextScene = GamemodeScene.super.getNextScene();
-            GamemodeScene.super.loadScene(nextScene);
-        } catch(RulesNotLoadedException exception) {
-            Alert alert = this.createErrorAlert("Mode de jeu non pris en compte", "Le mode de jeu demandé n'a pas été pris en compte",
-                    "Le fichier de règles pour le mode de jeu est inexistant ou n'a pas été trouvé sur le disque.");
-            alert.showAndWait();
-        } catch(FileNotLoadedException fexception) {
-            Alert alert = this.createErrorAlert("Erreur d'ouverture du fichier", "Le fichier demandé n'a pas pu être ouvert",
-                    "Vérifiez bien si le fichier n'est pas ouvert sous Excel ou si l'extension est bonne");
-            alert.showAndWait();
-        }
-    }
-
-    @Override
-    public Scene getViewScene() {
-        return new Scene(gridPane, super.getStage().getMinWidth(),super.getStage().getMinHeight());
-    }
-
 
 }
