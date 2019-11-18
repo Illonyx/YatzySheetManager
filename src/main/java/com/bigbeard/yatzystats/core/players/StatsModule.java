@@ -58,6 +58,7 @@ public class StatsModule {
     public String getYatzyRate(List<PlayerResult> playerResults) {
         long yatzyNum = playerResults.stream()
                 .map(PlayerResult::isHasYatzy)
+                .filter(aBoolean -> aBoolean.equals(true))
                 .count();
         return this.givePercentageOf((int)yatzyNum, playerResults.size());
     }
@@ -65,6 +66,7 @@ public class StatsModule {
     public String getWinRate(List<PlayerResult> playerResults) {
         long yatzyNum = playerResults.stream()
                 .map(PlayerResult::isWinner)
+                .filter(aBoolean -> aBoolean.equals(true))
                 .count();
         return this.givePercentageOf((int)yatzyNum, playerResults.size());
     }
@@ -72,6 +74,7 @@ public class StatsModule {
     public String getBonusRate(List<PlayerResult> playerResults) {
         long yatzyNum = playerResults.stream()
                 .map(PlayerResult::isHasBonus)
+                .filter(aBoolean -> aBoolean.equals(true))
                 .count();
         return this.givePercentageOf((int)yatzyNum, playerResults.size());
     }

@@ -8,6 +8,7 @@ import com.bigbeard.yatzystats.core.sheets.SheetDto;
 
 import com.bigbeard.yatzystats.exceptions.FileNotLoadedException;
 import com.bigbeard.yatzystats.exceptions.RulesNotLoadedException;
+import org.apache.poi.ss.usermodel.Sheet;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -30,7 +31,8 @@ public class UserConfigurationModel {
     private List<String> loadingErrors;
 
     //Infos 3eme ecran : Choix des joueurs à analyser
-    private List<String> selectedPlayers;
+    private List<String> playerNames;
+    private Map<String, List<PlayerResult>> resultsPerPlayers;
 
     // -----------------------------------------------------
     // -- 1ere etape : Validation path/mode de jeu
@@ -74,9 +76,8 @@ public class UserConfigurationModel {
                 .map(PlayerResult::getPlayerName)
                 .distinct()
                 .collect(Collectors.toList());
-        System.out.println("dd" + String.join(",", playerNames));
-
-        Map<String, List<PlayerResult>> resultsPerPlayers = new HashMap<>();
+        this.playerNames = playerNames;
+        this.resultsPerPlayers = new HashMap<>();
         playerNames.stream().forEach(playerName -> {
             resultsPerPlayers.put(playerName, playerResults.stream()
                     .filter(playerResult -> playerResult.getPlayerName().equals(playerName))
@@ -109,6 +110,13 @@ public class UserConfigurationModel {
         return foundSheets;
     }
 
+    public List<String> getPlayerNames() {
+        return playerNames;
+    }
+
+    public Map<String, List<PlayerResult>> getResultsPerPlayers() {
+        return resultsPerPlayers;
+    }
 
 }
 

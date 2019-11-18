@@ -51,7 +51,7 @@ public class GameLoader {
                     }
 
                     if(rules.getBonusRow() != null){
-                        playerResult.setHasBonus(sheetReader.readBonus(playerName) == this.rules.getBonusValue());
+                        playerResult.setHasBonus(sheetReader.readBonus(playerName) >= this.rules.getBonusValue());
                     }
                     //Ne pas ajouter la partie d'un joueur qui a 0 dans son score
                     if(playerResult.getScore() > 0)
@@ -82,24 +82,5 @@ public class GameLoader {
     public List<String> getErrors() {
         return errors;
     }
-
-    //    //FIXME : Where to do this?
-//    public Map<String, Integer> getPlayersByGameNumber(List<Sheet> sheets) {
-//        Map<String, Integer> playersByGameNumber = new HashMap<>();
-//        for(Sheet s : sheets){
-//            List<String> players = new ExcelSheetFacade().reachPlayersList(s);
-//            for(String player : players){
-//                if(playersByGameNumber.get(player) == null) playersByGameNumber.put(player, 1);
-//                else {
-//                    int nbGames = playersByGameNumber.get(player);
-//                    playersByGameNumber.put(player, ++nbGames);
-//                }
-//            }
-//        }
-//        return playersByGameNumber;
-//    }
-
-
-
 
 }
