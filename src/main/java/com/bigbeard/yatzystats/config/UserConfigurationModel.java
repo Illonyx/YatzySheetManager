@@ -1,5 +1,6 @@
 package com.bigbeard.yatzystats.config;
 
+import com.bigbeard.yatzystats.core.players.ConfrontationDTO;
 import com.bigbeard.yatzystats.core.players.PlayerResult;
 import com.bigbeard.yatzystats.core.rules.GameLoader;
 import com.bigbeard.yatzystats.core.rules.GameRules;
@@ -32,6 +33,7 @@ public class UserConfigurationModel {
 
     //Infos 3eme ecran : Choix des joueurs à analyser
     private List<String> playerNames;
+    private List<SheetDto> selectedSheets;
     private Map<String, List<PlayerResult>> resultsPerPlayers;
 
     // -----------------------------------------------------
@@ -67,7 +69,7 @@ public class UserConfigurationModel {
     // -- 2eme etape : Choix des feuilles à analyser
     // -----------------------------------------------------
 
-    public void loadStats(List<SheetDto> selectedSheets){
+    public void loadStats() {
         List<PlayerResult> playerResults = selectedSheets.stream()
                 .map(SheetDto::getPlayerList)
                 .flatMap(List::stream)
@@ -84,6 +86,14 @@ public class UserConfigurationModel {
                     .collect(Collectors.toList()));
         });
 
+    }
+
+    public List<ConfrontationDTO> makeConfrontations(List<SheetDto> selectedSheets, String currentPlayerName, String opponentPlayerName){
+        List<ConfrontationDTO> confrontations = selectedSheets.stream()
+                .map(sheetDto -> sheetDto.findConfrontation(currentPlayerName, opponentPlayerName))
+                .filter(confrontation -> confrontation != null)
+                .collect(Collectors.toList());
+        return confrontations;
     }
 
     // -----------------------------------------------------
@@ -118,6 +128,13 @@ public class UserConfigurationModel {
         return resultsPerPlayers;
     }
 
+    public List<SheetDto> getSelectedSheets() {
+        return selectedSheets;
+    }
+
+    public void setSelectedSheets(List<SheetDto> selectedSheets) {
+        this.selectedSheets = selectedSheets;
+    }
 }
 
 

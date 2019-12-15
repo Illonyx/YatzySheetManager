@@ -14,7 +14,6 @@ public class StatsModule {
     }
 
     //http://commons.apache.org/proper/commons-math/userguide/stat.html
-
     // -------------------------------------
     // -- Common
     // -------------------------------------

@@ -3,6 +3,7 @@ package com.bigbeard.yatzystats.ui;
 import com.bigbeard.yatzystats.config.UserConfigurationModel;
 import com.bigbeard.yatzystats.ui.settings.GamemodeScene;
 import com.bigbeard.yatzystats.ui.settings.GamesChoiceScene;
+import com.bigbeard.yatzystats.ui.statsmod.ConfrontationsScene;
 import com.bigbeard.yatzystats.ui.statsmod.StatsModScene;
 import javafx.stage.Stage;
 
@@ -32,6 +33,7 @@ public class WindowNavigation {
     }
 
     protected void loadScene(UiSceneRole role){
+        UiScene lastScene = this.currentScene;
         switch (role){
             case GAME_MODE_SCENE:
                 this.currentScene = new GamemodeScene(this);
@@ -45,10 +47,14 @@ public class WindowNavigation {
                 this.currentScene = new StatsModScene(this);
                 break;
 
+            case CONFRONTATIONS_SCENE:
+                this.currentScene = new ConfrontationsScene(this);
+                break;
+
             default:
                 System.out.println("PRoblème de chargement de scène");
                 break;
         }
-        if(this.currentScene != null) this.stage.setScene(this.currentScene.getViewScene());
+        if(this.currentScene != null && lastScene != this.currentScene) this.stage.setScene(this.currentScene.getViewScene());
     }
 }

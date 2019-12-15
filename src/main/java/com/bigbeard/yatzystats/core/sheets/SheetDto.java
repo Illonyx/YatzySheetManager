@@ -1,5 +1,6 @@
 package com.bigbeard.yatzystats.core.sheets;
 
+import com.bigbeard.yatzystats.core.players.ConfrontationDTO;
 import com.bigbeard.yatzystats.core.players.PlayerResult;
 
 import java.util.List;
@@ -38,6 +39,21 @@ public class SheetDto {
 
     public void setBestScore(Integer bestScore) {
         this.bestScore = bestScore;
+    }
+
+    public ConfrontationDTO findConfrontation(String playerName1, String playerName2){
+        PlayerResult player1Result = null;
+        PlayerResult player2Result = null;
+        for(PlayerResult playerResult : playerList){
+            if(playerResult.getPlayerName().equals(playerName1)){
+                player1Result = playerResult;
+            } else if(playerResult.getPlayerName().equals(playerName2)){
+                player2Result = playerResult;
+            } else {
+                if(player1Result != null && player2Result != null) break;
+            }
+        }
+        return (player1Result != null && player2Result != null) ? new ConfrontationDTO(player1Result, player2Result) : null;
     }
 
     @Override

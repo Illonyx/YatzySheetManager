@@ -79,7 +79,7 @@ public class GamesChoiceScene extends UiScene {
     }
 
     private void updateTextarea(String selectedItem){
-        Optional<SheetDto> selectedSheet = GamesChoiceScene.super.getModel().getFoundSheets().stream().filter(sheet -> {
+        Optional<SheetDto> selectedSheet = getModel().getFoundSheets().stream().filter(sheet -> {
             return sheet.getSheetName().equals(selectedItem);
         }).findFirst();
         if(selectedSheet.isPresent()){
@@ -101,7 +101,7 @@ public class GamesChoiceScene extends UiScene {
             List<SheetDto> selectedSheetDto = super.getModel().getFoundSheets().stream()
                     .filter(sheetDto -> selectedSheets.contains(sheetDto.getSheetName()))
                     .collect(Collectors.toList());
-            super.getModel().loadStats(selectedSheetDto);
+            getModel().setSelectedSheets(selectedSheetDto);
             return true;
         }
     }

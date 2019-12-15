@@ -11,6 +11,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
@@ -32,6 +33,7 @@ public class StatsModScene extends UiScene {
 
     public StatsModScene(WindowNavigation navigation){
         super(navigation, UiSceneRole.STATS_MODE_SCENE);
+        getModel().loadStats();
         this.initComponents();
     }
 
@@ -46,22 +48,20 @@ public class StatsModScene extends UiScene {
         this.textArea.setEditable(false);
         this.gridPane.add(textArea, 3, 5 , 5, 5);
 
+        //Switch confrontations button
+        Button confrontationsButton = this.getWindowNavigationButton("Confrontations view",
+                false, UiSceneRole.CONFRONTATIONS_SCENE);
+        this.gridPane.add(confrontationsButton, 8, 2, 3,2);
+
         //Combobox
-        ObservableList<String> options = FXCollections.observableList(getModel().getPlayerNames());
-        this.comboBox = new ComboBox(options);
-        this.comboBox.setValue(options.get(0));
-        this.comboBox.setPrefSize(300,30);
+        this.comboBox = getPlayerCombobox();
         this.comboBox.getSelectionModel().selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> updateTextarea(newValue));
         this.updateTextarea(getModel().getPlayerNames().get(0));
         this.gridPane.add(this.comboBox,3,2, 5,1);
 
-
-
-
         //Footer view
         this.gridPane.add(this.getLastSceneButton(), 1, 10, 3, 2);
-
 
     }
 
@@ -74,7 +74,7 @@ public class StatsModScene extends UiScene {
         StringBuffer buff = new StringBuffer();
 
         buff.append("-- Score du joueur --" + System.lineSeparator());
-        buff.append("Moyenne :" + StatsModule.getInstance().getMean(results) + System.lineSeparator());
+        buff.append("Moyenne : " + StatsModule.getInstance().getMean(results) + System.lineSeparator());
         buff.append("Plus haut : " + StatsModule.getInstance().getHighestScore(results) + System.lineSeparator());
         buff.append("Plus bas : " + StatsModule.getInstance().getLowestScore(results) + System.lineSeparator());
         buff.append("Standard Deviation : " + StatsModule.getInstance().getStandardDeviation(results) + System.lineSeparator());
@@ -89,7 +89,7 @@ public class StatsModScene extends UiScene {
 
     @Override
     public Scene getViewScene() {
-        return new Scene(gridPane, super.getStage().getMinWidth(),super.getStage().getMinHeight());
+        return new Scene(this.gridPane, super.getStage().getMinWidth(),super.getStage().getMinHeight());
     }
 
     @Override
