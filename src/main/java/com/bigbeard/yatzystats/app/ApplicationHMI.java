@@ -1,10 +1,6 @@
 package com.bigbeard.yatzystats.app;
 
-
-import com.bigbeard.yatzystats.config.UserConfigurationModel;
-import com.bigbeard.yatzystats.ui.UiScene;
 import com.bigbeard.yatzystats.ui.WindowNavigation;
-import com.bigbeard.yatzystats.ui.settings.GamemodeScene;
 import javafx.application.Application;
 import javafx.stage.Stage;
 

@@ -13,8 +13,9 @@
 
         <junit.version>4.11</junit.version>
         <log4j.version>1.2.17</log4j.version>
-        <javafx.version>11</javafx.version>
+        <javafx.version>11.0.2</javafx.version>
         <poi.version>4.1.0</poi.version>
+
     </properties>
 
 
@@ -35,7 +36,8 @@
                 <version>0.0.2</version>
                 <configuration>
                     <mainClass>com.bigbeard.yatzystats.app.ApplicationHMI</mainClass>
-                    <executable>C:\Program Files\Java\jdk-11.0.5\bin\java</executable>
+                    <!-- Not useful, check on other environments -->
+                    <!-- <executable>C:\Program Files\Java\jdk-11.0.4\bin\java</executable> -->
                 </configuration>
             </plugin>
             <plugin>
