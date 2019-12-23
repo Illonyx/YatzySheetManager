@@ -9,6 +9,7 @@ import com.bigbeard.yatzystats.core.sheets.SheetDto;
 
 import com.bigbeard.yatzystats.exceptions.FileNotLoadedException;
 import com.bigbeard.yatzystats.exceptions.RulesNotLoadedException;
+import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.Sheet;
 
 import java.io.IOException;
@@ -18,6 +19,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class UserConfigurationModel {
+
+    private Logger logger = Logger.getLogger(UserConfigurationModel.class);
 
     //Infos 1er ecran : Choix feuille/règles
     private String yatzyFilePath;
@@ -48,7 +51,7 @@ public class UserConfigurationModel {
             this.loadingErrors = gameLoader.getErrors();
 
         } catch(IOException ex) {
-            System.err.println("IO Exc : " + ex);
+            logger.error("IO Exc : " + ex);
             throw new FileNotLoadedException();
         }
 
@@ -59,7 +62,7 @@ public class UserConfigurationModel {
             GameRulesLoader gameRulesLoader = new GameRulesLoader(this.chosenRules);
             this.gameRules = gameRulesLoader.getGameRules();
         } catch (IOException ex){
-            System.err.println("Erreur chargement gameRules : " + ex);
+            logger.error("Erreur chargement gameRules : " + ex);
             throw new RulesNotLoadedException();
         }
 

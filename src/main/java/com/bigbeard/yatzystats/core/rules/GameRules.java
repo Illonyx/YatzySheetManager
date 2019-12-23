@@ -54,4 +54,12 @@ public class GameRules {
     public void setBonusValue(Integer bonusValue) {
         this.bonusValue = bonusValue;
     }
+
+    @Override
+    public String toString() {
+        String rulesStr = "GameRules : " + System.lineSeparator();
+        rulesStr += "BonusRow : " + this.bonusRow + System.lineSeparator();
+        rulesStr += "BonusVal : " + this.bonusValue + System.lineSeparator();
+        return rulesStr;
+    }
 }

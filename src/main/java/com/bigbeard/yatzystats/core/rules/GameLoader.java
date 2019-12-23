@@ -6,6 +6,7 @@ import com.bigbeard.yatzystats.core.sheets.ExcelSheetReader;
 import com.bigbeard.yatzystats.core.sheets.SheetDto;
 import com.bigbeard.yatzystats.core.sheets.SheetReader;
 import com.bigbeard.yatzystats.exceptions.CellNotFoundException;
+import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
 
@@ -22,6 +23,7 @@ public class GameLoader {
     FormulaEvaluator evaluator;
     GameRules rules;
     List<String> errors = new ArrayList<String>();
+    private Logger logger = Logger.getLogger(GameLoader.class);
 
     public GameLoader(GameRules rules, FormulaEvaluator formulaEvaluator){
         this.rules = rules;
@@ -29,6 +31,8 @@ public class GameLoader {
     }
 
     public List<SheetDto> loadGamesFromMode(List<Sheet> excelSheets){
+        logger.info("Chargement des parties avec les règles suivantes :" + this.rules);
+
         List<SheetDto> sheetDtoList = new ArrayList<SheetDto>();
         for(Sheet s : excelSheets){
             SheetReader sheetReader = new ExcelSheetReader(this.rules, s, this.evaluator);
@@ -71,11 +75,14 @@ public class GameLoader {
 
             } catch (CellNotFoundException ex) {
                 String error = "Feuille non chargée : " + s.getSheetName() + " - raison :" + ex.getCellLabel();
-                System.err.println(error);
+                logger.error(error);
                 this.errors.add(error);
+            } catch(Exception ex) {
+                logger.error("Error" + ex);
             }
 
         }
+        logger.info("Nombre de parties chargées :" + sheetDtoList.size());
         return sheetDtoList;
     }
 

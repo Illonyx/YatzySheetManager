@@ -52,7 +52,8 @@ public class GameRulesLoader {
                 extension = "scandinavian-yatzy-rules.properties";
                 break;
             default:
-                System.out.println("Pas encore implémenté");
+                //DO NOTHING
+                break;
         }
         return extension;
     }

@@ -136,7 +136,6 @@ public class GamemodeScene extends UiScene {
                         File file = fileChooser.showOpenDialog(stage);
                         if (file != null) {
                             selectedFilePathTextField.setText(file.getAbsolutePath());
-                            System.out.println("Fichier" + file.toString());
                         }
                     }
                 });

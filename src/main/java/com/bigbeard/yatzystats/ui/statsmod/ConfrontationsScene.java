@@ -11,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.GridPane;
+import org.apache.log4j.Logger;
 
 import java.util.List;
 
@@ -18,6 +19,7 @@ public class ConfrontationsScene extends UiScene {
 
     private GridPane gridPane;
     private ComboBox comboPlayer1, comboPlayer2;
+    private Logger logger = Logger.getLogger(ConfrontationsScene.class);
 
     public ConfrontationsScene(WindowNavigation navigation){
         super(navigation, UiSceneRole.CONFRONTATIONS_SCENE);
@@ -64,9 +66,8 @@ public class ConfrontationsScene extends UiScene {
         String firstPlayer = (String) this.comboPlayer1.getValue();
         String secondPlayer = (String) this.comboPlayer2.getValue();
         if(firstPlayer != null && secondPlayer != null && !firstPlayer.equals(secondPlayer)){
-            System.out.println("Génération de la confrontation entre " + firstPlayer + " et " + secondPlayer);
+            logger.debug("Génération de la confrontation entre " + firstPlayer + " et " + secondPlayer);
             List<ConfrontationDTO> confrontations = getModel().makeConfrontations(getModel().getSelectedSheets(), firstPlayer, secondPlayer);
-            System.out.print(confrontations.size());
             long firstPlayerScore = confrontations.stream()
                     .map(ConfrontationDTO::getWinnerName)
                     .filter(playerName -> playerName.equals(firstPlayer))
@@ -75,7 +76,7 @@ public class ConfrontationsScene extends UiScene {
                     .map(ConfrontationDTO::getWinnerName)
                     .filter(playerName -> playerName.equals(secondPlayer))
                     .count();
-            System.out.println("Confrontations : " + firstPlayer + " " + firstPlayerScore +
+            logger.debug("Confrontations : " + firstPlayer + " " + firstPlayerScore +
                     " - " + secondPlayerScore + " " + secondPlayer);
         }
     }

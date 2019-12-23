@@ -6,12 +6,15 @@ import com.bigbeard.yatzystats.ui.settings.GamesChoiceScene;
 import com.bigbeard.yatzystats.ui.statsmod.ConfrontationsScene;
 import com.bigbeard.yatzystats.ui.statsmod.StatsModScene;
 import javafx.stage.Stage;
+import org.apache.log4j.Logger;
 
 public class WindowNavigation {
 
     private UiScene currentScene;
     private Stage stage;
     private UserConfigurationModel model;
+    private Logger logger = Logger.getLogger(WindowNavigation.class);
+
 
     public WindowNavigation(Stage stage){
         this.stage = stage;
@@ -52,7 +55,7 @@ public class WindowNavigation {
                 break;
 
             default:
-                System.out.println("PRoblème de chargement de scène");
+                logger.warn("Problème de chargement de scène");
                 break;
         }
         if(this.currentScene != null && lastScene != this.currentScene) this.stage.setScene(this.currentScene.getViewScene());
