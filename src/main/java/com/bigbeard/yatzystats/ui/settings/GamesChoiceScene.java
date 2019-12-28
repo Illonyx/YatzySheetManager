@@ -68,7 +68,6 @@ public class GamesChoiceScene extends UiScene {
                     observable.setValue(listCheckboxValues.get(item));
                 } else observable.setValue(false);
                 observable.addListener((obs, wasSelected, isNowSelected) -> listCheckboxValues.put(item,isNowSelected));
-                //System.out.println("Check box for "+item+" changed from "+wasSelected+" to "+isNowSelected);
                 return observable;
             }
         }));
