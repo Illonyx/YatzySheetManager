@@ -6,7 +6,9 @@ import com.bigbeard.yatzystats.core.sheets.ExcelSheetReader;
 import com.bigbeard.yatzystats.core.sheets.SheetDto;
 import com.bigbeard.yatzystats.core.sheets.SheetReader;
 import com.bigbeard.yatzystats.exceptions.CellNotFoundException;
+import com.bigbeard.yatzystats.exceptions.FileNotLoadedException;
 import org.apache.log4j.Logger;
+import org.apache.poi.poifs.crypt.temp.AesZipFileZipEntrySource;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
 
@@ -30,7 +32,7 @@ public class GameLoader {
         this.evaluator = formulaEvaluator;
     }
 
-    public List<SheetDto> loadGamesFromMode(List<Sheet> excelSheets){
+    public List<SheetDto> loadGamesFromMode(List<Sheet> excelSheets) throws FileNotLoadedException {
         logger.info("Chargement des parties avec les règles suivantes :" + this.rules);
 
         List<SheetDto> sheetDtoList = new ArrayList<SheetDto>();
@@ -79,10 +81,13 @@ public class GameLoader {
                 this.errors.add(error);
             } catch(Exception ex) {
                 logger.error("Error" + ex);
+                throw new FileNotLoadedException("Une erreur est survenue lors de la lecture du fichier", ex.getMessage());
             }
 
         }
+
         logger.info("Nombre de parties chargées :" + sheetDtoList.size());
+        if(sheetDtoList.isEmpty()) throw new FileNotLoadedException("Le nombre de parties chargées est de 0","Vérifiez bien si le format des parties enregistrées dans le fichier Excel est cohérent avec celui des règles utilisées");
         return sheetDtoList;
     }
 

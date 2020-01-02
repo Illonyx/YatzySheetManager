@@ -103,8 +103,8 @@ public class GamemodeScene extends UiScene {
             alert.showAndWait();
             return false;
         } catch(FileNotLoadedException fexception) {
-            Alert alert = this.createErrorAlert("Erreur d'ouverture du fichier", "Le fichier demandé n'a pas pu être ouvert",
-                    "Vérifiez bien si le fichier n'est pas ouvert sous Excel ou si l'extension est bonne");
+            Alert alert = this.createErrorAlert("Erreur d'ouverture du fichier", fexception.getMainReason(),
+                    fexception.getMessage());
             alert.showAndWait();
             return false;
         }
