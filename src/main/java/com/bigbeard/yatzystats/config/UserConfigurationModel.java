@@ -48,11 +48,15 @@ public class UserConfigurationModel {
             this.excelSheetLoader = new ExcelSheetLoader(this.yatzyFilePath);
             GameLoader gameLoader = new GameLoader(gameRules, this.excelSheetLoader.getFormulaEvaluator());
             this.foundSheets = gameLoader.loadGamesFromMode(this.excelSheetLoader.getAllSheets());
+
+            //Fichier illisible, 0 parties trouvées
             this.loadingErrors = gameLoader.getErrors();
+
 
         } catch(IOException ex) {
             logger.error("IO Exc : " + ex);
-            throw new FileNotLoadedException();
+            throw new FileNotLoadedException("Le fichier demandé n'a pas pu être ouvert",
+                    "Vérifiez bien si le fichier n'est pas ouvert sous Excel ou si l'extension est bonne (xlsx)");
         }
 
     }
