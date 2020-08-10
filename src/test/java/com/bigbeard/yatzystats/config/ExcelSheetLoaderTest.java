@@ -5,6 +5,7 @@ import com.bigbeard.yatzystats.core.rules.GameLoader;
 import com.bigbeard.yatzystats.core.rules.GameRules;
 import com.bigbeard.yatzystats.core.rules.SheetRulesIdentifiers;
 import com.bigbeard.yatzystats.core.sheets.SheetDto;
+import com.bigbeard.yatzystats.exceptions.FileNotLoadedException;
 import org.apache.log4j.Logger;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -37,7 +38,7 @@ public class ExcelSheetLoaderTest extends BaseTest {
             List<SheetDto> foundSheets = gameLoader.loadGamesFromMode(excelSheetLoader.getAllSheets());
             logger.debug("FSize : " + foundSheets.size());
 
-        } catch(IOException ex) {
+        } catch(FileNotLoadedException | IOException ex) {
             logger.error("Erreur" + ex);
         }
     }
