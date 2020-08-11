@@ -11,6 +11,7 @@ import com.bigbeard.yatzystats.exceptions.FileNotLoadedException;
 import com.bigbeard.yatzystats.exceptions.RulesNotLoadedException;
 import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -65,7 +66,7 @@ public class UserConfigurationModel {
         try {
             GameRulesLoader gameRulesLoader = new GameRulesLoader(this.chosenRules);
             this.gameRules = gameRulesLoader.getGameRules();
-        } catch (IOException ex){
+        } catch (IOException | ParseException ex){
             logger.error("Erreur chargement gameRules : " + ex);
             throw new RulesNotLoadedException();
         }

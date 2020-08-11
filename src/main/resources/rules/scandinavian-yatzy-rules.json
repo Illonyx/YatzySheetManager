@@ -1,0 +1,99 @@
+{
+  "formatName": "Scandinavian Yatzy",
+  "bonus": {
+    "bonusCond": 63,
+    "bonusValue": 50
+  },
+  "values": {
+    "aces": {
+      "columnLabel" : "Les 1",
+      "sheetIndex" : 3,
+      "maxValue" : 5,
+    },
+    "twos": {
+      "columnLabel" : "Les 2",
+      "sheetIndex" : 4,
+      "maxValue": 10
+    },
+    "threes": {
+      "columnLabel" : "Les 3",
+      "sheetIndex" : 5,
+      "maxValue" : 15
+    },
+    "fours": {
+      "columnLabel" : "Les 4",
+      "sheetIndex" : 6,
+      "maxValue": 20
+    },
+    "fives": {
+      "columnLabel" : "Les 5",
+      "sheetIndex" : 7,
+      "maxValue" : 25
+    },
+    "sixes": {
+      "columnLabel" : "Les 6",
+      "sheetIndex" : 8,
+      "maxValue" : 30
+    },
+    "partialSum": {
+      "columnLabel": "Somme",
+      "sheetIndex": 9,
+      "maxValue": 155
+    }
+  },
+  "combinations" : {
+    "pair": {
+      "columnLabel": "Paire",
+      "sheetIndex": 11,
+      "maxValue": 12
+    },
+    "doublePair": {
+      "columnLabel" : "Deux paires",
+      "sheetIndex": 12,
+      "maxValue": 22
+    },
+    "threeOfAKind": {
+      "columnLabel": "Brelan",
+      "sheetIndex": 13,
+      "maxValue": 18
+    },
+    "fourOfAKind": {
+      "columnLabel" : "Carré",
+      "sheetIndex": 14,
+      "maxValue": 24
+    },
+    "fullHouse": {
+      "columnLabel" : "Full",
+      "sheetIndex" : 15,
+      "maxValue": 28
+    },
+    "smallStraight": {
+      "columnLabel": "Petite suite",
+      "sheetIndex": 16,
+      "maxValue" : 15,
+      "fixedValue": true
+    },
+    "largeStraight": {
+      "columnLabel": "Grande suite",
+      "sheetIndex": 17,
+      "maxValue": 20,
+      "fixedValue": true
+    },
+    "yahtzee": {
+      "columnLabel" : "Yatzee",
+      "sheetIndex": 18,
+      "maxValue": 50,
+      "fixedValue": true
+    },
+    "chance": {
+      "columnLabel": "Chance",
+      "sheetIndex": 19,
+      "maxValue": 30
+    },
+    "finalSum": {
+      "columnLabel": "Somme",
+      "sheetIndex": 21,
+      "maxValue": 374
+    }
+  }
+}

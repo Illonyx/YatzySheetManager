@@ -47,17 +47,17 @@ public class GameLoader {
                     PlayerResult playerResult = new PlayerResult();
                     playerResult.setPlayerName(playerName);
 
-                    if(rules.getScoreRow() != null){
+                    if(rules.getFinalSum().getSheetIndex() != null){
                         int playerScore = sheetReader.readScore(playerName);
                         playerResult.setScore(playerScore);
                     }
 
-                    if(rules.getYatzyRow() != null){
-                        playerResult.setHasYatzy(sheetReader.readYatzy(playerName) == this.rules.getYatzyValue());
+                    if(rules.getYahtzee().getSheetIndex() != null){
+                        playerResult.setHasYatzy(sheetReader.readYatzy(playerName) == this.rules.getYahtzee().getMaxValue().intValue());
                     }
 
-                    if(rules.getBonusRow() != null){
-                        playerResult.setHasBonus(sheetReader.readBonus(playerName) >= this.rules.getBonusValue());
+                    if(rules.getPartialSum().getSheetIndex() != null){
+                        playerResult.setHasBonus(sheetReader.readBonus(playerName) >= this.rules.getBonusCond());
                     }
                     //Ne pas ajouter la partie d'un joueur qui a 0 dans son score
                     if(playerResult.getScore() > 0)
@@ -86,7 +86,7 @@ public class GameLoader {
 
         }
 
-        logger.info("Nombre de parties chargées :" + sheetDtoList.size());
+        logger.info("Nombre de parties chargées : " + sheetDtoList.size() + "/" + excelSheets.size());
         if(sheetDtoList.isEmpty()) throw new FileNotLoadedException("Le nombre de parties chargées est de 0","Vérifiez bien si le format des parties enregistrées dans le fichier Excel est cohérent avec celui des règles utilisées");
         return sheetDtoList;
     }
@@ -96,3 +96,5 @@ public class GameLoader {
     }
 
 }
+
+
