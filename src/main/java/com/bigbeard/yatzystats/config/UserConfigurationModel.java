@@ -63,14 +63,8 @@ public class UserConfigurationModel {
     }
 
     public void loadGameRules() throws RulesNotLoadedException {
-        try {
-            GameRulesLoader gameRulesLoader = new GameRulesLoader(this.chosenRules);
-            this.gameRules = gameRulesLoader.getGameRules();
-        } catch (IOException | ParseException ex){
-            logger.error("Erreur chargement gameRules : " + ex);
-            throw new RulesNotLoadedException();
-        }
-
+        GameRulesLoader gameRulesLoader = new GameRulesLoader(this.chosenRules);
+        this.gameRules = gameRulesLoader.getGameRules();
     }
 
     // -----------------------------------------------------
