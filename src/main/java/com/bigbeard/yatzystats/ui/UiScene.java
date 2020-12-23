@@ -5,10 +5,12 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 public abstract class UiScene {
@@ -71,6 +73,15 @@ public abstract class UiScene {
     // Génère un bouton pour aller dans la vue suivante
     public Button getNextSceneButton(){
         return this.getWindowNavigationButton(">> Suivant", true, UiSceneRole.getNextScene(role));
+    }
+
+    public GridPane getDefaultGridPaneConfig() {
+        GridPane gridPane = new GridPane();
+        gridPane.setMinSize(this.getStage().getMinWidth(), this.getStage().getMinHeight());
+        gridPane.setPadding(new Insets(20));
+        gridPane.setHgap(25);
+        gridPane.setVgap(15);
+        return gridPane;
     }
 
     public ComboBox getPlayerCombobox(){

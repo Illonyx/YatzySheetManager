@@ -1,4 +1,4 @@
-package com.bigbeard.yatzystats.ui.settings;
+package com.bigbeard.yatzystats.ui.statistics.settings;
 
 import com.bigbeard.yatzystats.config.UserConfigurationModel;
 import com.bigbeard.yatzystats.core.rules.SheetRulesIdentifiers;
@@ -46,11 +46,7 @@ public class GamemodeScene extends UiScene {
     }
 
     private void initComponents() {
-        this.gridPane = new GridPane();
-        this.gridPane.setMinSize(super.getStage().getMinWidth(),super.getStage().getMinHeight());
-        this.gridPane.setPadding(new Insets(20));
-        this.gridPane.setHgap(25);
-        this.gridPane.setVgap(15);
+        this.gridPane = this.getDefaultGridPaneConfig();
 
         Text mainLabel = new Text("Etape 1 : Sélection du fichier de parties et du mode de jeu");
         this.gridPane.add(mainLabel, 0,0,3,1);

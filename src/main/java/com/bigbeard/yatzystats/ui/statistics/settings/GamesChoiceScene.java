@@ -1,4 +1,4 @@
-package com.bigbeard.yatzystats.ui.settings;
+package com.bigbeard.yatzystats.ui.statistics.settings;
 
 import com.bigbeard.yatzystats.config.UserConfigurationModel;
 import com.bigbeard.yatzystats.core.sheets.SheetDto;
@@ -40,11 +40,7 @@ public class GamesChoiceScene extends UiScene {
     }
 
     private void initComponents(){
-        this.gridPane = new GridPane();
-        this.gridPane.setMinSize(super.getStage().getMinWidth(),super.getStage().getMinHeight());
-        this.gridPane.setPadding(new Insets(20));
-        this.gridPane.setHgap(25);
-        this.gridPane.setVgap(15);
+        this.gridPane = this.getDefaultGridPaneConfig();
 
         this.textArea = new TextArea();
         this.textArea.setEditable(false);

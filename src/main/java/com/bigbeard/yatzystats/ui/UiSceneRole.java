@@ -1,7 +1,9 @@
 package com.bigbeard.yatzystats.ui;
 
 public enum UiSceneRole {
-    GAME_MODE_SCENE(0), GAMES_CHOICE_SCENE(1), STATS_MODE_SCENE(2), CONFRONTATIONS_SCENE(3);
+    STARTING_SCENE(0), GAME_MODE_SCENE(1),
+    GAMES_CHOICE_SCENE(2), STATS_MODE_SCENE(3), CONFRONTATIONS_SCENE(4),
+    CREATE_SHEET_SCENE(5);
 
     private int order;
 

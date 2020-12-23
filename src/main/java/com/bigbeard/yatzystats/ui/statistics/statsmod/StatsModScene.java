@@ -1,26 +1,19 @@
-package com.bigbeard.yatzystats.ui.statsmod;
+package com.bigbeard.yatzystats.ui.statistics.statsmod;
 
 import com.bigbeard.yatzystats.config.UserConfigurationModel;
 import com.bigbeard.yatzystats.core.players.PlayerResult;
 import com.bigbeard.yatzystats.core.players.StatsModule;
-import com.bigbeard.yatzystats.core.rules.SheetRulesIdentifiers;
 import com.bigbeard.yatzystats.ui.UiScene;
 import com.bigbeard.yatzystats.ui.UiSceneRole;
 import com.bigbeard.yatzystats.ui.WindowNavigation;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class StatsModScene extends UiScene {
 
@@ -38,11 +31,7 @@ public class StatsModScene extends UiScene {
     }
 
     private void initComponents() {
-        this.gridPane = new GridPane();
-        this.gridPane.setMinSize(super.getStage().getMinWidth(),super.getStage().getMinHeight());
-        this.gridPane.setPadding(new Insets(20));
-        this.gridPane.setHgap(25);
-        this.gridPane.setVgap(15);
+        this.gridPane = this.getDefaultGridPaneConfig();
 
         this.textArea = new TextArea();
         this.textArea.setEditable(false);

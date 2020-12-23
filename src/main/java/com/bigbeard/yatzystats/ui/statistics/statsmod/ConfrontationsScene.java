@@ -1,4 +1,4 @@
-package com.bigbeard.yatzystats.ui.statsmod;
+package com.bigbeard.yatzystats.ui.statistics.statsmod;
 
 import com.bigbeard.yatzystats.core.players.ConfrontationDTO;
 import com.bigbeard.yatzystats.ui.UiScene;
@@ -6,19 +6,22 @@ import com.bigbeard.yatzystats.ui.UiSceneRole;
 import com.bigbeard.yatzystats.ui.WindowNavigation;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.GridPane;
+import javafx.scene.text.Text;
 import org.apache.log4j.Logger;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class ConfrontationsScene extends UiScene {
 
     private GridPane gridPane;
     private ComboBox comboPlayer1, comboPlayer2;
+    private Text globalText;
     private Logger logger = Logger.getLogger(ConfrontationsScene.class);
 
     public ConfrontationsScene(WindowNavigation navigation){
@@ -28,11 +31,7 @@ public class ConfrontationsScene extends UiScene {
 
     private void initComponents() {
 
-        this.gridPane = new GridPane();
-        this.gridPane.setMinSize(super.getStage().getMinWidth(),super.getStage().getMinHeight());
-        this.gridPane.setPadding(new Insets(20));
-        this.gridPane.setHgap(25);
-        this.gridPane.setVgap(15);
+        this.gridPane = this.getDefaultGridPaneConfig();
 
         //Switch stats button
         Button confrontationsButton = this.getWindowNavigationButton("Stats view",
@@ -47,7 +46,10 @@ public class ConfrontationsScene extends UiScene {
         //Combo player 2
         this.comboPlayer2 = getPlayerCombobox();
         this.comboPlayer1.getSelectionModel().select(1);
-        this.gridPane.add(this.comboPlayer2,4,5, 2,1);
+        this.gridPane.add(this.comboPlayer2,5,5, 2,1);
+
+        this.globalText = new Text("");
+        this.gridPane.add(this.globalText, 3, 7, 2,1);
 
         //Button validation
         Button button = new Button("Generer");
@@ -78,12 +80,16 @@ public class ConfrontationsScene extends UiScene {
                     .count();
             logger.debug("Confrontations : " + firstPlayer + " " + firstPlayerScore +
                     " - " + secondPlayerScore + " " + secondPlayer);
+            this.globalText.setText(firstPlayerScore + " - " + secondPlayerScore +
+                    "(" + getPlayerLastScores(3, confrontations, firstPlayer) +  ")");
         }
     }
 
-//    public void initScoreHeader(List<ConfrontationDTO> confrontationDTOList){
-//
-//    }
+    String getPlayerLastScores(int limit, List<ConfrontationDTO> confrontations, String playerName) {
+        return confrontations.stream().limit(limit)
+                .map(conf -> conf.getConfrontationScore(playerName))
+                .reduce(((s, s2) -> {return s2 + "," + s;})).get();
+    }
 
     @Override
     public Scene getViewScene() {
