@@ -56,7 +56,7 @@ public class ExcelSheetLoaderTest extends BaseTest {
     @Test
     @DisplayName("Test JU5")
     public void readExcelSheet() {
-        logger.info("Lancement du test");
+        logger.info("Lancement du test readExcelSheet");
         URL filePath = ClassLoader.getSystemResource(SC_YATZY_TEST_PATH);
         try {
             ExcelSheetLoader excelSheetLoader = new ExcelSheetLoader(filePath.getPath());
