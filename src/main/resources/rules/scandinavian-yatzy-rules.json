@@ -4,96 +4,113 @@
     "bonusCond": 63,
     "bonusValue": 50
   },
-  "values": {
-    "aces": {
+  "values": [
+    {
+      "techColumnId": "aces",
       "columnLabel" : "Les 1",
       "sheetIndex" : 3,
-      "maxValue" : 5,
+      "maxValue" : 5
     },
-    "twos": {
+    {
+      "techColumnId": "twos",
       "columnLabel" : "Les 2",
       "sheetIndex" : 4,
       "maxValue": 10
     },
-    "threes": {
+    {
+      "techColumnId": "threes",
       "columnLabel" : "Les 3",
       "sheetIndex" : 5,
       "maxValue" : 15
     },
-    "fours": {
+    {
+      "techColumnId": "fours",
       "columnLabel" : "Les 4",
       "sheetIndex" : 6,
       "maxValue": 20
     },
-    "fives": {
+    {
+      "techColumnId": "fives",
       "columnLabel" : "Les 5",
       "sheetIndex" : 7,
       "maxValue" : 25
     },
-    "sixes": {
+    {
+      "techColumnId": "sixes",
       "columnLabel" : "Les 6",
       "sheetIndex" : 8,
       "maxValue" : 30
     },
-    "partialSum": {
+    {
+      "techColumnId": "partialSum",
       "columnLabel": "Somme",
       "sheetIndex": 9,
       "maxValue": 155
     }
-  },
-  "combinations" : {
-    "pair": {
+  ],
+  "combinations" : [
+    {
+      "techColumnId": "pair",
       "columnLabel": "Paire",
       "sheetIndex": 11,
       "maxValue": 12
     },
-    "doublePair": {
-      "columnLabel" : "Deux paires",
+    {
+      "techColumnId": "doublePair",
+      "columnLabel": "Deux paires",
       "sheetIndex": 12,
       "maxValue": 22
     },
-    "threeOfAKind": {
+    {
+      "techColumnId": "threeOfAKind",
       "columnLabel": "Brelan",
       "sheetIndex": 13,
       "maxValue": 18
     },
-    "fourOfAKind": {
+    {
+      "techColumnId": "fourOfAKind",
       "columnLabel" : "Carré",
       "sheetIndex": 14,
       "maxValue": 24
     },
-    "fullHouse": {
+    {
+      "techColumnId": "fullHouse",
       "columnLabel" : "Full",
       "sheetIndex" : 15,
       "maxValue": 28
     },
-    "smallStraight": {
+    {
+      "techColumnId": "smallStraight",
       "columnLabel": "Petite suite",
       "sheetIndex": 16,
       "maxValue" : 15,
       "fixedValue": true
     },
-    "largeStraight": {
+    {
+      "techColumnId": "largeStraight",
       "columnLabel": "Grande suite",
       "sheetIndex": 17,
       "maxValue": 20,
       "fixedValue": true
     },
-    "yahtzee": {
+    {
+      "techColumnId": "yahtzee",
       "columnLabel" : "Yatzee",
       "sheetIndex": 18,
       "maxValue": 50,
       "fixedValue": true
     },
-    "chance": {
+    {
+      "techColumnId": "chance",
       "columnLabel": "Chance",
       "sheetIndex": 19,
       "maxValue": 30
     },
-    "finalSum": {
+    {
+      "techColumnId": "finalSum",
       "columnLabel": "Somme",
       "sheetIndex": 21,
       "maxValue": 374
     }
-  }
+  ]
 }

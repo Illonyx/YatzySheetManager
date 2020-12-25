@@ -18,6 +18,12 @@ public enum GameRulesEnum {
     LARGE_STRAIGHT("largeStraight"),
     YAHTZEE("yahtzee"),
     CHANCE("chance"),
+
+    THREE_PAIR("threePair"),
+    FIVE_OF_A_KIND("fiveOfAKind"),
+    FULL_STRAIGHT("fullStraight"),
+    CABIN("cabin"),
+    TOWER("tower"),
     FINAL_SUM("finalSum");
 
     private String value;

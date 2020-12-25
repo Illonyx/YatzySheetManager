@@ -24,12 +24,11 @@ public class ExcelSheetWriterTest extends BaseTest {
 
     public final String SC_YATZY_TEST_PATH = "feuille_calcul_yatzee.xlsx";
     public final String SC_YATZY_TEST_NEW_PATH = "feuille_calcul_yatzee_new.xlsx";
-    public final String SC_YATZY_RULES_PATH = "rules/scandinavian-yatzy-rules.json";
     private Logger logger = Logger.getLogger(ExcelSheetWriterTest.class);
 
     @Test
-    @DisplayName("Ecriture d'un fichier Excel")
-    public void writeExcelSheet() {
+    @DisplayName("Ecriture d'un fichier Excel Yatzy")
+    public void writeYatzyExcelSheet() {
         logger.info("Lancement du test writeExcelSheet");
         URL filePath = ClassLoader.getSystemResource(SC_YATZY_TEST_PATH);
         String path = filePath.getPath().replace(SC_YATZY_TEST_PATH, SC_YATZY_TEST_NEW_PATH);
@@ -41,6 +40,30 @@ public class ExcelSheetWriterTest extends BaseTest {
 
             // Rules
             GameRulesLoader gameRulesLoader = new GameRulesLoader(SheetRulesIdentifiers.YATZY);
+            GameRules rules = gameRulesLoader.getGameRules();
+
+            ExcelSheetWriter writer = new ExcelSheetWriter(path, players);
+            writer.writeSheets(2, rules);
+
+        } catch(IOException | RulesNotLoadedException ex) {
+            logger.error("Erreur" + ex);
+            fail();
+        }
+    }
+
+    @Test
+    @DisplayName("Ecriture d'un fichier Excel Maxi Yatzy")
+    public void writeMaxiYatzyExcelSheet() {
+        logger.info("Lancement du test writeExcelSheet");
+        URL filePath = ClassLoader.getSystemResource(SC_YATZY_TEST_PATH);
+        String path = filePath.getPath().replace(SC_YATZY_TEST_PATH, SC_YATZY_TEST_NEW_PATH);
+        try {
+
+            // Players
+            List<String> players = List.of("Alexis","Arnaud","Maman","Papa");
+
+            // Rules
+            GameRulesLoader gameRulesLoader = new GameRulesLoader(SheetRulesIdentifiers.MAXI_YATZY);
             GameRules rules = gameRulesLoader.getGameRules();
 
             ExcelSheetWriter writer = new ExcelSheetWriter(path, players);

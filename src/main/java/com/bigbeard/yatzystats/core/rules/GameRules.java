@@ -1,9 +1,12 @@
 package com.bigbeard.yatzystats.core.rules;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class GameRules {
@@ -14,12 +17,10 @@ public class GameRules {
     private Long bonusVal;
 
     // Values
-    private ColumnDescription aces, twos, threes, fours, fives, sixes, partialSum;
+    private List<ColumnDescription> values = new ArrayList<>();
 
     // Combinations
-    private ColumnDescription pair, doublePair, threeOfAKind, fourOfAKind,
-    fullHouse, smallStraight, largeStraight, yahtzee, chance, finalSum;
-
+    private List<ColumnDescription> combinations = new ArrayList<>();
 
     public GameRules() {
     }
@@ -31,53 +32,34 @@ public class GameRules {
         this.bonusVal = (Long) ((JSONObject) obj.get("bonus")).get("bonusValue");
 
         // Column description
-        JSONObject values = (JSONObject) obj.get("values");
-        this.aces = ColumnDescription.fromJson(GameRulesEnum.ACES.getValue(), (JSONObject) values.get(GameRulesEnum.ACES.getValue()));
-        this.twos = ColumnDescription.fromJson(GameRulesEnum.TWOS.getValue(), (JSONObject) values.get(GameRulesEnum.TWOS.getValue()));
-        this.threes = ColumnDescription.fromJson(GameRulesEnum.THREES.getValue(), (JSONObject) values.get(GameRulesEnum.THREES.getValue()));
-        this.fours = ColumnDescription.fromJson(GameRulesEnum.FOURS.getValue(), (JSONObject) values.get(GameRulesEnum.FOURS.getValue()));
-        this.fives = ColumnDescription.fromJson(GameRulesEnum.FIVES.getValue(), (JSONObject) values.get(GameRulesEnum.FIVES.getValue()));
-        this.sixes = ColumnDescription.fromJson(GameRulesEnum.SIXES.getValue(), (JSONObject) values.get(GameRulesEnum.SIXES.getValue()));
-        this.partialSum = ColumnDescription.fromJson(GameRulesEnum.PARTIAL_SUM.getValue(), (JSONObject) values.get(GameRulesEnum.PARTIAL_SUM.getValue()));
+        JSONArray valuesArray = (JSONArray) obj.get("values");
+        for (Object value : valuesArray) {
+            JSONObject valueObj = (JSONObject) value;
+            values.add(ColumnDescription.fromJson(valueObj));
+        }
 
-        JSONObject combinations = (JSONObject) obj.get("combinations");
-        this.pair = ColumnDescription.fromJson(GameRulesEnum.PAIR.getValue(),
-                (JSONObject) combinations.get(GameRulesEnum.PAIR.getValue()));
-        this.doublePair = ColumnDescription.fromJson(GameRulesEnum.DOUBLE_PAIR.getValue(),
-                (JSONObject) combinations.get(GameRulesEnum.DOUBLE_PAIR.getValue()));
-        this.threeOfAKind = ColumnDescription.fromJson(GameRulesEnum.THREE_OF_A_KIND.getValue(),
-                (JSONObject) combinations.get(GameRulesEnum.THREE_OF_A_KIND.getValue()));
-        this.fourOfAKind = ColumnDescription.fromJson(GameRulesEnum.FOUR_OF_A_KIND.getValue(),
-                (JSONObject) combinations.get(GameRulesEnum.FOUR_OF_A_KIND.getValue()));
-        this.fullHouse = ColumnDescription.fromJson(GameRulesEnum.FULL_HOUSE.getValue(),
-                (JSONObject) combinations.get(GameRulesEnum.FULL_HOUSE.getValue()));
-
-        this.smallStraight = ColumnDescription.fromJson(GameRulesEnum.SMALL_STRAIGHT.getValue(),
-                (JSONObject) combinations.get(GameRulesEnum.SMALL_STRAIGHT.getValue()));
-        this.largeStraight = ColumnDescription.fromJson(GameRulesEnum.LARGE_STRAIGHT.getValue(),
-                (JSONObject) combinations.get(GameRulesEnum.LARGE_STRAIGHT.getValue()));
-        this.yahtzee = ColumnDescription.fromJson(GameRulesEnum.YAHTZEE.getValue(),
-                (JSONObject) combinations.get(GameRulesEnum.YAHTZEE.getValue()));
-        this.chance = ColumnDescription.fromJson(GameRulesEnum.CHANCE.getValue(),
-                (JSONObject) combinations.get(GameRulesEnum.CHANCE.getValue()));
-        this.finalSum = ColumnDescription.fromJson(GameRulesEnum.FINAL_SUM.getValue(),
-                (JSONObject) combinations.get(GameRulesEnum.FINAL_SUM.getValue()));
+        // Column description
+        JSONArray combinationsArray = (JSONArray) obj.get("combinations");
+        for (Object o : combinationsArray) {
+            JSONObject valueObj = (JSONObject) o;
+            combinations.add(ColumnDescription.fromJson(valueObj));
+        }
     }
 
     @Override
     public String toString() {
         String rulesStr = "GameRules : " + System.lineSeparator();
-        rulesStr += "BonusRow : " + this.partialSum.getSheetIndex() + System.lineSeparator();
+        rulesStr += "BonusRow : " + this.getPartialSum().getSheetIndex() + System.lineSeparator();
         rulesStr += "BonusVal : " + this.bonusVal + System.lineSeparator();
         return rulesStr;
     }
 
     public List<ColumnDescription> getColumnsList() {
-        ColumnDescription[] columnDescriptionsArr = {aces, twos, threes, fours, fives, sixes, partialSum,
-        pair, doublePair, threeOfAKind, fourOfAKind, fullHouse, smallStraight, largeStraight, yahtzee,
-        chance, finalSum};
-        return Arrays.asList(columnDescriptionsArr).stream()
-                .filter(col -> col != null)
+        List<ColumnDescription> descriptions = new ArrayList<>();
+        descriptions.addAll(values);
+        descriptions.addAll(combinations);
+        return descriptions.stream()
+                .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
 
@@ -94,71 +76,38 @@ public class GameRules {
     }
 
     public ColumnDescription getAces() {
-        return aces;
-    }
-
-    public ColumnDescription getTwos() {
-        return twos;
-    }
-
-    public ColumnDescription getThrees() {
-        return threes;
-    }
-
-    public ColumnDescription getFours() {
-        return fours;
-    }
-
-    public ColumnDescription getFives() {
-        return fives;
+        return values.stream()
+                .filter(columnDescription -> GameRulesEnum.ACES.getValue().equals(columnDescription.getTechColumnLabel()))
+                .findFirst()
+                .orElse(null);
     }
 
     public ColumnDescription getSixes() {
-        return sixes;
+        return values.stream()
+                .filter(columnDescription -> GameRulesEnum.SIXES.getValue().equals(columnDescription.getTechColumnLabel()))
+                .findFirst()
+                .orElse(null);
     }
 
     public ColumnDescription getPartialSum() {
-        return partialSum;
-    }
-
-    public ColumnDescription getPair() {
-        return pair;
-    }
-
-    public ColumnDescription getDoublePair() {
-        return doublePair;
-    }
-
-    public ColumnDescription getThreeOfAKind() {
-        return threeOfAKind;
-    }
-
-    public ColumnDescription getFourOfAKind() {
-        return fourOfAKind;
-    }
-
-    public ColumnDescription getFullHouse() {
-        return fullHouse;
-    }
-
-    public ColumnDescription getSmallStraight() {
-        return smallStraight;
-    }
-
-    public ColumnDescription getLargeStraight() {
-        return largeStraight;
+        return values.stream()
+                .filter(columnDescription -> GameRulesEnum.PARTIAL_SUM.getValue().equals(columnDescription.getTechColumnLabel()))
+                .findFirst()
+                .orElse(null);
     }
 
     public ColumnDescription getYahtzee() {
-        return yahtzee;
-    }
-
-    public ColumnDescription getChance() {
-        return chance;
+        return combinations.stream()
+                .filter(columnDescription -> GameRulesEnum.YAHTZEE.getValue().equals(columnDescription.getTechColumnLabel()))
+                .findFirst()
+                .orElse(null);
     }
 
     public ColumnDescription getFinalSum() {
-        return finalSum;
+        return combinations.stream()
+                .filter(columnDescription -> GameRulesEnum.FINAL_SUM.getValue().equals(columnDescription.getTechColumnLabel()))
+                .findFirst()
+                .orElse(null);
     }
 
 }

@@ -4,122 +4,144 @@
     "bonusCond": 84,
     "bonusValue": 100
   },
-  "values": {
-    "aces": {
-      "columnLabel" : "Ones",
+  "values": [
+    {
+      "techColumnId": "aces",
+      "columnLabel" : "Aces",
       "sheetIndex" : 3,
       "maxValue" : 6
     },
-    "twos": {
+    {
+      "techColumnId": "twos",
       "columnLabel" : "Twos",
       "sheetIndex" : 4,
       "maxValue": 12
     },
-    "threes": {
+    {
+      "techColumnId": "threes",
       "columnLabel" : "Threes",
       "sheetIndex" : 5,
       "maxValue" : 18
     },
-    "fours": {
+    {
+      "techColumnId": "fours",
       "columnLabel" : "Fours",
       "sheetIndex" : 6,
       "maxValue": 24
     },
-    "fives": {
+    {
+      "techColumnId": "fives",
       "columnLabel" : "Fives",
       "sheetIndex" : 7,
       "maxValue" : 30
     },
-    "sixes": {
+    {
+      "techColumnId": "sixes",
       "columnLabel" : "Sixes",
       "sheetIndex" : 8,
       "maxValue" : 36
     },
-    "partialSum": {
+    {
+      "techColumnId": "partialSum",
       "columnLabel": "Somme",
       "sheetIndex": 9,
       "maxValue": 176
     }
-  },
-  "combinations" : {
-    "pair": {
+  ],
+  "combinations" : [
+    {
+      "techColumnId": "pair",
       "columnLabel": "Pair",
       "sheetIndex": 11,
       "maxValue": 12
     },
-    "doublePair": {
+    {
+      "techColumnId": "doublePair",
       "columnLabel" : "Two pair",
       "sheetIndex": 12,
       "maxValue": 22
     },
-    "threePair": {
+    {
+      "techColumnId": "threePair",
       "columnLabel" : "Three Pair",
       "sheetIndex": 13,
       "maxValue": 30
     },
-    "threeOfAKind": {
+    {
+      "techColumnId": "threeOfAKind",
       "columnLabel": "Three of a kind",
       "sheetIndex": 14,
       "maxValue": 18
     },
-    "fourOfAKind": {
-      "columnLabel" : "Four of a kind",
+    {
+      "techColumnId": "fourOfAKind",
+      "columnLabel": "Four of a kind",
       "sheetIndex": 15,
       "maxValue": 24
     },
-    "fiveOfAKind": {
+    {
+      "techColumnId": "fiveOfAKind",
       "columnLabel" : "Five of a kind",
       "sheetIndex": 16,
       "maxValue": 30
     },
-    "smallStraight": {
+    {
+      "techColumnId": "smallStraight",
       "columnLabel": "Small straight (1 2 3 4 5)",
       "sheetIndex": 17,
       "maxValue" : 15,
       "fixedValue": true
     },
-    "largeStraight": {
+    {
+      "techColumnId": "largeStraight",
       "columnLabel": "Large straight (2 3 4 5 6)",
       "sheetIndex": 18,
       "maxValue": 20,
       "fixedValue": true
     },
-    "fullStraight": {
+    {
+      "techColumnId": "fullStraight",
       "columnLabel": "Full straight (1 2 3 4 5 6)",
       "sheetIndex": 19,
       "maxValue" : 21,
       "fixedValue": true
     },
-    "cabin": {
+    {
+      "techColumnId": "cabin",
       "columnLabel" : "Cabin (3+2)",
       "sheetIndex" : 20,
       "maxValue": 28
     },
-    "tower": {
+    {
+      "techColumnId": "tower",
       "columnLabel" : "Tower (4+2)",
       "sheetIndex" : 21,
       "maxValue": 34
     },
-    "fullHouse": {
+    {
+      "techColumnId": "fullHouse",
       "columnLabel" : "Full (3+3)",
       "sheetIndex" : 22,
       "maxValue": 33
     },
-    "chance": {
+    {
+      "techColumnId": "chance",
       "columnLabel": "Chance",
       "sheetIndex": 23,
       "maxValue": 36
     },
-    "maxiyatzy": {
+    {
+      "techColumnId": "maxiYatzy",
       "columnLabel" : "MaxiYatzy",
       "sheetIndex": 24,
       "maxValue": 100,
       "fixedValue": true
     },
-    "finalSum": {
+    {
+      "techColumnId": "finalSum",
       "columnLabel": "Somme",
       "sheetIndex": 26,
       "maxValue": 599
     }
-  }
+    ]
 }

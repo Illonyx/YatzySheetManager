@@ -10,6 +10,7 @@ import org.json.simple.parser.ParseException;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +27,7 @@ public class GameRulesLoader {
     }
 
     public List<GameRules> findLoadedGameRules() {
-        List<GameRules> loadedGameRules = new ArrayList<GameRules>();
+        List<GameRules> loadedGameRules = new ArrayList<>();
         for(SheetRulesIdentifiers identifier : SheetRulesIdentifiers.values()) {
             try {
                 GameRules rules = this.loadGameRules(identifier);
@@ -40,8 +41,8 @@ public class GameRulesLoader {
 
     private GameRules loadGameRules(SheetRulesIdentifiers sheetRules) throws RulesNotLoadedException {
         try {
-            String rootPath = Thread.currentThread().getContextClassLoader().getResource("rules").getPath();
-            String appConfigPath = rootPath + File.separator + this.getSheetRulesPath(sheetRules);
+            URL resourceUrl = Thread.currentThread().getContextClassLoader().getResource("rules");
+            String appConfigPath = resourceUrl.getPath() + File.separator + this.getSheetRulesPath(sheetRules);
 
             FileReader reader = new FileReader(appConfigPath);
             JSONParser parser = new JSONParser();
@@ -49,6 +50,8 @@ public class GameRulesLoader {
             return new GameRules(object);
         } catch(IOException | ParseException ex) {
             throw new RulesNotLoadedException("Règles non chargées", "Exception déclenchée" + ex);
+        } catch (Exception ex) {
+            throw new RulesNotLoadedException("Le chemin vers les fichiers de configuration des règles est incorrect.", "Exception déclenchée" + ex);
         }
     }
 
@@ -58,6 +61,11 @@ public class GameRulesLoader {
             case YATZY:
                 extension = "scandinavian-yatzy-rules.json";
                 break;
+
+            case MAXI_YATZY:
+                extension = "scandinavian-maxiyatzy-rules.json";
+                break;
+
             default:
                 //DO NOTHING
                 break;

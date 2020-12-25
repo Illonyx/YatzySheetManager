@@ -2,7 +2,7 @@ package com.bigbeard.yatzystats.core.rules;
 
 public enum SheetRulesIdentifiers {
    YATZY("Yatzy - Scandinavian Yathzee"),
-   MEGA_YATZY("Mega Yatzy - 6 dice Scandinavian Yathzee");
+   MAXI_YATZY("Maxi Yatzy - 6 dice Scandinavian Yathzee");
 
    private String value;
 
