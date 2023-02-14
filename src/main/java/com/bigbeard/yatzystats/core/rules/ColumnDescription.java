@@ -26,7 +26,7 @@ public class ColumnDescription {
         return columnToReturn;
     }
 
-    public String getTechColumnLabel() {
+    public String getTechColumnId() {
         return techColumnId;
     }
 

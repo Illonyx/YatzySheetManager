@@ -51,7 +51,7 @@ public class ExcelSheetWriter {
         for (ColumnDescription columnDescription : rules.getColumnsList()) {
             List<String> rowData = new ArrayList<>(List.of(columnDescription.getColumnLabel()));
             boolean isFormula = false;
-            GameRulesEnum rulesEnum = GameRulesEnum.fromValue(columnDescription.getTechColumnLabel());
+            GameRulesEnum rulesEnum = GameRulesEnum.fromValue(columnDescription.getTechColumnId());
 
             switch (rulesEnum) {
                 case PARTIAL_SUM:

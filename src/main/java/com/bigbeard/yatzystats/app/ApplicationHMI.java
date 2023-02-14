@@ -15,7 +15,8 @@ public class ApplicationHMI extends Application {
         PropertyConfigurator.configure("log4j.properties");
 
         //Setting title to the scene
-        primaryStage.setTitle("Yatzy Statistics tool");
+        primaryStage.setResizable(false);
+        primaryStage.setTitle("Yatzy Companion");
         primaryStage.setMinWidth(600);
         primaryStage.setMinHeight(300);
 

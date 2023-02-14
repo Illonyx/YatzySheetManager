@@ -1,11 +1,13 @@
 package com.bigbeard.yatzystats.ui;
 
-import com.bigbeard.yatzystats.config.UserConfigurationModel;
-import com.bigbeard.yatzystats.ui.createsheet.CreateSheetScene;
-import com.bigbeard.yatzystats.ui.statistics.settings.GamemodeScene;
-import com.bigbeard.yatzystats.ui.statistics.settings.GamesChoiceScene;
-import com.bigbeard.yatzystats.ui.statistics.statsmod.ConfrontationsScene;
-import com.bigbeard.yatzystats.ui.statistics.statsmod.StatsModScene;
+import com.bigbeard.yatzystats.ui.models.BaseUserModel;
+import com.bigbeard.yatzystats.ui.models.CreateSheetsUserModel;
+import com.bigbeard.yatzystats.ui.models.StatsSheetsUserModel;
+import com.bigbeard.yatzystats.ui.scenes.createsheet.CreateSheetScene;
+import com.bigbeard.yatzystats.ui.scenes.statistics.settings.GamemodeScene;
+import com.bigbeard.yatzystats.ui.scenes.statistics.settings.GamesChoiceScene;
+import com.bigbeard.yatzystats.ui.scenes.statistics.statsmod.ConfrontationsScene;
+import com.bigbeard.yatzystats.ui.scenes.statistics.statsmod.StatsModScene;
 import javafx.stage.Stage;
 import org.apache.log4j.Logger;
 
@@ -13,13 +15,13 @@ public class WindowNavigation {
 
     private UiScene currentScene;
     private Stage stage;
-    private UserConfigurationModel model;
+    private BaseUserModel model;
     private Logger logger = Logger.getLogger(WindowNavigation.class);
 
 
     public WindowNavigation(Stage stage){
         this.stage = stage;
-        this.model = new UserConfigurationModel();
+        this.model = new StatsSheetsUserModel();
     }
 
     public void initApp() {
@@ -32,7 +34,7 @@ public class WindowNavigation {
         return stage;
     }
 
-    public UserConfigurationModel getModel() {
+    public BaseUserModel getModel() {
         return model;
     }
 
@@ -62,6 +64,7 @@ public class WindowNavigation {
 
             case CREATE_SHEET_SCENE:
                 this.currentScene = new CreateSheetScene(this);
+                this.model = new CreateSheetsUserModel();
                 break;
 
             default:

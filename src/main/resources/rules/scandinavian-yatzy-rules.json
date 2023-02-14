@@ -7,39 +7,39 @@
   "values": [
     {
       "techColumnId": "aces",
-      "columnLabel" : "Les 1",
-      "sheetIndex" : 3,
-      "maxValue" : 5
+      "columnLabel": "Les 1",
+      "sheetIndex": 3,
+      "maxValue": 5
     },
     {
       "techColumnId": "twos",
-      "columnLabel" : "Les 2",
-      "sheetIndex" : 4,
+      "columnLabel": "Les 2",
+      "sheetIndex": 4,
       "maxValue": 10
     },
     {
       "techColumnId": "threes",
-      "columnLabel" : "Les 3",
-      "sheetIndex" : 5,
-      "maxValue" : 15
+      "columnLabel": "Les 3",
+      "sheetIndex": 5,
+      "maxValue": 15
     },
     {
       "techColumnId": "fours",
-      "columnLabel" : "Les 4",
-      "sheetIndex" : 6,
+      "columnLabel": "Les 4",
+      "sheetIndex": 6,
       "maxValue": 20
     },
     {
       "techColumnId": "fives",
-      "columnLabel" : "Les 5",
-      "sheetIndex" : 7,
-      "maxValue" : 25
+      "columnLabel": "Les 5",
+      "sheetIndex": 7,
+      "maxValue": 25
     },
     {
       "techColumnId": "sixes",
-      "columnLabel" : "Les 6",
-      "sheetIndex" : 8,
-      "maxValue" : 30
+      "columnLabel": "Les 6",
+      "sheetIndex": 8,
+      "maxValue": 30
     },
     {
       "techColumnId": "partialSum",
@@ -48,7 +48,7 @@
       "maxValue": 155
     }
   ],
-  "combinations" : [
+  "combinations": [
     {
       "techColumnId": "pair",
       "columnLabel": "Paire",
@@ -69,21 +69,21 @@
     },
     {
       "techColumnId": "fourOfAKind",
-      "columnLabel" : "Carré",
+      "columnLabel": "Carré",
       "sheetIndex": 14,
       "maxValue": 24
     },
     {
       "techColumnId": "fullHouse",
-      "columnLabel" : "Full",
-      "sheetIndex" : 15,
+      "columnLabel": "Full",
+      "sheetIndex": 15,
       "maxValue": 28
     },
     {
       "techColumnId": "smallStraight",
       "columnLabel": "Petite suite",
       "sheetIndex": 16,
-      "maxValue" : 15,
+      "maxValue": 15,
       "fixedValue": true
     },
     {
@@ -95,7 +95,7 @@
     },
     {
       "techColumnId": "yahtzee",
-      "columnLabel" : "Yatzee",
+      "columnLabel": "Yatzee",
       "sheetIndex": 18,
       "maxValue": 50,
       "fixedValue": true

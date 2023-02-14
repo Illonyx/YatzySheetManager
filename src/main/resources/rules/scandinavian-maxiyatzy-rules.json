@@ -7,39 +7,39 @@
   "values": [
     {
       "techColumnId": "aces",
-      "columnLabel" : "Aces",
-      "sheetIndex" : 3,
-      "maxValue" : 6
+      "columnLabel": "Aces",
+      "sheetIndex": 3,
+      "maxValue": 6
     },
     {
       "techColumnId": "twos",
-      "columnLabel" : "Twos",
-      "sheetIndex" : 4,
+      "columnLabel": "Twos",
+      "sheetIndex": 4,
       "maxValue": 12
     },
     {
       "techColumnId": "threes",
-      "columnLabel" : "Threes",
-      "sheetIndex" : 5,
-      "maxValue" : 18
+      "columnLabel": "Threes",
+      "sheetIndex": 5,
+      "maxValue": 18
     },
     {
       "techColumnId": "fours",
-      "columnLabel" : "Fours",
-      "sheetIndex" : 6,
+      "columnLabel": "Fours",
+      "sheetIndex": 6,
       "maxValue": 24
     },
     {
       "techColumnId": "fives",
-      "columnLabel" : "Fives",
-      "sheetIndex" : 7,
-      "maxValue" : 30
+      "columnLabel": "Fives",
+      "sheetIndex": 7,
+      "maxValue": 30
     },
     {
       "techColumnId": "sixes",
-      "columnLabel" : "Sixes",
-      "sheetIndex" : 8,
-      "maxValue" : 36
+      "columnLabel": "Sixes",
+      "sheetIndex": 8,
+      "maxValue": 36
     },
     {
       "techColumnId": "partialSum",
@@ -48,7 +48,7 @@
       "maxValue": 176
     }
   ],
-  "combinations" : [
+  "combinations": [
     {
       "techColumnId": "pair",
       "columnLabel": "Pair",
@@ -57,13 +57,13 @@
     },
     {
       "techColumnId": "doublePair",
-      "columnLabel" : "Two pair",
+      "columnLabel": "Two pair",
       "sheetIndex": 12,
       "maxValue": 22
     },
     {
       "techColumnId": "threePair",
-      "columnLabel" : "Three Pair",
+      "columnLabel": "Three Pair",
       "sheetIndex": 13,
       "maxValue": 30
     },
@@ -81,7 +81,7 @@
     },
     {
       "techColumnId": "fiveOfAKind",
-      "columnLabel" : "Five of a kind",
+      "columnLabel": "Five of a kind",
       "sheetIndex": 16,
       "maxValue": 30
     },
@@ -89,7 +89,7 @@
       "techColumnId": "smallStraight",
       "columnLabel": "Small straight (1 2 3 4 5)",
       "sheetIndex": 17,
-      "maxValue" : 15,
+      "maxValue": 15,
       "fixedValue": true
     },
     {
@@ -103,25 +103,25 @@
       "techColumnId": "fullStraight",
       "columnLabel": "Full straight (1 2 3 4 5 6)",
       "sheetIndex": 19,
-      "maxValue" : 21,
+      "maxValue": 21,
       "fixedValue": true
     },
     {
       "techColumnId": "cabin",
-      "columnLabel" : "Cabin (3+2)",
-      "sheetIndex" : 20,
+      "columnLabel": "Cabin (3+2)",
+      "sheetIndex": 20,
       "maxValue": 28
     },
     {
       "techColumnId": "tower",
-      "columnLabel" : "Tower (4+2)",
-      "sheetIndex" : 21,
+      "columnLabel": "Tower (4+2)",
+      "sheetIndex": 21,
       "maxValue": 34
     },
     {
       "techColumnId": "fullHouse",
-      "columnLabel" : "Full (3+3)",
-      "sheetIndex" : 22,
+      "columnLabel": "Full (3+3)",
+      "sheetIndex": 22,
       "maxValue": 33
     },
     {
@@ -132,7 +132,7 @@
     },
     {
       "techColumnId": "maxiYatzy",
-      "columnLabel" : "MaxiYatzy",
+      "columnLabel": "MaxiYatzy",
       "sheetIndex": 24,
       "maxValue": 100,
       "fixedValue": true
@@ -143,5 +143,5 @@
       "sheetIndex": 26,
       "maxValue": 599
     }
-    ]
+  ]
 }

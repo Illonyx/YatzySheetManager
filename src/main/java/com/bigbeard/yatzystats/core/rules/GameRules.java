@@ -4,7 +4,6 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -77,35 +76,35 @@ public class GameRules {
 
     public ColumnDescription getAces() {
         return values.stream()
-                .filter(columnDescription -> GameRulesEnum.ACES.getValue().equals(columnDescription.getTechColumnLabel()))
+                .filter(columnDescription -> GameRulesEnum.ACES.getValue().equals(columnDescription.getTechColumnId()))
                 .findFirst()
                 .orElse(null);
     }
 
     public ColumnDescription getSixes() {
         return values.stream()
-                .filter(columnDescription -> GameRulesEnum.SIXES.getValue().equals(columnDescription.getTechColumnLabel()))
+                .filter(columnDescription -> GameRulesEnum.SIXES.getValue().equals(columnDescription.getTechColumnId()))
                 .findFirst()
                 .orElse(null);
     }
 
     public ColumnDescription getPartialSum() {
         return values.stream()
-                .filter(columnDescription -> GameRulesEnum.PARTIAL_SUM.getValue().equals(columnDescription.getTechColumnLabel()))
+                .filter(columnDescription -> GameRulesEnum.PARTIAL_SUM.getValue().equals(columnDescription.getTechColumnId()))
                 .findFirst()
                 .orElse(null);
     }
 
     public ColumnDescription getYahtzee() {
         return combinations.stream()
-                .filter(columnDescription -> GameRulesEnum.YAHTZEE.getValue().equals(columnDescription.getTechColumnLabel()))
+                .filter(columnDescription -> GameRulesEnum.YAHTZEE.getValue().equals(columnDescription.getTechColumnId()))
                 .findFirst()
                 .orElse(null);
     }
 
     public ColumnDescription getFinalSum() {
         return combinations.stream()
-                .filter(columnDescription -> GameRulesEnum.FINAL_SUM.getValue().equals(columnDescription.getTechColumnLabel()))
+                .filter(columnDescription -> GameRulesEnum.FINAL_SUM.getValue().equals(columnDescription.getTechColumnId()))
                 .findFirst()
                 .orElse(null);
     }

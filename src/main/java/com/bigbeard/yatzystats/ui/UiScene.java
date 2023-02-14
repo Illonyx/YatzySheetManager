@@ -1,22 +1,26 @@
 package com.bigbeard.yatzystats.ui;
 
-import com.bigbeard.yatzystats.config.UserConfigurationModel;
+import com.bigbeard.yatzystats.ui.models.StatsSheetsUserModel;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.layout.GridPane;
+import javafx.scene.image.Image;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
+
+import java.net.URL;
 
 public abstract class UiScene {
 
     private Stage stage;
-    private UserConfigurationModel model;
+    private StatsSheetsUserModel model;
     private UiSceneRole role;
     private WindowNavigation windowNavigation;
 
@@ -29,7 +33,7 @@ public abstract class UiScene {
     public abstract boolean isViewValid();
 
 
-    public UserConfigurationModel getModel(){
+    public StatsSheetsUserModel getModel(){
         return this.windowNavigation.getModel();
     }
 
@@ -62,6 +66,16 @@ public abstract class UiScene {
                 if(!needsValidation || (needsValidation && isViewValid())) windowNavigation.loadScene(targetSceneRole);
             }
         });
+        navButton.setOnMouseEntered(new EventHandler<javafx.scene.input.MouseEvent>() {
+            public void handle(javafx.scene.input.MouseEvent me) {
+                getStage().getScene().setCursor(Cursor.HAND); //Change cursor to hand
+            }
+        });
+        navButton.setOnMouseExited(new EventHandler<javafx.scene.input.MouseEvent>() {
+            public void handle(javafx.scene.input.MouseEvent me) {
+                getStage().getScene().setCursor(Cursor.DEFAULT);
+            }
+        });
         return navButton;
     }
 
@@ -91,4 +105,13 @@ public abstract class UiScene {
         comboBox.setPrefSize(300,30);
         return comboBox;
     }
+
+    public BackgroundImage getBackgroundImage() {
+        URL resourceUrl = getClass().getClassLoader().getResource("icon/background.png");
+        Image image = new Image("file:" + resourceUrl.getPath());
+        BackgroundSize size = new BackgroundSize(this.getStage().getWidth(), this.getStage().getHeight(),
+                false, false, true, false);
+        return new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.ROUND, BackgroundPosition.DEFAULT, size);
+    }
+
 }

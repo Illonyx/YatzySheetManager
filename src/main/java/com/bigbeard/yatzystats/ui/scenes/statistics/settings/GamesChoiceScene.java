@@ -1,6 +1,6 @@
-package com.bigbeard.yatzystats.ui.statistics.settings;
+package com.bigbeard.yatzystats.ui.scenes.statistics.settings;
 
-import com.bigbeard.yatzystats.config.UserConfigurationModel;
+import com.bigbeard.yatzystats.ui.models.StatsSheetsUserModel;
 import com.bigbeard.yatzystats.core.sheets.SheetDto;
 import com.bigbeard.yatzystats.ui.UiScene;
 import com.bigbeard.yatzystats.ui.UiSceneRole;
@@ -10,12 +10,12 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.cell.CheckBoxListCell;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 public class GamesChoiceScene extends UiScene {
 
     private Stage stage;
-    private UserConfigurationModel model;
+    private StatsSheetsUserModel model;
     private GridPane gridPane;
     private TextArea textArea;
     private Map<String, Boolean> listCheckboxValues = new HashMap<>();
@@ -41,6 +41,9 @@ public class GamesChoiceScene extends UiScene {
 
     private void initComponents(){
         this.gridPane = this.getDefaultGridPaneConfig();
+
+        // Chargement du logo principal
+        this.gridPane.setBackground(new Background(this.getBackgroundImage()));
 
         this.textArea = new TextArea();
         this.textArea.setEditable(false);

@@ -1,4 +1,4 @@
-package com.bigbeard.yatzystats.ui.statistics.statsmod;
+package com.bigbeard.yatzystats.ui.scenes.statistics.statsmod;
 
 import com.bigbeard.yatzystats.core.players.ConfrontationDTO;
 import com.bigbeard.yatzystats.ui.UiScene;
@@ -9,13 +9,12 @@ import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import org.apache.log4j.Logger;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 public class ConfrontationsScene extends UiScene {
 
@@ -32,6 +31,9 @@ public class ConfrontationsScene extends UiScene {
     private void initComponents() {
 
         this.gridPane = this.getDefaultGridPaneConfig();
+
+        // Chargement du logo principal
+        this.gridPane.setBackground(new Background(this.getBackgroundImage()));
 
         //Switch stats button
         Button confrontationsButton = this.getWindowNavigationButton("Stats view",

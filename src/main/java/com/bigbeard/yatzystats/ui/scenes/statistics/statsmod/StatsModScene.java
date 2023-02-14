@@ -1,6 +1,6 @@
-package com.bigbeard.yatzystats.ui.statistics.statsmod;
+package com.bigbeard.yatzystats.ui.scenes.statistics.statsmod;
 
-import com.bigbeard.yatzystats.config.UserConfigurationModel;
+import com.bigbeard.yatzystats.ui.models.StatsSheetsUserModel;
 import com.bigbeard.yatzystats.core.players.PlayerResult;
 import com.bigbeard.yatzystats.core.players.StatsModule;
 import com.bigbeard.yatzystats.ui.UiScene;
@@ -10,6 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
@@ -18,7 +19,7 @@ import java.util.List;
 public class StatsModScene extends UiScene {
 
     private Stage stage;
-    private UserConfigurationModel model;
+    private StatsSheetsUserModel model;
     private GridPane gridPane;
 
     private ComboBox comboBox;
@@ -32,6 +33,9 @@ public class StatsModScene extends UiScene {
 
     private void initComponents() {
         this.gridPane = this.getDefaultGridPaneConfig();
+
+        // Chargement du logo principal
+        this.gridPane.setBackground(new Background(this.getBackgroundImage()));
 
         this.textArea = new TextArea();
         this.textArea.setEditable(false);

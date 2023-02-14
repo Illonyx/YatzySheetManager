@@ -1,23 +1,24 @@
-package com.bigbeard.yatzystats.ui.statistics.settings;
+package com.bigbeard.yatzystats.ui.scenes.statistics.settings;
 
-import com.bigbeard.yatzystats.config.UserConfigurationModel;
+import com.bigbeard.yatzystats.ui.models.StatsSheetsUserModel;
 import com.bigbeard.yatzystats.core.rules.SheetRulesIdentifiers;
 import com.bigbeard.yatzystats.exceptions.FileNotLoadedException;
 import com.bigbeard.yatzystats.exceptions.RulesNotLoadedException;
 import com.bigbeard.yatzystats.ui.UiScene;
 import com.bigbeard.yatzystats.ui.UiSceneRole;
 import com.bigbeard.yatzystats.ui.WindowNavigation;
+import com.bigbeard.yatzystats.ui.theming.UIButtonTheming;
+import com.bigbeard.yatzystats.ui.theming.UITheming;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -35,7 +36,7 @@ public class GamemodeScene extends UiScene {
 
     private GridPane gridPane;
     private Stage stage;
-    private UserConfigurationModel model;
+    private StatsSheetsUserModel model;
 
     private ComboBox gameModeComboBox;
     private TextField selectedFilePathTextField;
@@ -48,11 +49,17 @@ public class GamemodeScene extends UiScene {
     private void initComponents() {
         this.gridPane = this.getDefaultGridPaneConfig();
 
+        // Chargement du logo principal
+        this.gridPane.setBackground(new Background(this.getBackgroundImage()));
+
+        UIButtonTheming theming = new UIButtonTheming();
         Text mainLabel = new Text("Etape 1 : Sélection du fichier de parties et du mode de jeu");
+        UITheming.getInstance().applyTextTheming(mainLabel, theming);
         this.gridPane.add(mainLabel, 0,0,3,1);
 
         //1. Choix du fichier
         Text chooseFileLabel = new Text("Fichier de parties : ");
+        UITheming.getInstance().applyTextTheming(chooseFileLabel, theming);
         this.gridPane.add(chooseFileLabel, 1,2, 2,1);
 
         this.selectedFilePathTextField = new TextField();
@@ -64,6 +71,7 @@ public class GamemodeScene extends UiScene {
 
         //2. Choix du mode de jeu
         Text selectGamemodeLabel = new Text("Choix du mode de jeu :");
+        UITheming.getInstance().applyTextTheming(selectGamemodeLabel, theming);
         this.gridPane.add(selectGamemodeLabel, 1,4, 2,1);
 
         ObservableList<String> options =
