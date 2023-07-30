@@ -6,7 +6,9 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="yatzystats-core" />
         <module name="yatzySheetManager" />
+        <module name="yatzystats-ui" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
