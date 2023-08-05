@@ -12,7 +12,8 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 
@@ -21,7 +22,7 @@ public class ConfrontationsScene extends UiScene {
     private GridPane gridPane;
     private ComboBox comboPlayer1, comboPlayer2;
     private Text globalText;
-    private Logger logger = Logger.getLogger(ConfrontationsScene.class);
+    private Logger logger = LogManager.getLogger(ConfrontationsScene.class);
 
     public ConfrontationsScene(WindowNavigation navigation){
         super(navigation, UiSceneRole.CONFRONTATIONS_SCENE);

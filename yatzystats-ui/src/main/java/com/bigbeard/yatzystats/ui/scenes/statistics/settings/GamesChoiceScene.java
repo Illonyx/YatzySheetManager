@@ -10,8 +10,11 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.cell.CheckBoxListCell;
@@ -74,6 +77,17 @@ public class GamesChoiceScene extends UiScene {
 
         //Button to go to the stats module
         this.gridPane.add(this.getNextSceneButton(), 10, 10, 3, 2);
+
+        //Master toogle
+        Button selectAllButton = new Button("Tout sélectionner");
+        selectAllButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                list.getSelectionModel().selectAll();
+                list.refresh();
+            }
+        });
+        this.gridPane.add(selectAllButton, 0,10, 3, 2);
     }
 
     private void updateTextarea(String selectedItem){
@@ -91,7 +105,7 @@ public class GamesChoiceScene extends UiScene {
                 .filter(stringBooleanEntry -> stringBooleanEntry.getValue() == true)
                 .map(stringBooleanEntry -> stringBooleanEntry.getKey())
                 .collect(Collectors.toList());
-        if(selectedSheets.size() == 0){
+        if(selectedSheets.isEmpty()){
             Alert alert = super.createErrorAlert("Pas de choix de sélection", "", "Aucune feuille n'a été sélectionnée.");
             alert.showAndWait();
             return false;

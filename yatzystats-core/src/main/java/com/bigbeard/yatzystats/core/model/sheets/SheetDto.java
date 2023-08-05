@@ -58,11 +58,11 @@ public class SheetDto {
 
     @Override
     public String toString(){
-        String sheetContent = "Players :" + System.lineSeparator();
+        StringBuilder sheetContent = new StringBuilder("Players :" + System.lineSeparator());
         for(PlayerResult p : playerList){
-            sheetContent += p.getPlayerName() + " : " + p.getScore() + System.lineSeparator();
+            sheetContent.append(p.getPlayerName()).append(" : ").append(p.getScore()).append(System.lineSeparator());
         }
 
-        return sheetContent;
+        return sheetContent.toString();
     }
 }

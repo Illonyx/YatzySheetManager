@@ -1,19 +1,21 @@
 package com.bigbeard.yatzystats.core.model.rules;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+class Bonus {
+    Long bonusCond;
+    Long bonusValue;
+}
+
 public class GameRules {
 
     private String formatName;
 
-    private Long bonusCond;
-    private Long bonusVal;
+    //Bonus
+    private Bonus bonus;
 
     // Values
     private List<ColumnDescription> values = new ArrayList<>();
@@ -24,32 +26,13 @@ public class GameRules {
     public GameRules() {
     }
 
-    public GameRules(JSONObject obj) {
-        // General infos
-        this.formatName = (String) obj.get("formatName");
-        this.bonusCond = (Long) ((JSONObject) obj.get("bonus")).get("bonusCond");
-        this.bonusVal = (Long) ((JSONObject) obj.get("bonus")).get("bonusValue");
-
-        // Column description
-        JSONArray valuesArray = (JSONArray) obj.get("values");
-        for (Object value : valuesArray) {
-            JSONObject valueObj = (JSONObject) value;
-            values.add(ColumnDescription.fromJson(valueObj));
-        }
-
-        // Column description
-        JSONArray combinationsArray = (JSONArray) obj.get("combinations");
-        for (Object o : combinationsArray) {
-            JSONObject valueObj = (JSONObject) o;
-            combinations.add(ColumnDescription.fromJson(valueObj));
-        }
-    }
-
     @Override
     public String toString() {
         String rulesStr = "GameRules : " + System.lineSeparator();
         rulesStr += "BonusRow : " + this.getPartialSum().getSheetIndex() + System.lineSeparator();
-        rulesStr += "BonusVal : " + this.bonusVal + System.lineSeparator();
+        rulesStr += "BonusCond : " + this.bonus.bonusCond + System.lineSeparator();
+        rulesStr += "BonusVal : " + this.bonus.bonusValue + System.lineSeparator();
+        rulesStr += "Sixes TechColumnId : " + this.getSixes().getTechColumnId() + System.lineSeparator();
         return rulesStr;
     }
 
@@ -67,11 +50,11 @@ public class GameRules {
     }
 
     public Long getBonusCond() {
-        return bonusCond;
+        return this.bonus.bonusCond;
     }
 
     public Long getBonusVal() {
-        return bonusVal;
+        return this.bonus.bonusValue;
     }
 
     public ColumnDescription getAces() {

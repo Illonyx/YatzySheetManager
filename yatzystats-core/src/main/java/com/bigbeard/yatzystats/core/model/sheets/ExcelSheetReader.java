@@ -2,6 +2,8 @@ package com.bigbeard.yatzystats.core.model.sheets;
 
 import com.bigbeard.yatzystats.core.exceptions.CellNotFoundException;
 import com.bigbeard.yatzystats.core.model.rules.GameRules;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -14,6 +16,8 @@ public class ExcelSheetReader implements SheetReader {
     private Sheet sheet;
     private FormulaEvaluator evaluator;
     private ExcelSheetFacade facade;
+
+    private Logger logger = LogManager.getLogger(ExcelSheetReader.class);
 
     public ExcelSheetReader(GameRules gameRules, Sheet sheet, FormulaEvaluator evaluator){
         this.gameRules = gameRules;
@@ -58,7 +62,9 @@ public class ExcelSheetReader implements SheetReader {
         final int playerIndex = facade.findPlayerIndex(this.sheet, targetName);
         try {
             Cell cell = facade.readCell(this.sheet, this.gameRules.getFinalSum().getSheetIndex().intValue(), playerIndex);
-            return (int) cell.getNumericCellValue();
+            int sumVal = (int) cell.getNumericCellValue();
+            if(sumVal == 0) throw new Exception();
+            return sumVal;
         } catch(Exception e){
             throw new CellNotFoundException("score", this.gameRules.getFinalSum().getSheetIndex().intValue());
         }

@@ -1,7 +1,5 @@
 package com.bigbeard.yatzystats.core.model.rules;
 
-import org.json.simple.JSONObject;
-
 public class ColumnDescription {
     private String techColumnId;
     private String columnLabel;
@@ -13,17 +11,6 @@ public class ColumnDescription {
         this.columnLabel = columnLabel;
         this.sheetIndex = sheetIndex;
         this.maxValue = maxValue;
-    }
-
-    public static ColumnDescription fromJson(JSONObject obj) {
-        String techColumnId = (String) obj.get("techColumnId");
-        String columnLabel = (String) obj.get("columnLabel");
-        Long sheetIndex = (Long) obj.get("sheetIndex") - 1;
-        Long maxValue = (Long) obj.get("maxValue");
-        ColumnDescription columnToReturn =
-                new ColumnDescription(techColumnId, columnLabel, sheetIndex, maxValue);
-        if (obj.get("fixedValue") != null) columnToReturn.setFixedValue(true);
-        return columnToReturn;
     }
 
     public String getTechColumnId() {

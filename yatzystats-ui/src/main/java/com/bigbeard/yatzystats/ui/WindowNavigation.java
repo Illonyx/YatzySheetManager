@@ -9,14 +9,15 @@ import com.bigbeard.yatzystats.ui.scenes.statistics.settings.GamesChoiceScene;
 import com.bigbeard.yatzystats.ui.scenes.statistics.statsmod.ConfrontationsScene;
 import com.bigbeard.yatzystats.ui.scenes.statistics.statsmod.StatsModScene;
 import javafx.stage.Stage;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class WindowNavigation {
 
     private UiScene currentScene;
     private Stage stage;
     private BaseUserModel model;
-    private Logger logger = Logger.getLogger(WindowNavigation.class);
+    private Logger logger = LogManager.getLogger(WindowNavigation.class);
 
 
     public WindowNavigation(Stage stage){

@@ -5,18 +5,20 @@ import com.bigbeard.yatzystats.core.model.rules.GameRules;
 import com.bigbeard.yatzystats.core.model.rules.SheetRulesIdentifiers;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.net.URL;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class GameRulesLoader {
 
     private GameRules gameRules;
+
+    private Logger logger = LogManager.getLogger(GameRulesLoader.class);
 
     public GameRulesLoader(SheetRulesIdentifiers sheetRules) throws RulesNotLoadedException {
        this.gameRules = this.loadGameRules(sheetRules);
@@ -40,14 +42,14 @@ public class GameRulesLoader {
     }
 
     private GameRules loadGameRules(SheetRulesIdentifiers sheetRules) throws RulesNotLoadedException {
+        final Gson gson = new GsonBuilder().create();
+        ClassLoader classLoader = getClass().getClassLoader();
+        InputStream inputStream = classLoader.getResourceAsStream(this.getSheetRulesPath(sheetRules));
+        assert inputStream != null;
+        Reader reader = new InputStreamReader(inputStream);
         try {
-            URL resourceUrl = Thread.currentThread().getContextClassLoader().getResource("rules");
-            String appConfigPath = resourceUrl.getPath() + File.separator + this.getSheetRulesPath(sheetRules);
-            final Gson gson = new GsonBuilder().create();
-
-            FileReader reader = new FileReader(appConfigPath);
             return gson.fromJson(reader, GameRules.class);
-        } catch(IOException | JsonSyntaxException ex) {
+        } catch(JsonSyntaxException | JsonIOException ex) {
             throw new RulesNotLoadedException("Règles non chargées", "Exception déclenchée" + ex);
         } catch (Exception ex) {
             throw new RulesNotLoadedException("Le chemin vers les fichiers de configuration des règles est incorrect.", "Exception déclenchée" + ex);
@@ -55,21 +57,21 @@ public class GameRulesLoader {
     }
 
     private String getSheetRulesPath(SheetRulesIdentifiers sheetRules){
-        String extension = "";
+        String path = "rules" + File.separator;
         switch(sheetRules) {
             case YATZY:
-                extension = "scandinavian-yatzy-rules.json";
+                path += "scandinavian-yatzy-rules.json";
                 break;
 
             case MAXI_YATZY:
-                extension = "scandinavian-maxiyatzy-rules.json";
+                path += "scandinavian-maxiyatzy-rules.json";
                 break;
 
             default:
                 //DO NOTHING
                 break;
         }
-        return extension;
+        return path;
     }
 
 }

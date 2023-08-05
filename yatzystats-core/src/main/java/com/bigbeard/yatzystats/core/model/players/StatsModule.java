@@ -20,7 +20,7 @@ public class StatsModule {
 
     public String givePercentageOf(int numbersOf, int numbersAll){
         double percentage = 100.0*numbersOf/numbersAll;
-        return String.valueOf(percentage) + "% (" + numbersOf + "/" + numbersAll + ")";
+        return String.valueOf(Math.ceil(percentage)) + "% (" + numbersOf + "/" + numbersAll + ")";
     }
 
     public double getMean(List<PlayerResult> playerResults){

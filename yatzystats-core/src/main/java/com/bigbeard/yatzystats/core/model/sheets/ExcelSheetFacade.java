@@ -42,7 +42,7 @@ public class ExcelSheetFacade {
 	public Cell readCell(org.apache.poi.ss.usermodel.Sheet sheet, int row, int column)
 	{
 		Cell cellToReturn = null;
-		Row yatzyRow = sheet.getRow(row);
+		Row yatzyRow = sheet.getRow(--row);
 		java.util.Iterator<Cell> itYatzy = yatzyRow.iterator();
 		while(itYatzy.hasNext()) {
 			Cell currentCell = itYatzy.next();

@@ -1,11 +1,12 @@
-package com.bigbeard.yatzystats.config;
+package com.bigbeard.yatzystats.core.config;
 
-import com.bigbeard.yatzystats.BaseTest;
-import com.bigbeard.yatzystats.config.writers.ExcelSheetWriter;
-import com.bigbeard.yatzystats.core.rules.GameRules;
-import com.bigbeard.yatzystats.core.rules.SheetRulesIdentifiers;
-import com.bigbeard.yatzystats.exceptions.RulesNotLoadedException;
-import org.apache.log4j.Logger;
+import com.bigbeard.yatzystats.core.config.writers.ExcelSheetWriter;
+import com.bigbeard.yatzystats.core.exceptions.RulesNotLoadedException;
+import com.bigbeard.yatzystats.core.model.rules.GameRules;
+import com.bigbeard.yatzystats.core.model.rules.SheetRulesIdentifiers;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -13,13 +14,11 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 
-import static org.junit.Assert.fail;
-
-public class ExcelSheetWriterTest extends BaseTest {
+public class ExcelSheetWriterTest {
 
     public final String SC_YATZY_TEST_PATH = "feuille_calcul_yatzee.xlsx";
     public final String SC_YATZY_TEST_NEW_PATH = "feuille_calcul_yatzee_new.xlsx";
-    private Logger logger = Logger.getLogger(ExcelSheetWriterTest.class);
+    private Logger logger = LogManager.getLogger(ExcelSheetWriterTest.class);
 
     @Test
     @DisplayName("Ecriture d'un fichier Excel Yatzy")
@@ -41,7 +40,7 @@ public class ExcelSheetWriterTest extends BaseTest {
 
         } catch (IOException | RulesNotLoadedException ex) {
             logger.error("Erreur" + ex);
-            fail();
+            Assertions.fail();
         }
     }
 
@@ -65,7 +64,7 @@ public class ExcelSheetWriterTest extends BaseTest {
 
         } catch (IOException | RulesNotLoadedException ex) {
             logger.error("Erreur" + ex);
-            fail();
+            Assertions.fail();
         }
     }
 

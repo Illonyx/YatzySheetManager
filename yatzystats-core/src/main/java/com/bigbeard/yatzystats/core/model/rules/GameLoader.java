@@ -13,6 +13,7 @@ import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.Sheet;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -69,7 +70,7 @@ public class GameLoader {
                     int score = playerResult.getScore();
                     playerResult.setWinner(score == bestScore);
                     return playerResult;
-                }).collect(Collectors.toList());
+                }).sorted(Comparator.comparingInt(PlayerResult::getScore).reversed()).collect(Collectors.toList());
 
                 SheetDto sheetDto = new SheetDto(s.getSheetName(), playerResults, bestScore);
                 sheetDtoList.add(sheetDto);
