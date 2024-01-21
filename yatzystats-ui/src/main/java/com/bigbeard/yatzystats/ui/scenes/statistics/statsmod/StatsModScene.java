@@ -64,6 +64,7 @@ public class StatsModScene extends UiScene {
     }
 
     private String showStats(List<PlayerResult> results){
+        List<String> top5high = StatsModule.getInstance().getHighestScores(5,results);
         StringBuffer buff = new StringBuffer();
 
         buff.append("-- Score du joueur --" + System.lineSeparator());
@@ -76,6 +77,7 @@ public class StatsModScene extends UiScene {
         buff.append("Taux de victoires :" + StatsModule.getInstance().getWinRate(results) + System.lineSeparator());
         buff.append("Taux de yatzées :" + StatsModule.getInstance().getYatzyRate(results) + System.lineSeparator());
         buff.append("BonusRate :" + StatsModule.getInstance().getBonusRate(results) + System.lineSeparator());
+        buff.append("Top 5 scores :" + String.join(",", top5high)  + System.lineSeparator());
 
         return buff.toString();
     }

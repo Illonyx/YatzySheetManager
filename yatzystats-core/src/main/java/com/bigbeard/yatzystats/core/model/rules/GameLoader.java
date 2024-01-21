@@ -1,20 +1,15 @@
 package com.bigbeard.yatzystats.core.model.rules;
 
-
 import com.bigbeard.yatzystats.core.exceptions.CellNotFoundException;
 import com.bigbeard.yatzystats.core.exceptions.FileNotLoadedException;
 import com.bigbeard.yatzystats.core.model.players.PlayerResult;
-import com.bigbeard.yatzystats.core.model.sheets.ExcelSheetReader;
 import com.bigbeard.yatzystats.core.model.sheets.SheetDto;
+import com.bigbeard.yatzystats.core.model.sheets.SheetLoader;
 import com.bigbeard.yatzystats.core.model.sheets.SheetReader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.poi.ss.usermodel.FormulaEvaluator;
-import org.apache.poi.ss.usermodel.Sheet;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -22,23 +17,21 @@ import java.util.stream.Collectors;
  */
 public class GameLoader {
 
-    FormulaEvaluator evaluator;
+    SheetLoader sheetLoader;
     GameRules rules;
     List<String> errors = new ArrayList<String>();
     private final Logger logger = LogManager.getLogger(GameLoader.class);
 
-    public GameLoader(GameRules rules, FormulaEvaluator formulaEvaluator) {
+    public GameLoader(GameRules rules, SheetLoader sheetLoader) {
         this.rules = rules;
-        this.evaluator = formulaEvaluator;
+        this.sheetLoader = sheetLoader;
     }
 
-    public List<SheetDto> loadGamesFromMode(List<Sheet> excelSheets) throws FileNotLoadedException {
+    public List<SheetDto> loadGamesFromMode() throws FileNotLoadedException {
         logger.info("Chargement des parties avec les règles suivantes :" + this.rules);
 
         List<SheetDto> sheetDtoList = new ArrayList<SheetDto>();
-        for (Sheet s : excelSheets) {
-            SheetReader sheetReader = new ExcelSheetReader(this.rules, s, this.evaluator);
-
+        for (SheetReader sheetReader : this.sheetLoader.createSheetReaders(this.rules)) {
             try {
                 List<String> players = sheetReader.readPlayerNames();
                 List<PlayerResult> playerResults = new ArrayList<PlayerResult>();
@@ -72,11 +65,11 @@ public class GameLoader {
                     return playerResult;
                 }).sorted(Comparator.comparingInt(PlayerResult::getScore).reversed()).collect(Collectors.toList());
 
-                SheetDto sheetDto = new SheetDto(s.getSheetName(), playerResults, bestScore);
+                SheetDto sheetDto = new SheetDto(sheetReader.getSheetName(), playerResults, bestScore);
                 sheetDtoList.add(sheetDto);
 
             } catch (CellNotFoundException ex) {
-                String error = "Feuille non chargée : " + s.getSheetName() + " - raison :" + ex.getCellLabel();
+                String error = "Feuille non chargée : " + sheetReader.getSheetName() + " - raison :" + ex.getCellLabel();
                 logger.error(error);
                 this.errors.add(error);
             } catch (Exception ex) {
@@ -86,14 +79,29 @@ public class GameLoader {
 
         }
 
-        logger.info("Nombre de parties chargées : " + sheetDtoList.size() + "/" + excelSheets.size());
-        if (sheetDtoList.isEmpty())
+        logger.info("Nombre de parties chargées : " + sheetDtoList.size() + "/" + this.sheetLoader.getSheetNumber());
+        if (sheetDtoList.isEmpty() || !listDuplicateUsingSet(sheetDtoList).isEmpty())
             throw new FileNotLoadedException("Le nombre de parties chargées est de 0", "Vérifiez bien si le format des parties enregistrées dans le fichier Excel est cohérent avec celui des règles utilisées");
         return sheetDtoList;
     }
 
     public List<String> getErrors() {
         return errors;
+    }
+
+    List<PlayerResult> listDuplicateUsingSet(List<SheetDto> list) {
+        List<PlayerResult> duplicates = new ArrayList<>();
+        Set<PlayerResult> set = new HashSet<>();
+        for (SheetDto i : list) {
+            for(PlayerResult pr: i.getPlayerList()){
+                if (set.contains(pr)) {
+                    duplicates.add(pr);
+                } else {
+                    set.add(pr);
+                }
+            }
+        }
+        return duplicates;
     }
 
 }

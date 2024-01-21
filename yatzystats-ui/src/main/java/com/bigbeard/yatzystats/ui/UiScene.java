@@ -1,5 +1,6 @@
 package com.bigbeard.yatzystats.ui;
 
+import com.bigbeard.yatzystats.ui.models.CreateSheetsUserModel;
 import com.bigbeard.yatzystats.ui.models.StatsSheetsUserModel;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -7,6 +8,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -15,7 +17,9 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.URL;
+import java.util.Objects;
 
 public abstract class UiScene {
 
@@ -23,6 +27,7 @@ public abstract class UiScene {
     private StatsSheetsUserModel model;
     private UiSceneRole role;
     private WindowNavigation windowNavigation;
+    private Parent parent;
 
     public UiScene(WindowNavigation windowNavigation, UiSceneRole role){
         this.windowNavigation = windowNavigation;
@@ -37,12 +42,24 @@ public abstract class UiScene {
         return (StatsSheetsUserModel) this.windowNavigation.getModel();
     }
 
+    public CreateSheetsUserModel getSheetCreationModel() {
+        return (CreateSheetsUserModel) this.windowNavigation.getModel();
+    }
+
     public Stage getStage(){
         return this.windowNavigation.getStage();
     }
 
     public UiSceneRole getRole(){
         return this.role;
+    }
+
+    public Parent getParent() {
+        return parent;
+    }
+
+    public void setParent(Parent parent) {
+        this.parent = parent;
     }
 
     // --------------------------------------------------------

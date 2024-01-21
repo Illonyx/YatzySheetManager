@@ -4,133 +4,146 @@ import com.bigbeard.yatzystats.core.model.rules.SheetRulesIdentifiers;
 import com.bigbeard.yatzystats.ui.UiScene;
 import com.bigbeard.yatzystats.ui.UiSceneRole;
 import com.bigbeard.yatzystats.ui.WindowNavigation;
+import com.bigbeard.yatzystats.ui.models.CreateSheetsUserModel;
 import com.bigbeard.yatzystats.ui.theming.UIButtonTheming;
 import com.bigbeard.yatzystats.ui.theming.UITheming;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.fxml.FXML;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
-import javafx.stage.FileChooser;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class CreateSheetScene extends UiScene {
-
-    private GridPane gridPane;
-
     private List<String> players;
-    private ComboBox gameModeComboBox;
-    private TextField selectedFilePathTextField;
+    @FXML Text mainSheetCreationText;
+    @FXML GridPane gridPane;
+    @FXML Button startSheetCreationButton;
+
+    @FXML Text folderCreationText;
+    @FXML TextField directoryTextfield;
+    @FXML Button browseDirectoryButton;
+
+    @FXML Text sheetNumberText;
+    @FXML ComboBox<Integer> sheetNumberCombobox;
+
+    @FXML Text playersText;
+    @FXML TextField playerTextfield;
+    @FXML Button addPlayerButton;
+    @FXML ListView<String> playersListView;
+
+    @FXML Text rulesText;
+    @FXML ComboBox<String> rulesCombobox;
 
     public CreateSheetScene(WindowNavigation navigation) {
         super(navigation, UiSceneRole.CREATE_SHEET_SCENE);
-        this.initComponents();
     }
 
     private void initComponents() {
-        this.gridPane = this.getDefaultGridPaneConfig();
 
         // Chargement du logo principal
-        this.gridPane.setBackground(new Background(this.getBackgroundImage()));
-
+        gridPane.setBackground(new Background(this.getBackgroundImage()));
         UIButtonTheming theming = new UIButtonTheming();
-        Text mainLabel = new Text("Etape 1 : Fichier de parties et du mode de jeu");
-        UITheming.getInstance().applyTextTheming(mainLabel, theming);
-        this.gridPane.add(mainLabel, 0,0,3,1);
 
-        //1. Choix du fichier
-        Text chooseFileLabel = new Text("Fichier de parties : ");
-        UITheming.getInstance().applyTextTheming(chooseFileLabel, theming);
-        this.gridPane.add(chooseFileLabel, 1,2, 2,1);
+        // Labels
+        UITheming.getInstance().applyTextTheming(rulesText, theming);
+        UITheming.getInstance().applyTextTheming(folderCreationText, theming);
+//        folderCreationText.setStyle("-fx-background-image: url('../icons/find.png');" +
+//                "    -fx-background-repeat: no-repeat;" +
+//                "    -fx-background-position: right center;");
+        UITheming.getInstance().applyTextTheming(sheetNumberText, theming);
+        UITheming.getInstance().applyTextTheming(mainSheetCreationText, theming);
+        UITheming.getInstance().applyTextTheming(playersText, theming);
 
-        this.selectedFilePathTextField = new TextField();
-        this.selectedFilePathTextField.setPrefSize(300,30);
-        this.gridPane.add(this.selectedFilePathTextField, 3,2, 5,1);
+        // Folder
+        this.setDirectoryChooserHandler(super.getStage());
 
-        Button selectFileButton = this.getBrowseButton(super.getStage());
-        this.gridPane.add(selectFileButton, 8, 2, 1 ,1);
+        // Sheet number
+        ObservableList<Integer> numberOptions =
+                FXCollections.observableList(
+                        List.of(1,2,5,10,20)
+                );
+        sheetNumberCombobox.setItems(numberOptions);
+        sheetNumberCombobox.setValue(2);
 
-        //2. Texte expliquant le fonctionnement
-        Text selectGamemodeLabel = new Text("Choix du mode de jeu :");
-        UITheming.getInstance().applyTextTheming(selectGamemodeLabel, theming);
-        this.gridPane.add(selectGamemodeLabel, 1,4, 2,1);
+        // Players
+        List<String> playersList = new ArrayList<>();
+        ObservableList<String> playerOptions = FXCollections.observableList(playersList);
+        playersListView.setItems(playerOptions);
+        addPlayerButton.setOnAction(e -> {
+            String val = playerTextfield.getText();
+            if(!val.isEmpty() && !playerOptions.contains(val)) {
+                playersListView.getItems().add(val);
+            }
+        });
 
+        // Rules
         ObservableList<String> options =
                 FXCollections.observableList(
                         Arrays.stream(SheetRulesIdentifiers.values())
                                 .map(SheetRulesIdentifiers::getValue)
                                 .collect(Collectors.toList())
                 );
-        this.gameModeComboBox = new ComboBox(options);
-        this.gameModeComboBox.setValue(SheetRulesIdentifiers.YATZY.getValue());
-        this.gameModeComboBox.setPrefSize(300,30);
-        this.gridPane.add(this.gameModeComboBox,3,4, 5,1);
+        rulesCombobox.setItems(options);
+        rulesCombobox.setValue(SheetRulesIdentifiers.YATZY.getValue());
 
-        // Ce qu'il faut pour créer la feuille !
-
-        // Cinématique - L'utilisateur sélectionne sa partie et ses règles
-
-        // 2.1 On transmettra le path - si le fichier n'est pas un XLSX
-
-        // 2.2
-
-
-        // Le format de la partie
-
-        // La liste des joueurs
-
-        // Utilisation d'une feuille existante pour créer les parties ou création de la feuille à un endroit voulu
-
-        // Pouvoir spécifier le nombre de parties à générer
-
-        // La date de génération (mais pas besoin de la demander)
+        // Button action
+        startSheetCreationButton.setOnAction(actionEvent -> {
+            if(isViewValid()) {
+                System.out.println("ON A REUSSI");
+            }
+        });
     }
 
     @Override
     public Scene getViewScene() {
-        return new Scene(this.gridPane, super.getStage().getMinWidth(), super.getStage().getMinHeight());
+        this.initComponents();
+        return new Scene(this.getParent(), super.getStage().getMinWidth(), super.getStage().getMinHeight());
     }
 
     @Override
     public boolean isViewValid() {
-        return false;
+        // Check
+        if(playersListView.getItems().isEmpty()) {
+            Alert alert = super.createErrorAlert("Pas de choix de joueurs", "", "Aucune joueur n'a été sélectionné.");
+            alert.showAndWait();
+            return false;
+        }
+
+        // Set Data
+        getSheetCreationModel().setPlayers(playersListView.getItems());
+        getSheetCreationModel().setSheetNumber(sheetNumberCombobox.getValue());
+        getSheetCreationModel().setChosenRules(SheetRulesIdentifiers.fromValue(rulesCombobox.getValue()));
+        getSheetCreationModel().confirmFinalWritingPath(directoryTextfield.getText());
+
+        getSheetCreationModel().writeExcelSheet();
+        return true;
     }
 
-    private Button getBrowseButton(Stage stage){
-        Button selectFileButton = new Button("Parcourir");
-        final FileChooser fileChooser = new FileChooser();
-        selectFileButton.setOnAction(
-                new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(final ActionEvent e) {
-                        fileChooser.setTitle("Tu choisis une partie enculé?");
-                        fileChooser.setInitialDirectory(
-                                new File(System.getProperty("user.home"))
-                        );
-                        if(fileChooser.getExtensionFilters().isEmpty()){
-                            fileChooser.getExtensionFilters().addAll(
-                                    new FileChooser.ExtensionFilter("All Files", "*.*"),
-                                    new FileChooser.ExtensionFilter("XLS", "*.xls"),
-                                    new FileChooser.ExtensionFilter("XLSX", "*.xlsx")
-                            );
-                        }
-                        File file = fileChooser.showOpenDialog(stage);
-                        if (file != null) {
-                            selectedFilePathTextField.setText(file.getAbsolutePath());
-                        }
+    private void setDirectoryChooserHandler(Stage stage){
+        final DirectoryChooser directoryChooser = new DirectoryChooser();
+        browseDirectoryButton.setOnAction(
+                e -> {
+                    directoryChooser.setTitle("Choix du répertoire de création");
+                    directoryChooser.setInitialDirectory(
+                            new File(System.getProperty("user.home"))
+                    );
+                    File file = directoryChooser.showDialog(stage);
+                    if (file != null) {
+                        directoryTextfield.setText(file.getAbsolutePath());
                     }
                 });
-        return selectFileButton;
     }
 }

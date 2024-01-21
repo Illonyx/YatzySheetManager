@@ -1,7 +1,8 @@
-package com.bigbeard.yatzystats.core.model.sheets;
+package com.bigbeard.yatzystats.core.config.loaders.excel;
 
 import com.bigbeard.yatzystats.core.exceptions.CellNotFoundException;
 import com.bigbeard.yatzystats.core.model.rules.GameRules;
+import com.bigbeard.yatzystats.core.model.sheets.SheetReader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.poi.ss.usermodel.Cell;
@@ -24,6 +25,11 @@ public class ExcelSheetReader implements SheetReader {
         this.sheet = sheet;
         this.evaluator = evaluator;
         this.facade = new ExcelSheetFacade();
+    }
+
+    @Override
+    public String getSheetName() {
+        return this.sheet.getSheetName();
     }
 
     @Override

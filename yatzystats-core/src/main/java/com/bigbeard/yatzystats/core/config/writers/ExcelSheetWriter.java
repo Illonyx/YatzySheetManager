@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.function.Function;
 
@@ -33,11 +34,29 @@ public class ExcelSheetWriter {
 
     public void writeSheets(int sheetNumber, GameRules rules) throws IOException {
 
-        for(int i=0;i<sheetNumber;i++) {
-            String sheetName = rules.getFormatName().trim() + "(" + (i+1) + ")";
+        for(int i=1;i<=sheetNumber;i++) {
+            String sheetName = this.getSheetName(rules.getFormatName(), i);
             writeSheet(sheetName,rules);
         }
         workbook.close();
+    }
+
+    private String getSheetName(String formatName, int number) {
+        String sheetName = formatName.trim();
+        sheetName += this.getFormattedTime();
+        sheetName += "(" + number + ")";
+        return sheetName;
+    }
+
+    private String getFormattedTime() {
+        int year = Calendar.getInstance().get(Calendar.YEAR);
+        int month = Calendar.getInstance().get(Calendar.MONTH) + 1;
+        int dayOfMonth = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+
+        String monthFormatted = String.format("%02d", month);
+        String dayOfMonthFormatted = String.format("%02d", dayOfMonth);
+
+        return dayOfMonthFormatted + monthFormatted + year;
     }
 
     protected void writeSheet(String sheetName, GameRules rules) throws IOException {

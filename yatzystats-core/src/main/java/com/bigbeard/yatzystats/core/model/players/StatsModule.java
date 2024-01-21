@@ -1,6 +1,8 @@
 package com.bigbeard.yatzystats.core.model.players;
 
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
+
+import java.util.Comparator;
 import java.util.List;
 
 public class StatsModule {
@@ -26,7 +28,8 @@ public class StatsModule {
     public double getMean(List<PlayerResult> playerResults){
         return playerResults.stream()
                 .mapToDouble(PlayerResult::getScore)
-                .average().getAsDouble();
+                .average()
+                .getAsDouble();
     }
 
     public String getInterval(double min, double max){
@@ -42,6 +45,16 @@ public class StatsModule {
         return playerResults.stream()
                 .map(PlayerResult::getScore)
                 .max(Integer::compare).get();
+    }
+
+    public List<String> getHighestScores(int limit, List<PlayerResult> playerResults)
+    {
+        return playerResults.stream()
+                .map(PlayerResult::getScore)
+                .sorted(Comparator.reverseOrder())
+                .limit(limit)
+                .map(Object::toString)
+                .toList();
     }
 
     public int getLowestScore(List<PlayerResult> playerResults){
@@ -88,8 +101,8 @@ public class StatsModule {
         playerResults.stream()
                 .map(PlayerResult::getScore)
                 .map(Integer::doubleValue)
-                .forEach(value -> stats.addValue(value));
-        return stats.getStandardDeviation();
+                .forEach(stats::addValue);
+        return Math.round(stats.getStandardDeviation());
     }
 
 }

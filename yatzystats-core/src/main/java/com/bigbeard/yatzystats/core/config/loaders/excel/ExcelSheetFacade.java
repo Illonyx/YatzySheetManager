@@ -1,4 +1,4 @@
-package com.bigbeard.yatzystats.core.model.sheets;
+package com.bigbeard.yatzystats.core.config.loaders.excel;
 
 import com.bigbeard.yatzystats.core.exceptions.CellNotFoundException;
 import org.apache.poi.ss.usermodel.Cell;

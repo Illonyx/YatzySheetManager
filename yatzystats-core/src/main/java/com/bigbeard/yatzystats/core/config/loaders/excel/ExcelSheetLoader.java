@@ -1,5 +1,8 @@
-package com.bigbeard.yatzystats.core.config;
+package com.bigbeard.yatzystats.core.config.loaders.excel;
 
+import com.bigbeard.yatzystats.core.model.rules.GameRules;
+import com.bigbeard.yatzystats.core.model.sheets.SheetLoader;
+import com.bigbeard.yatzystats.core.model.sheets.SheetReader;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -11,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ExcelSheetLoader {
+public class ExcelSheetLoader implements SheetLoader {
 
     private List<Sheet> allSheets = new ArrayList<Sheet>();
     private Workbook workbook;
@@ -47,4 +50,13 @@ public class ExcelSheetLoader {
         return this.allSheets;
     }
 
+    @Override
+    public List<SheetReader> createSheetReaders(GameRules gameRules) {
+        return this.allSheets.stream().map(sheet -> new ExcelSheetReader(gameRules, sheet, this.getFormulaEvaluator())).collect(Collectors.toList());
+    }
+
+    @Override
+    public Integer getSheetNumber(){
+        return this.allSheets.size();
+    }
 }

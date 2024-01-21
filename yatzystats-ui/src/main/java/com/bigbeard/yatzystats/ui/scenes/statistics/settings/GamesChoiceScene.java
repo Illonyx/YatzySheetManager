@@ -94,17 +94,15 @@ public class GamesChoiceScene extends UiScene {
         Optional<SheetDto> selectedSheet = getModel().getFoundSheets().stream().filter(sheet -> {
             return sheet.getSheetName().equals(selectedItem);
         }).findFirst();
-        if(selectedSheet.isPresent()){
-            textArea.setText(selectedSheet.get().toString());
-        }
+        selectedSheet.ifPresent(sheetDto -> textArea.setText(sheetDto.toString()));
     }
 
     @Override
     public boolean isViewValid() {
         List<String> selectedSheets = this.listCheckboxValues.entrySet().stream()
-                .filter(stringBooleanEntry -> stringBooleanEntry.getValue() == true)
-                .map(stringBooleanEntry -> stringBooleanEntry.getKey())
-                .collect(Collectors.toList());
+                .filter(Map.Entry::getValue)
+                .map(Map.Entry::getKey)
+                .toList();
         if(selectedSheets.isEmpty()){
             Alert alert = super.createErrorAlert("Pas de choix de sélection", "", "Aucune feuille n'a été sélectionnée.");
             alert.showAndWait();

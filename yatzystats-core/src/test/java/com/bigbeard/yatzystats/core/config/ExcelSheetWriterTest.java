@@ -12,6 +12,8 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class ExcelSheetWriterTest {
@@ -24,6 +26,15 @@ public class ExcelSheetWriterTest {
     @DisplayName("Ecriture d'un fichier Excel Yatzy")
     public void writeYatzyExcelSheet() {
         logger.info("Lancement du test writeExcelSheet");
+
+        int year = Calendar.getInstance().get(Calendar.YEAR);
+        int month = Calendar.getInstance().get(Calendar.MONTH) + 1;
+        int dayOfMonth = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+
+        String monthFormatted = String.format("%02d", month);
+        String dayOfMonthFormatted = String.format("%02d", dayOfMonth);
+
+        logger.info(dayOfMonthFormatted + monthFormatted + year);
         URL filePath = ClassLoader.getSystemResource(SC_YATZY_TEST_PATH);
         String path = filePath.getPath().replace(SC_YATZY_TEST_PATH, SC_YATZY_TEST_NEW_PATH);
         try {

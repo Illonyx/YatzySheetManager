@@ -8,9 +8,13 @@ import com.bigbeard.yatzystats.ui.scenes.statistics.settings.GamemodeScene;
 import com.bigbeard.yatzystats.ui.scenes.statistics.settings.GamesChoiceScene;
 import com.bigbeard.yatzystats.ui.scenes.statistics.statsmod.ConfrontationsScene;
 import com.bigbeard.yatzystats.ui.scenes.statistics.statsmod.StatsModScene;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.io.File;
 
 public class WindowNavigation {
 
@@ -65,6 +69,8 @@ public class WindowNavigation {
 
             case CREATE_SHEET_SCENE:
                 this.currentScene = new CreateSheetScene(this);
+                Parent parent = getFXMLComponents(this.currentScene, "fxml" + File.separator + "createsheet-view.fxml");
+                this.currentScene.setParent(parent);
                 this.model = new CreateSheetsUserModel();
                 break;
 
@@ -73,5 +79,17 @@ public class WindowNavigation {
                 break;
         }
         if(this.currentScene != null && lastScene != this.currentScene) this.stage.setScene(this.currentScene.getViewScene());
+    }
+
+    public Parent getFXMLComponents(UiScene scene, String fxmlPath) {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource(fxmlPath));
+        fxmlLoader.setController(scene);
+        Parent parent = null;
+        try {
+            parent = fxmlLoader.load();
+        } catch (Exception ex) {
+            logger.error(ex);
+        }
+        return parent;
     }
 }

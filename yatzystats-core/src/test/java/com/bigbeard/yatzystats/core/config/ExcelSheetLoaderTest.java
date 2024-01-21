@@ -1,5 +1,6 @@
 package com.bigbeard.yatzystats.core.config;
 
+import com.bigbeard.yatzystats.core.config.loaders.excel.ExcelSheetLoader;
 import com.bigbeard.yatzystats.core.exceptions.FileNotLoadedException;
 import com.bigbeard.yatzystats.core.exceptions.RulesNotLoadedException;
 import com.bigbeard.yatzystats.core.model.rules.GameLoader;
@@ -58,8 +59,8 @@ public class ExcelSheetLoaderTest {
 
             GameRulesLoader gameRulesLoader = new GameRulesLoader(SheetRulesIdentifiers.YATZY);
             GameRules rules = gameRulesLoader.getGameRules();
-            GameLoader gameLoader = new GameLoader(rules, excelSheetLoader.getFormulaEvaluator());
-            List<SheetDto> foundSheets = gameLoader.loadGamesFromMode(excelSheetLoader.getAllSheets());
+            GameLoader gameLoader = new GameLoader(rules, excelSheetLoader);
+            List<SheetDto> foundSheets = gameLoader.loadGamesFromMode();
             logger.debug("FSize : " + foundSheets.size());
 
         } catch(FileNotLoadedException | IOException | RulesNotLoadedException ex) {
