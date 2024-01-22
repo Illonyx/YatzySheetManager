@@ -42,7 +42,7 @@
             <Insets left="15.0" />
          </GridPane.margin>
       </Button>
-      <Button fx:id="ruleInfoButton" mnemonicParsing="false" text="Info" GridPane.columnIndex="2" GridPane.rowIndex="6">
+      <Button id="ruleInfoButton" fx:id="ruleInfoButton" mnemonicParsing="false" text="Info" GridPane.columnIndex="2" GridPane.rowIndex="6">
          <GridPane.margin>
             <Insets left="120.0" />
          </GridPane.margin>
@@ -58,7 +58,7 @@
             <Insets bottom="15.0" />
          </GridPane.margin>
       </ListView>
-      <Button fx:id="goHomeButton" mnemonicParsing="false" text="Revenir à l'accueil" GridPane.rowIndex="8">
+      <Button id="goHomeButton" fx:id="goHomeButton" mnemonicParsing="false" text="Revenir à l'accueil" GridPane.rowIndex="8">
          <GridPane.margin>
             <Insets left="15.0" />
          </GridPane.margin>

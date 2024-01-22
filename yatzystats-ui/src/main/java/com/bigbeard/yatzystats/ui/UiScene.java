@@ -77,6 +77,11 @@ public abstract class UiScene {
     //Méthode générique permettant de créer un bouton pour aller dans une autre vue
     public Button getWindowNavigationButton(String buttonName, boolean needsValidation, UiSceneRole targetSceneRole){
         Button navButton = new Button(buttonName);
+        this.setButtonForWindowNavigation(navButton, needsValidation, targetSceneRole);
+        return navButton;
+    }
+
+    public void setButtonForWindowNavigation(Button navButton, boolean needsValidation, UiSceneRole targetSceneRole) {
         navButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
@@ -93,7 +98,6 @@ public abstract class UiScene {
                 getStage().getScene().setCursor(Cursor.DEFAULT);
             }
         });
-        return navButton;
     }
 
     // Génére un bouton pour aller dans la vue précédente

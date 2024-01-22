@@ -4,13 +4,11 @@ import com.bigbeard.yatzystats.core.model.rules.SheetRulesIdentifiers;
 import com.bigbeard.yatzystats.ui.UiScene;
 import com.bigbeard.yatzystats.ui.UiSceneRole;
 import com.bigbeard.yatzystats.ui.WindowNavigation;
-import com.bigbeard.yatzystats.ui.models.CreateSheetsUserModel;
+import com.bigbeard.yatzystats.ui.scenes.common.RulesDialog;
 import com.bigbeard.yatzystats.ui.theming.UIButtonTheming;
 import com.bigbeard.yatzystats.ui.theming.UITheming;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -46,6 +44,10 @@ public class CreateSheetScene extends UiScene {
 
     @FXML Text rulesText;
     @FXML ComboBox<String> rulesCombobox;
+
+    @FXML Button ruleInfoButton;
+
+    @FXML Button goHomeButton;
 
     public CreateSheetScene(WindowNavigation navigation) {
         super(navigation, UiSceneRole.CREATE_SHEET_SCENE);
@@ -99,12 +101,21 @@ public class CreateSheetScene extends UiScene {
         rulesCombobox.setItems(options);
         rulesCombobox.setValue(SheetRulesIdentifiers.YATZY.getValue());
 
+        ruleInfoButton.setOnAction(actionEvent -> {
+            SheetRulesIdentifiers ruleIdentifier = SheetRulesIdentifiers.fromValue(rulesCombobox.getValue());
+            assert ruleIdentifier != null;
+            RulesDialog rulesAlert = new RulesDialog(ruleIdentifier);
+            rulesAlert.getDialog().showAndWait();
+        });
+
         // Button action
         startSheetCreationButton.setOnAction(actionEvent -> {
             if(isViewValid()) {
                 System.out.println("ON A REUSSI");
             }
         });
+
+        this.setButtonForWindowNavigation(goHomeButton, false, UiSceneRole.STARTING_SCENE);
     }
 
     @Override
