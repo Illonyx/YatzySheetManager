@@ -2,7 +2,7 @@
 
 YatzyProject - Module d'analyse et de statistiques de joueurs de Yatzee
 
-Description du module
+Description du module (test)
 
 A partir d'un fichier Excel contenant les résultats de parties de yatzée, ce logiciel permet
 d'afficher un certain nombre de données statistiques selon deux modes : 
