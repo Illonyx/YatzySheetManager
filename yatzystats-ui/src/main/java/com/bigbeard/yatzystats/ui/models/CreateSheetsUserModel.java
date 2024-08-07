@@ -9,11 +9,10 @@ import com.bigbeard.yatzystats.core.model.rules.SheetRulesIdentifiers;
 import java.io.IOException;
 import java.util.List;
 
-public class CreateSheetsUserModel extends BaseUserModel {
+public class CreateSheetsUserModel {
 
     private String yatzyFilePath;
 
-    @Override
     public void setChosenRules(SheetRulesIdentifiers chosenRules) {
         this.chosenRules = chosenRules;
     }

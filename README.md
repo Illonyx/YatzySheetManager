@@ -1,54 +1,104 @@
-# YatzySheetManager
+# YatzyCompanion
 
-YatzyProject - Module d'analyse et de statistiques de joueurs de Yatzee
+Welcome on **YatzyCompanion** dev page. Here is some features of this **amazing project**
 
-Description du module
+![Alt text](readme-resources/00-starting-scene.png)
 
-A partir d'un fichier Excel contenant les résultats de parties de yatzée, ce logiciel permet
-d'afficher un certain nombre de données statistiques selon deux modes : 
-- Mode Statistiques : pour chaque joueur : score moyen, pourcentage de yatzées...
-- Mode Confrontations : Ce mode permet de comparer les statistiques de deux joueurs en les opposant
+## Yatzy sheet generator feature
 
-**Captures d'écran à mettre*
+![Alt text](readme-resources/02-create-sheet-scene.png)
 
-Pour utiliser le logiciel, il faudra deux fichiers : 
-- Obligatoire : Le fichier Excel contenant les résultats qui peut par exemple avoir le format suivant. 
-Deux formats sont pris en compte nativement : 
--- le format de fichier du yatzée scandinave (Yatzy) 
--- le format de fichier du yathzee traditionnel
+You can generate a yatzy sheet Excel file specifying these informations: 
+1. The folder which will be containing the file.
+It is possible to add some games to an existing Excel file.
+2. The number of sheets to generate inside the Excel Sheet.
+3. All the players that will be playing
+4. It is actually possible to choose between two Yatzy game formats.
+    - Scandinavian Yatzy
+    - 6 dice Yatzy, also called Maxi Yatzy
 
-- Optionnel : On peut également ajouter un fichier de règles pour que le logiciel puisse 
-analyser son propre format de yathzee. Le fichier à intégrer dans l'application sera un fichier 
-sous la forme suivante : **fichier.json**
-Si vous voulez intégrer un format par défaut dans l'application, faites un sujet sur Github et on 
-regardera pour le faire
+Future improvements : 
+- Currently, .xlsx is the only file format which can be used for sheet generation.  
+It will be possible to use .csv as well as a file extension
 
-Installation du projet
+## Yatzy statistics feature
 
-Java 11 et Maven seront nécéssaires pour lancer le projet. 
-IntelliJ (dans sa version gratuite) est recommandé pour le développement du projet. 
+The yatzy statistics process has three steps. 
 
-**A remplir**
+### Yatzy file selection
 
-Commande pour lancer le projet en local : maven compile javafx:run
-Générer un jar executable : 
+![Alt text](readme-resources/03-select-rules-scene.png)
 
-En cours de developpement
+The Yatzy companion asks you to provide these two informations :
+- A file which must be in a XLSX format
+- The set of rules which has been used to create the games. This can be
+  - Scandinavian Yatzy
+  - 6 dice Yatzy, also called Maxi Yatzy
 
-YatzyCore
+User preferences can be stored in the application to help you :.
+-> Finding The Excel file you use to save your games
+-> Automatically selecting your preferred yathzee game rules
 
-- Etre plus générique sur les données à introduire (Joueurs, parties à importer..)
-- Lecture de fichiers au format JSON
-- Mise en place de tests unitaires
+In the next step, the companion is scanning the provided file and searches for played games.  
+Some Yatzy sheets in the Excel file may not be not recognized by the companion.  
+If this happens, these sheets will be appearing in a dialog with the problem encountered while the sheet reading.
 
-- (En etude) Pouvoir générer une feuille de yatz' quelconque à partir de règles
-- Installateur pour Windows à créer
+Future improvements :
+- Currently, .xlsx is the only file format which can be used for sheet reading.  
+  It will be possible to use .csv as well as a file extension
+- It will also be possible to get your files from Google Drive Cloud
 
-YatzyUI
+### Yatzy sheets selector
 
-- Mise en place de l'IHM Confrontations
-- La liste des erreurs de chargement doit pouvoir être accessible depuis l'interface
+![Alt text](readme-resources/03-select-games-scene.png)
 
-Choses à regarder
-- Tester avec un fichier xls ou csv
+All the sheets of the Excel file and only those with the applied rules are available. 
+It is possible to consult info about the players and their scores. 
 
+Future improvements : 
+ - Some filters will be available to allow a better selection of the games
+
+### Global stats Tab
+
+![Alt text](readme-resources/04-stats-view-general.png)
+
+When the sheets are selected, the statistics tab appears. 
+Some data are viewable for each players as bonus rate, yatzy rates, win percentage. 
+
+Future improvements: 
+- Redesign the window
+- Add some more stats
+
+![Alt text](readme-resources/04-stats-view-duel.png)
+
+The duel tab allows two users to compare their scores. 
+When two player names are selected, 
+
+-> Total wins for each player when playing together
+-> The last 3 games with their scores
+-> A piechart with winning player percentages
+
+Future improvements : 
+- Improve 3 last matches UI
+- Piechart is buggy
+
+## Global settings tab
+
+![Alt text](readme-resources/01-settings-scene.png)
+
+Allows the player to save its file or rules preferences. 
+_**Application is in French language and is not translated in English yet._** 
+
+![Alt text](readme-resources/01-rules-info-dialog.png)
+
+Some informations about the rules are available when clicking on Info button.
+
+Future improvements : 
+- Allow the users to include and import their own rules in the application
+
+## Installing the project
+
+**For customers** : installation link will be included for MAC and Windows users.
+
+**For devs** : project has been developed in Java 17 with Maven, Java FX, Scenebuilder and IntelliJ. 
+Project can be launched with the command **maven compile javafx:run**

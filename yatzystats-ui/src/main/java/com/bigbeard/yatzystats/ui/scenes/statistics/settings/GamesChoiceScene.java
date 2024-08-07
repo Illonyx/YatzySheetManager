@@ -32,14 +32,15 @@ import java.util.stream.Collectors;
 public class GamesChoiceScene extends UiScene {
 
     private Stage stage;
-    private StatsSheetsUserModel model;
+    private final StatsSheetsUserModel model;
     private GridPane gridPane;
     private TextArea textArea;
-    private Map<String, Boolean> listCheckboxValues = new HashMap<>();
+    private final Map<String, Boolean> listCheckboxValues = new HashMap<>();
 
     public GamesChoiceScene(WindowNavigation navigation){
         super(navigation, UiSceneRole.GAMES_CHOICE_SCENE);
         this.initComponents();
+        this.model = getModel().getStatsSheetsUserModel();
     }
 
     private void initComponents(){
@@ -55,7 +56,7 @@ public class GamesChoiceScene extends UiScene {
         //Initialize listview with found sheet values
         ListView<String> list = new ListView<String>();
         ObservableList<String> items = FXCollections.observableList (
-                super.getModel().getFoundSheets().stream().map(SheetDto::getSheetName).collect(Collectors.toList()));
+                getModel().getStatsSheetsUserModel().getSheets().stream().map(SheetDto::getSheetName).toList());
         list.setItems(items);
 
         //When an element is clicked on, display it on textArea
@@ -83,7 +84,7 @@ public class GamesChoiceScene extends UiScene {
         selectAllButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                list.getSelectionModel().selectAll();
+                list.getItems().forEach(item -> listCheckboxValues.put(item, true));
                 list.refresh();
             }
         });
@@ -91,7 +92,7 @@ public class GamesChoiceScene extends UiScene {
     }
 
     private void updateTextarea(String selectedItem){
-        Optional<SheetDto> selectedSheet = getModel().getFoundSheets().stream().filter(sheet -> {
+        Optional<SheetDto> selectedSheet = getModel().getStatsSheetsUserModel().getSheets().stream().filter(sheet -> {
             return sheet.getSheetName().equals(selectedItem);
         }).findFirst();
         selectedSheet.ifPresent(sheetDto -> textArea.setText(sheetDto.toString()));
@@ -108,10 +109,10 @@ public class GamesChoiceScene extends UiScene {
             alert.showAndWait();
             return false;
         } else {
-            List<SheetDto> selectedSheetDto = super.getModel().getFoundSheets().stream()
+            List<SheetDto> selectedSheetDto = model.getSheets().stream()
                     .filter(sheetDto -> selectedSheets.contains(sheetDto.getSheetName()))
                     .collect(Collectors.toList());
-            getModel().setSelectedSheets(selectedSheetDto);
+            model.setSelectedSheets(selectedSheetDto);
             return true;
         }
     }

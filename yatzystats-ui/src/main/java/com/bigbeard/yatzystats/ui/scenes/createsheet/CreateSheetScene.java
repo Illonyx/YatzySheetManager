@@ -4,6 +4,7 @@ import com.bigbeard.yatzystats.core.model.rules.SheetRulesIdentifiers;
 import com.bigbeard.yatzystats.ui.UiScene;
 import com.bigbeard.yatzystats.ui.UiSceneRole;
 import com.bigbeard.yatzystats.ui.WindowNavigation;
+import com.bigbeard.yatzystats.ui.models.CreateSheetsUserModel;
 import com.bigbeard.yatzystats.ui.scenes.common.RulesDialog;
 import com.bigbeard.yatzystats.ui.theming.UIButtonTheming;
 import com.bigbeard.yatzystats.ui.theming.UITheming;
@@ -26,6 +27,7 @@ import java.util.stream.Collectors;
 
 public class CreateSheetScene extends UiScene {
     private List<String> players;
+    private CreateSheetsUserModel model;
     @FXML Text mainSheetCreationText;
     @FXML GridPane gridPane;
     @FXML Button startSheetCreationButton;
@@ -51,6 +53,7 @@ public class CreateSheetScene extends UiScene {
 
     public CreateSheetScene(WindowNavigation navigation) {
         super(navigation, UiSceneRole.CREATE_SHEET_SCENE);
+        this.model = getModel().getCreateSheetsUserModel();
     }
 
     private void initComponents() {
@@ -70,6 +73,10 @@ public class CreateSheetScene extends UiScene {
         UITheming.getInstance().applyTextTheming(playersText, theming);
 
         // Folder
+        String savedPath = getModel().getUserProperties().getSheetCreationPath();
+        if(savedPath != null) {
+            this.directoryTextfield.setText(savedPath);
+        }
         this.setDirectoryChooserHandler(super.getStage());
 
         // Sheet number
@@ -92,6 +99,10 @@ public class CreateSheetScene extends UiScene {
         });
 
         // Rules
+        String savedUserRule = getModel().getUserProperties().getDefaultRulesFile();
+        SheetRulesIdentifiers savedRuleIdentifier = SheetRulesIdentifiers.fromPath(savedUserRule);
+        SheetRulesIdentifiers defaultIdentifier = savedRuleIdentifier != null ? savedRuleIdentifier : SheetRulesIdentifiers.YATZY;
+
         ObservableList<String> options =
                 FXCollections.observableList(
                         Arrays.stream(SheetRulesIdentifiers.values())
@@ -99,7 +110,7 @@ public class CreateSheetScene extends UiScene {
                                 .collect(Collectors.toList())
                 );
         rulesCombobox.setItems(options);
-        rulesCombobox.setValue(SheetRulesIdentifiers.YATZY.getValue());
+        rulesCombobox.setValue(defaultIdentifier.getValue());
 
         ruleInfoButton.setOnAction(actionEvent -> {
             SheetRulesIdentifiers ruleIdentifier = SheetRulesIdentifiers.fromValue(rulesCombobox.getValue());
@@ -134,12 +145,12 @@ public class CreateSheetScene extends UiScene {
         }
 
         // Set Data
-        getSheetCreationModel().setPlayers(playersListView.getItems());
-        getSheetCreationModel().setSheetNumber(sheetNumberCombobox.getValue());
-        getSheetCreationModel().setChosenRules(SheetRulesIdentifiers.fromValue(rulesCombobox.getValue()));
-        getSheetCreationModel().confirmFinalWritingPath(directoryTextfield.getText());
+        this.model.setPlayers(playersListView.getItems());
+        this.model.setSheetNumber(sheetNumberCombobox.getValue());
+        this.model.setChosenRules(SheetRulesIdentifiers.fromValue(rulesCombobox.getValue()));
+        this.model.confirmFinalWritingPath(directoryTextfield.getText());
 
-        getSheetCreationModel().writeExcelSheet();
+        this.model.writeExcelSheet();
         return true;
     }
 

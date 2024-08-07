@@ -1,90 +1,186 @@
 package com.bigbeard.yatzystats.ui.scenes.statistics.statsmod;
 
+import com.bigbeard.yatzystats.core.model.players.ConfrontationDTO;
 import com.bigbeard.yatzystats.core.model.players.PlayerResult;
 import com.bigbeard.yatzystats.core.model.players.StatsModule;
 import com.bigbeard.yatzystats.ui.UiScene;
 import com.bigbeard.yatzystats.ui.models.StatsSheetsUserModel;
 import com.bigbeard.yatzystats.ui.UiSceneRole;
 import com.bigbeard.yatzystats.ui.WindowNavigation;
+import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.fxml.FXML;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextArea;
+import javafx.scene.chart.PieChart;
+import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
+import javax.swing.text.NumberFormatter;
+import java.text.NumberFormat;
 import java.util.List;
 
 public class StatsModScene extends UiScene {
 
+    private Logger logger = LogManager.getLogger(StatsModScene.class);
+
     private Stage stage;
     private StatsSheetsUserModel model;
-    private GridPane gridPane;
 
-    private ComboBox comboBox;
-    private TextArea textArea;
+    @FXML
+    TabPane tabsPane;
+
+    @FXML
+    SplitPane statsSplitPane;
+
+    @FXML
+    Button goBackButton;
+
+    @FXML
+    ComboBox<String> playersCombobox;
+
+    @FXML
+    TextArea statsArea;
+
+    @FXML
+    ComboBox<String> player1Combobox;
+
+    @FXML
+    ComboBox<String> player2Combobox;
+
+    @FXML
+    Button duelButton;
+
+    @FXML
+    PieChart piechartDuel;
+
+    @FXML
+    TextArea textareaDuel;
+
+    @FXML
+    Tab statsTab;
+
+    @FXML
+    SplitPane duelSplitPane;
 
     public StatsModScene(WindowNavigation navigation){
         super(navigation, UiSceneRole.STATS_MODE_SCENE);
-        getModel().loadStats();
-        this.initComponents();
+        this.model = getModel().getStatsSheetsUserModel();
+        model.loadStats();
     }
 
     private void initComponents() {
-        this.gridPane = this.getDefaultGridPaneConfig();
-
+        tabsPane.setBackground(new Background(this.getBackgroundImage()));
         // Chargement du logo principal
-        this.gridPane.setBackground(new Background(this.getBackgroundImage()));
+        this.initStatsTab();
+        this.initConfrontationsTab();
+    }
 
-        this.textArea = new TextArea();
-        this.textArea.setEditable(false);
-        this.gridPane.add(textArea, 3, 5 , 5, 5);
+    private void initStatsTab() {
+        // bouton goback
+        this.setButtonForWindowNavigation(goBackButton, false, UiSceneRole.GAMES_CHOICE_SCENE);
 
-        //Switch confrontations button
-        Button confrontationsButton = this.getWindowNavigationButton("Confrontations view",
-                false, UiSceneRole.CONFRONTATIONS_SCENE);
-        this.gridPane.add(confrontationsButton, 8, 2, 3,2);
-
-        //Combobox
-        this.comboBox = getPlayerCombobox();
-        this.comboBox.getSelectionModel().selectedItemProperty()
+        //Combobox joueurs vue principale
+        playersCombobox.setItems(FXCollections.observableList(model.getPlayerNames()));
+        playersCombobox.getSelectionModel().selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> updateTextarea(newValue));
-        this.updateTextarea(getModel().getPlayerNames().get(0));
-        this.gridPane.add(this.comboBox,3,2, 5,1);
+        playersCombobox.setValue(model.getPlayerNames().get(0));
+        this.updateTextarea(model.getPlayerNames().get(0));
+    }
 
-        //Footer view
-        this.gridPane.add(this.getLastSceneButton(), 1, 10, 3, 2);
+    private void initConfrontationsTab() {
+        //Combobox joueur 1 vue confrontations
+        player1Combobox.setItems(FXCollections.observableList(model.getPlayerNames()));
+        player1Combobox.setValue(model.getPlayerNames().get(0));
 
+        //Combobox joueur 2 vue confrontations
+        player2Combobox.setItems(FXCollections.observableList(model.getPlayerNames()));
+        player2Combobox.setValue(model.getPlayerNames().get(1));
+
+        duelButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                generateConfrontations();
+            }
+        });
     }
 
     private void updateTextarea(Object newValue) {
-        List<PlayerResult> prs = getModel().getResultsPerPlayers().get(newValue);
-        this.textArea.setText(this.showStats(prs));
+        List<PlayerResult> prs = model.getResultsPerPlayers().get(newValue);
+        statsArea.setText(this.showStats(prs));
     }
 
     private String showStats(List<PlayerResult> results){
         List<String> top5high = StatsModule.getInstance().getHighestScores(5,results);
-        StringBuffer buff = new StringBuffer();
+        StringBuilder buff = new StringBuilder();
 
-        buff.append("-- Score du joueur --" + System.lineSeparator());
-        buff.append("Moyenne : " + StatsModule.getInstance().getMean(results) + System.lineSeparator());
-        buff.append("Plus haut : " + StatsModule.getInstance().getHighestScore(results) + System.lineSeparator());
-        buff.append("Plus bas : " + StatsModule.getInstance().getLowestScore(results) + System.lineSeparator());
-        buff.append("Standard Deviation : " + StatsModule.getInstance().getStandardDeviation(results) + System.lineSeparator());
+        buff.append("-- Score du joueur --").append(System.lineSeparator());
+        buff.append("Moyenne : ").append(StatsModule.getInstance().getMean(results)).append(System.lineSeparator());
+        buff.append("Plus haut : ").append(StatsModule.getInstance().getHighestScore(results)).append(System.lineSeparator());
+        buff.append("Plus bas : ").append(StatsModule.getInstance().getLowestScore(results)).append(System.lineSeparator());
+        buff.append("Standard Deviation : ").append(StatsModule.getInstance().getStandardDeviation(results)).append(System.lineSeparator());
 
-        buff.append("-- Combinaisons du joueur --" + System.lineSeparator());
-        buff.append("Taux de victoires :" + StatsModule.getInstance().getWinRate(results) + System.lineSeparator());
-        buff.append("Taux de yatzées :" + StatsModule.getInstance().getYatzyRate(results) + System.lineSeparator());
-        buff.append("BonusRate :" + StatsModule.getInstance().getBonusRate(results) + System.lineSeparator());
-        buff.append("Top 5 scores :" + String.join(",", top5high)  + System.lineSeparator());
+        buff.append("-- Combinaisons du joueur --").append(System.lineSeparator());
+        buff.append("Taux de victoires :").append(StatsModule.getInstance().getWinRate(results)).append(System.lineSeparator());
+        buff.append("Taux de yatzées :").append(StatsModule.getInstance().getYatzyRate(results)).append(System.lineSeparator());
+        buff.append("BonusRate :").append(StatsModule.getInstance().getBonusRate(results)).append(System.lineSeparator());
+        buff.append("Top 5 scores :").append(String.join(",", top5high)).append(System.lineSeparator());
 
         return buff.toString();
     }
 
+    public void generateConfrontations(){
+        String firstPlayer = (String) this.player1Combobox.getValue();
+        String secondPlayer = (String) this.player2Combobox.getValue();
+        if(firstPlayer != null && secondPlayer != null && !firstPlayer.equals(secondPlayer)){
+            logger.debug("Génération de la confrontation entre " + firstPlayer + " et " + secondPlayer);
+            List<ConfrontationDTO> confrontations = model.makeConfrontations(model.getSelectedSheets(), firstPlayer, secondPlayer);
+
+            PieChart.Data slice1 = getConfrontationsPieChart(confrontations, firstPlayer);
+            PieChart.Data slice2 = getConfrontationsPieChart(confrontations, secondPlayer);
+            this.piechartDuel.setData(FXCollections.observableArrayList(slice1, slice2));
+            // Customize PieChart
+            piechartDuel.setLabelLineLength(10); // Length of the lines from the pie slice to the label
+            piechartDuel.setLegendVisible(true);
+            piechartDuel.setLabelsVisible(true); // Show labels on the slices
+
+            logger.debug("Confrontations : " + slice1.getName() + "/ " + slice2.getName());
+            this.textareaDuel.setText(slice1.getPieValue() + " - " + slice2.getPieValue() +
+                    "(" + getPlayerLastScores(3, confrontations, firstPlayer) +  ")");
+        }
+    }
+
+    private PieChart.Data getConfrontationsPieChart(List<ConfrontationDTO> confrontations, String playerName) {
+        long playerScore = confrontations.stream()
+                .map(ConfrontationDTO::getWinnerName)
+                .filter(winnerName -> winnerName.equals(playerName))
+                .count();
+        return new PieChart.Data(getLabel(playerName, playerScore, confrontations.size()), playerScore);
+    }
+
+    private String getLabel(String playerName, long playerScore, long confrontationsSize) {
+        NumberFormat percentFormatter = NumberFormat.getPercentInstance();
+        double elDouble = (double) playerScore / confrontationsSize;
+        return playerName + " - " + percentFormatter.format(elDouble);
+    }
+
+    String getPlayerLastScores(int limit, List<ConfrontationDTO> confrontations, String playerName) {
+        return confrontations.stream().limit(limit)
+                .map(conf -> conf.getConfrontationScore(playerName))
+                .reduce(((s, s2) -> {return s2 + "," + s;})).get();
+    }
+
     @Override
     public Scene getViewScene() {
-        return new Scene(this.gridPane, super.getStage().getMinWidth(),super.getStage().getMinHeight());
+        this.initComponents();
+        return new Scene(tabsPane, super.getStage().getMinWidth(),super.getStage().getMinHeight());
     }
 
     @Override

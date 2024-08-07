@@ -3,7 +3,6 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -29,36 +28,24 @@
       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <ComboBox id="rulesCombobox" fx:id="rulesCombobox" prefHeight="26.0" prefWidth="285.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="6" />
-      <Button fx:id="startSheetCreationButton" mnemonicParsing="false" text="Terminer" GridPane.columnIndex="3" GridPane.rowIndex="8">
+      <ComboBox id="rulesCombobox" fx:id="rulesCombobox" prefHeight="26.0" prefWidth="285.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3" />
+      <Button fx:id="saveButton" mnemonicParsing="false" text="Enregistrer" GridPane.columnIndex="3" GridPane.rowIndex="8">
          <GridPane.margin>
             <Insets left="15.0" />
          </GridPane.margin>
       </Button>
-      <ComboBox fx:id="sheetNumberCombobox" prefHeight="26.0" prefWidth="171.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
       <TextField fx:id="directoryTextfield" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" />
       <Button fx:id="browseDirectoryButton" mnemonicParsing="false" text="Parcourir" GridPane.columnIndex="3" GridPane.rowIndex="1">
          <GridPane.margin>
             <Insets left="15.0" />
          </GridPane.margin>
       </Button>
-      <Button id="ruleInfoButton" fx:id="ruleInfoButton" mnemonicParsing="false" text="Info" GridPane.columnIndex="2" GridPane.rowIndex="6">
+      <Button id="ruleInfoButton" fx:id="ruleInfoButton" mnemonicParsing="false" text="Info" GridPane.columnIndex="2" GridPane.rowIndex="3">
          <GridPane.margin>
             <Insets left="120.0" />
          </GridPane.margin>
       </Button>
-      <TextField fx:id="playerTextfield" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-      <Button fx:id="addPlayerButton" mnemonicParsing="false" text="Ajouter" GridPane.columnIndex="2" GridPane.rowIndex="3">
-         <GridPane.margin>
-            <Insets left="15.0" />
-         </GridPane.margin>
-      </Button>
-      <ListView fx:id="playersListView" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="4" GridPane.rowSpan="2">
-         <GridPane.margin>
-            <Insets bottom="15.0" />
-         </GridPane.margin>
-      </ListView>
-      <Button id="goHomeButton" fx:id="goHomeButton" mnemonicParsing="false" text="Revenir à l'accueil" GridPane.rowIndex="8">
+      <Button id="goHomeButton" fx:id="goHomeButton" mnemonicParsing="false" text="Quitter" GridPane.rowIndex="8">
          <GridPane.margin>
             <Insets left="15.0" />
          </GridPane.margin>
@@ -68,21 +55,17 @@
             <Insets left="30.0" />
          </GridPane.margin>
       </Text>
-      <Text id="rulesText" fx:id="rulesText" strokeType="OUTSIDE" strokeWidth="0.0" text="Règles" GridPane.rowIndex="6">
+      <Text id="rulesText" fx:id="rulesText" strokeType="OUTSIDE" strokeWidth="0.0" text="Règles preferées" GridPane.rowIndex="3">
          <GridPane.margin>
             <Insets left="30.0" />
          </GridPane.margin>
       </Text>
-      <Text fx:id="sheetNumberText" strokeType="OUTSIDE" strokeWidth="0.0" text="Nombre de feuilles" GridPane.rowIndex="2">
+      <Text fx:id="mainSheetCreationText" strokeType="OUTSIDE" strokeWidth="0.0" text="Preferences" textAlignment="CENTER" wrappingWidth="597.7373046875" GridPane.columnSpan="2" />
+      <Text id="folderCreationText" fx:id="languageText" strokeType="OUTSIDE" strokeWidth="0.0" text="Langue" GridPane.rowIndex="2">
          <GridPane.margin>
             <Insets left="30.0" />
          </GridPane.margin>
       </Text>
-      <Text fx:id="playersText" strokeType="OUTSIDE" strokeWidth="0.0" text="Joueurs" GridPane.rowIndex="3">
-         <GridPane.margin>
-            <Insets left="30.0" />
-         </GridPane.margin>
-      </Text>
-      <Text fx:id="mainSheetCreationText" strokeType="OUTSIDE" strokeWidth="0.0" text="Création d'une feuille de Yahtzee" textAlignment="CENTER" wrappingWidth="597.7373046875" GridPane.columnSpan="2" />
+      <ComboBox id="rulesCombobox" fx:id="languagesCombobox" prefHeight="26.0" prefWidth="285.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
    </children>
 </GridPane>

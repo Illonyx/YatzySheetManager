@@ -4,15 +4,16 @@ import com.bigbeard.yatzystats.core.exceptions.FileNotLoadedException;
 import com.bigbeard.yatzystats.core.exceptions.RulesNotLoadedException;
 import com.bigbeard.yatzystats.core.model.rules.SheetRulesIdentifiers;
 import com.bigbeard.yatzystats.ui.UiScene;
-import com.bigbeard.yatzystats.ui.models.StatsSheetsUserModel;
 import com.bigbeard.yatzystats.ui.UiSceneRole;
 import com.bigbeard.yatzystats.ui.WindowNavigation;
+import com.bigbeard.yatzystats.ui.scenes.common.RulesDialog;
 import com.bigbeard.yatzystats.ui.theming.UIButtonTheming;
 import com.bigbeard.yatzystats.ui.theming.UITheming;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -34,45 +35,57 @@ import java.util.stream.Collectors;
  */
 public class GamemodeScene extends UiScene {
 
-    private GridPane gridPane;
-    private Stage stage;
-    private StatsSheetsUserModel model;
+    @FXML
+    GridPane gridPane;
+    @FXML
+    Text stepText;
+    @FXML
+    Text folderSelectionText;
+    @FXML
+    TextField selectedFilePathTextField;
+    @FXML
+    Button selectFileButton;
 
-    private ComboBox gameModeComboBox;
-    private TextField selectedFilePathTextField;
+    // Rules
+    @FXML
+    Text rulesText;
+    @FXML
+    ComboBox<String> rulesCombobox;
+    @FXML
+    Button ruleInfoButton;
 
-    public GamemodeScene(WindowNavigation navigation){
+    @FXML
+    Button goHomeButton;
+    @FXML
+    Button processNextStepButton;
+
+    public GamemodeScene(WindowNavigation navigation) {
         super(navigation, UiSceneRole.GAME_MODE_SCENE);
-        this.initComponents();
     }
 
     private void initComponents() {
-        this.gridPane = this.getDefaultGridPaneConfig();
 
         // Chargement du logo principal
-        this.gridPane.setBackground(new Background(this.getBackgroundImage()));
+        gridPane.setBackground(new Background(this.getBackgroundImage()));
 
         UIButtonTheming theming = new UIButtonTheming();
-        Text mainLabel = new Text("Etape 1 : Sélection du fichier de parties et du mode de jeu");
-        UITheming.getInstance().applyTextTheming(mainLabel, theming);
-        this.gridPane.add(mainLabel, 0,0,3,1);
+        UITheming.getInstance().applyTextTheming(stepText, theming);
+        UITheming.getInstance().applyTextTheming(folderSelectionText, theming);
+        UITheming.getInstance().applyTextTheming(rulesText, theming);
 
         //1. Choix du fichier
-        Text chooseFileLabel = new Text("Fichier de parties : ");
-        UITheming.getInstance().applyTextTheming(chooseFileLabel, theming);
-        this.gridPane.add(chooseFileLabel, 1,2, 2,1);
 
-        this.selectedFilePathTextField = new TextField();
-        this.selectedFilePathTextField.setPrefSize(300,30);
-        this.gridPane.add(this.selectedFilePathTextField, 3,2, 5,1);
-
-        Button selectFileButton = this.getBrowseButton();
-        this.gridPane.add(selectFileButton, 8, 2, 1 ,1);
+        String savedPath = getModel().getUserProperties().getSheetCreationPath();
+        if (savedPath != null) {
+            selectedFilePathTextField.setText(savedPath);
+        }
+        this.setBrowseButton(super.getStage());
 
         //2. Choix du mode de jeu
-        Text selectGamemodeLabel = new Text("Choix du mode de jeu :");
-        UITheming.getInstance().applyTextTheming(selectGamemodeLabel, theming);
-        this.gridPane.add(selectGamemodeLabel, 1,4, 2,1);
+
+        String savedUserRule = getModel().getUserProperties().getDefaultRulesFile();
+        SheetRulesIdentifiers savedRuleIdentifier = SheetRulesIdentifiers.fromPath(savedUserRule);
+        SheetRulesIdentifiers defaultIdentifier = savedRuleIdentifier != null ? savedRuleIdentifier : SheetRulesIdentifiers.YATZY;
 
         ObservableList<String> options =
                 FXCollections.observableList(
@@ -80,33 +93,37 @@ public class GamemodeScene extends UiScene {
                                 .map(SheetRulesIdentifiers::getValue)
                                 .collect(Collectors.toList())
                 );
-        this.gameModeComboBox = new ComboBox(options);
-        this.gameModeComboBox.setValue(SheetRulesIdentifiers.YATZY.getValue());
-        this.gameModeComboBox.setPrefSize(300,30);
-        this.gridPane.add(this.gameModeComboBox,3,4, 5,1);
+        rulesCombobox.setValue(defaultIdentifier.getValue());
+
+        ruleInfoButton.setOnAction(actionEvent -> {
+            SheetRulesIdentifiers ruleIdentifier = SheetRulesIdentifiers.fromValue(rulesCombobox.getValue());
+            assert ruleIdentifier != null;
+            RulesDialog rulesAlert = new RulesDialog(ruleIdentifier);
+            rulesAlert.getDialog().showAndWait();
+        });
 
         //3. Boutons sur le footer du menu
-        this.gridPane.add(this.getNextSceneButton(), 8, 10,1,1);
+        this.setButtonForWindowNavigation(goHomeButton, false, UiSceneRole.STARTING_SCENE);
+        this.setButtonForWindowNavigation(processNextStepButton, true, UiSceneRole.GAMES_CHOICE_SCENE);
     }
 
     @Override
     public boolean isViewValid() {
-        String file = this.selectedFilePathTextField.getText();
-        String gameMode = (String) this.gameModeComboBox.getValue();
-        super.getModel().setYatzyFilePath(file);
-        super.getModel().setChosenRules(SheetRulesIdentifiers.fromValue(gameMode));
+        String file = selectedFilePathTextField.getText();
+        String gameMode = (String) this.rulesCombobox.getValue();
+        getModel().getStatsSheetsUserModel().setYatzyFilePath(file);
+        getModel().getStatsSheetsUserModel().setChosenRules(SheetRulesIdentifiers.fromValue(gameMode));
 
         //TODO : Dialogues d exception à afficher
         try {
-            getModel().loadGameRules();
-            getModel().loadExcelSheet();
+            getModel().getStatsSheetsUserModel().loadSheetAnalysis();
             return true;
-        } catch(RulesNotLoadedException exception) {
+        } catch (RulesNotLoadedException exception) {
             Alert alert = this.createErrorAlert("Mode de jeu non pris en compte", "Le mode de jeu demandé n'a pas été pris en compte",
                     "Le fichier de règles pour le mode de jeu est inexistant ou n'a pas été trouvé sur le disque.");
             alert.showAndWait();
             return false;
-        } catch(FileNotLoadedException fexception) {
+        } catch (FileNotLoadedException fexception) {
             Alert alert = this.createErrorAlert("Erreur d'ouverture du fichier", fexception.getMainReason(),
                     fexception.getMessage());
             alert.showAndWait();
@@ -116,11 +133,11 @@ public class GamemodeScene extends UiScene {
 
     @Override
     public Scene getViewScene() {
-        return new Scene(gridPane, super.getStage().getMinWidth(),super.getStage().getMinHeight());
+        this.initComponents();
+        return new Scene(gridPane, super.getStage().getMinWidth(), super.getStage().getMinHeight());
     }
 
-    private Button getBrowseButton(){
-        Button selectFileButton = new Button("Parcourir");
+    private void setBrowseButton(Stage stage) {
         final FileChooser fileChooser = new FileChooser();
         selectFileButton.setOnAction(
                 new EventHandler<ActionEvent>() {
@@ -130,7 +147,7 @@ public class GamemodeScene extends UiScene {
                         fileChooser.setInitialDirectory(
                                 new File(System.getProperty("user.home"))
                         );
-                        if(fileChooser.getExtensionFilters().isEmpty()){
+                        if (fileChooser.getExtensionFilters().isEmpty()) {
                             fileChooser.getExtensionFilters().addAll(
                                     new FileChooser.ExtensionFilter("All Files", "*.*"),
                                     new FileChooser.ExtensionFilter("XLS", "*.xls"),
@@ -143,7 +160,6 @@ public class GamemodeScene extends UiScene {
                         }
                     }
                 });
-        return selectFileButton;
     }
 
 }

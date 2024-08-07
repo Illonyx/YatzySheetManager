@@ -1,6 +1,6 @@
 package com.bigbeard.yatzystats.ui;
 
-import com.bigbeard.yatzystats.ui.models.CreateSheetsUserModel;
+import com.bigbeard.yatzystats.ui.models.GlobalUserModel;
 import com.bigbeard.yatzystats.ui.models.StatsSheetsUserModel;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -17,16 +17,15 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
-import java.io.IOException;
 import java.net.URL;
-import java.util.Objects;
+import java.util.List;
 
 public abstract class UiScene {
 
     private Stage stage;
     private StatsSheetsUserModel model;
     private UiSceneRole role;
-    private WindowNavigation windowNavigation;
+    protected WindowNavigation windowNavigation;
     private Parent parent;
 
     public UiScene(WindowNavigation windowNavigation, UiSceneRole role){
@@ -38,12 +37,8 @@ public abstract class UiScene {
     public abstract boolean isViewValid();
 
 
-    public StatsSheetsUserModel getModel(){
-        return (StatsSheetsUserModel) this.windowNavigation.getModel();
-    }
-
-    public CreateSheetsUserModel getSheetCreationModel() {
-        return (CreateSheetsUserModel) this.windowNavigation.getModel();
+    public GlobalUserModel getModel(){
+        return this.windowNavigation.getModel();
     }
 
     public Stage getStage(){
@@ -112,15 +107,15 @@ public abstract class UiScene {
 
     public GridPane getDefaultGridPaneConfig() {
         GridPane gridPane = new GridPane();
-        gridPane.setMinSize(this.getStage().getMinWidth(), this.getStage().getMinHeight());
+        gridPane.setPrefSize(this.getStage().getMinWidth(), this.getStage().getMinHeight());
         gridPane.setPadding(new Insets(20));
         gridPane.setHgap(25);
         gridPane.setVgap(15);
         return gridPane;
     }
 
-    public ComboBox getPlayerCombobox(){
-        ObservableList<String> options = FXCollections.observableList(getModel().getPlayerNames());
+    public ComboBox getPlayerCombobox(List<String> playerNames){
+        ObservableList<String> options = FXCollections.observableList(playerNames);
         ComboBox comboBox = new ComboBox(options);
         comboBox.setValue(options.get(0));
         comboBox.setPrefSize(300,30);

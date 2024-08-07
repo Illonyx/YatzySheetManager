@@ -1,17 +1,24 @@
 package com.bigbeard.yatzystats.core.model.rules;
 
 public enum SheetRulesIdentifiers {
-   YATZY("Yatzy - Scandinavian Yathzee"),
-   MAXI_YATZY("Maxi Yatzy - 6 dice Scandinavian Yathzee");
+   YATZY("Yatzy - Scandinavian Yathzee", "scandinavian-yatzy-rules.json"),
+   MAXI_YATZY("Maxi Yatzy - 6 dice Scandinavian Yathzee", "scandinavian-maxiyatzy-rules.json");
 
    private String value;
 
-   SheetRulesIdentifiers(String value) {
-    this.value=value;
+   private String path;
+
+   SheetRulesIdentifiers(String value, String path) {
+       this.value=value;
+       this.path=path;
    }
 
     public String getValue() {
         return value;
+    }
+
+    public String getPath() {
+        return path;
     }
 
     public static SheetRulesIdentifiers fromValue(String value) {
@@ -20,5 +27,12 @@ public enum SheetRulesIdentifiers {
        }
        return null;
    }
+
+    public static SheetRulesIdentifiers fromPath(String path) {
+        for(SheetRulesIdentifiers s : SheetRulesIdentifiers.values()){
+            if(s.path.equals(path)) return s;
+        }
+        return null;
+    }
 
 }

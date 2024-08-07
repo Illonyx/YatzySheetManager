@@ -12,8 +12,8 @@ public class ApplicationHMI extends Application {
         //Setting title to the scene
         primaryStage.setResizable(false);
         primaryStage.setTitle("Yatzy Companion");
-        primaryStage.setMinWidth(600);
-        primaryStage.setMinHeight(300);
+        primaryStage.setMinWidth(640);
+        primaryStage.setMinHeight(480);
 
         WindowNavigation navigation = new WindowNavigation(primaryStage);
         navigation.initApp();
@@ -23,3 +23,4 @@ public class ApplicationHMI extends Application {
         Application.launch(args);
     }
 }
+

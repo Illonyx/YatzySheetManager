@@ -1,12 +1,11 @@
 package com.bigbeard.yatzystats.ui;
 
-import com.bigbeard.yatzystats.ui.models.BaseUserModel;
-import com.bigbeard.yatzystats.ui.models.CreateSheetsUserModel;
+import com.bigbeard.yatzystats.ui.models.GlobalUserModel;
 import com.bigbeard.yatzystats.ui.models.StatsSheetsUserModel;
 import com.bigbeard.yatzystats.ui.scenes.createsheet.CreateSheetScene;
+import com.bigbeard.yatzystats.ui.scenes.settings.GlobalSettingsScene;
 import com.bigbeard.yatzystats.ui.scenes.statistics.settings.GamemodeScene;
 import com.bigbeard.yatzystats.ui.scenes.statistics.settings.GamesChoiceScene;
-import com.bigbeard.yatzystats.ui.scenes.statistics.statsmod.ConfrontationsScene;
 import com.bigbeard.yatzystats.ui.scenes.statistics.statsmod.StatsModScene;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -20,13 +19,13 @@ public class WindowNavigation {
 
     private UiScene currentScene;
     private Stage stage;
-    private BaseUserModel model;
+    private GlobalUserModel model;
     private Logger logger = LogManager.getLogger(WindowNavigation.class);
 
 
     public WindowNavigation(Stage stage){
         this.stage = stage;
-        this.model = new StatsSheetsUserModel();
+        this.model = new GlobalUserModel();
     }
 
     public void initApp() {
@@ -39,11 +38,11 @@ public class WindowNavigation {
         return stage;
     }
 
-    public BaseUserModel getModel() {
+    public GlobalUserModel getModel() {
         return model;
     }
 
-    protected void loadScene(UiSceneRole role){
+    public void loadScene(UiSceneRole role){
         UiScene lastScene = this.currentScene;
         switch (role){
 
@@ -53,6 +52,7 @@ public class WindowNavigation {
 
             case GAME_MODE_SCENE:
                 this.currentScene = new GamemodeScene(this);
+                this.currentScene.setParent(getFXMLComponents("choose-file.fxml"));
                 break;
 
             case GAMES_CHOICE_SCENE:
@@ -61,17 +61,17 @@ public class WindowNavigation {
 
             case STATS_MODE_SCENE:
                 this.currentScene = new StatsModScene(this);
-                break;
-
-            case CONFRONTATIONS_SCENE:
-                this.currentScene = new ConfrontationsScene(this);
+                this.currentScene.setParent(getFXMLComponents("statsview.fxml"));
                 break;
 
             case CREATE_SHEET_SCENE:
                 this.currentScene = new CreateSheetScene(this);
-                Parent parent = getFXMLComponents(this.currentScene, "fxml" + File.separator + "createsheet-view.fxml");
-                this.currentScene.setParent(parent);
-                this.model = new CreateSheetsUserModel();
+                this.currentScene.setParent(getFXMLComponents("createsheet-view.fxml"));
+                break;
+
+            case SETTINGS_SCENE:
+                this.currentScene = new GlobalSettingsScene(this);
+                this.currentScene.setParent(getFXMLComponents("user-preferences.fxml"));
                 break;
 
             default:
@@ -81,9 +81,10 @@ public class WindowNavigation {
         if(this.currentScene != null && lastScene != this.currentScene) this.stage.setScene(this.currentScene.getViewScene());
     }
 
-    public Parent getFXMLComponents(UiScene scene, String fxmlPath) {
+    public Parent getFXMLComponents(String fxmlFileName) {
+        String fxmlPath = "fxml" + File.separator + fxmlFileName;
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource(fxmlPath));
-        fxmlLoader.setController(scene);
+        fxmlLoader.setController(this.currentScene);
         Parent parent = null;
         try {
             parent = fxmlLoader.load();

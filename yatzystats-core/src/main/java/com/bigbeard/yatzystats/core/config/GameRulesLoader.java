@@ -57,21 +57,7 @@ public class GameRulesLoader {
     }
 
     private String getSheetRulesPath(SheetRulesIdentifiers sheetRules){
-        String path = "rules" + File.separator;
-        switch(sheetRules) {
-            case YATZY:
-                path += "scandinavian-yatzy-rules.json";
-                break;
-
-            case MAXI_YATZY:
-                path += "scandinavian-maxiyatzy-rules.json";
-                break;
-
-            default:
-                //DO NOTHING
-                break;
-        }
-        return path;
+        return "rules" + File.separator + sheetRules.getPath();
     }
 
 }
