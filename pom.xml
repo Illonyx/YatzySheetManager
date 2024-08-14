@@ -13,13 +13,14 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.target>17</maven.compiler.target>
-        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+        <maven.compiler.source>21</maven.compiler.source>
 
         <junit.version>5.5.2</junit.version>
         <log4j.version>2.20.0</log4j.version>
-        <javafx.version>17</javafx.version>
-        <poi.version>5.2.3</poi.version>
+        <javafx.version>21.0.4</javafx.version>
+        <poi.version>5.3.0</poi.version>
+        <!-- TODO: Remove Cpommon math versions-->
         <common-math.version>3.6.1</common-math.version>
         <gson.version>2.10.1</gson.version>
     </properties>
@@ -132,14 +133,14 @@
         </dependency>
 
         <!-- Apache Commons Math -->
-        <!-- For stats mod -->
+        <!-- For stats mod, seems deprecated.-->
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-math3</artifactId>
             <version>${common-math.version}</version>
         </dependency>
 
-        <!-- Gson (remove json-simple asap!!) -->
+        <!-- Gson -->
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
