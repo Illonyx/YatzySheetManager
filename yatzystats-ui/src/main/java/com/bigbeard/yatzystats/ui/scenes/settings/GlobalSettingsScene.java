@@ -88,17 +88,17 @@ public class GlobalSettingsScene extends UiScene {
 
         UserProperties userProperties = getModel().getUserProperties();
         // Folder
-        this.directoryTextfield.setText(userProperties.getSheetCreationPath());
+        this.directoryTextfield.setText(userProperties.sheetCreationPath());
         this.setDirectoryChooserHandler(super.getStage());
 
         // Language
-        String savedApplicationLanguage = userProperties.getApplicationLanguage();
+        String savedApplicationLanguage = userProperties.applicationLanguage();
         ObservableList<String> languageOptions = FXCollections.observableList(List.of("fr", "en"));
         languagesCombobox.setItems(languageOptions);
         languagesCombobox.setValue(savedApplicationLanguage != null ? savedApplicationLanguage : "fr");
 
         // Rules
-        SheetRulesIdentifiers savedRuleIdentifier = SheetRulesIdentifiers.fromPath(userProperties.getDefaultRulesFile());
+        SheetRulesIdentifiers savedRuleIdentifier = SheetRulesIdentifiers.fromPath(userProperties.defaultRulesFile());
         SheetRulesIdentifiers rulesIdentifiers = savedRuleIdentifier != null ? savedRuleIdentifier : SheetRulesIdentifiers.YATZY;
         ObservableList<String> options =
                 FXCollections.observableList(

@@ -11,14 +11,14 @@ public class ConfrontationDTO {
     }
 
     public String getWinnerName(){
-        return (playerResult1.getScore() == playerResult2.getScore())
-                ? "" : (playerResult1.getScore() > playerResult2.getScore()) ?
-        playerResult1.getPlayerName() : playerResult2.getPlayerName();
+        return (playerResult1.score() == playerResult2.score())
+                ? "" : (playerResult1.score() > playerResult2.score()) ?
+        playerResult1.playerName() : playerResult2.playerName();
     }
 
     public PlayerResult getPlayerResultWithName(String playerName){
-        return (playerResult1.getPlayerName().equals(playerName)) ? playerResult1 :
-                (playerResult2.getPlayerName().equals(playerName)) ? playerResult2 : null;
+        return (playerResult1.playerName().equals(playerName)) ? playerResult1 :
+                (playerResult2.playerName().equals(playerName)) ? playerResult2 : null;
     }
 
     public PlayerResult getPlayerResult1() {
@@ -30,7 +30,7 @@ public class ConfrontationDTO {
     }
 
     public String getConfrontationScore(String firstPlayer) {
-        return playerResult1.getPlayerName().equals(firstPlayer) ? playerResult1.getScore() + "-" + playerResult2.getScore() :
-                playerResult2.getScore() + "-" + playerResult1.getScore();
+        return playerResult1.playerName().equals(firstPlayer) ? playerResult1.score() + "-" + playerResult2.score() :
+                playerResult2.score() + "-" + playerResult1.score();
     }
 }

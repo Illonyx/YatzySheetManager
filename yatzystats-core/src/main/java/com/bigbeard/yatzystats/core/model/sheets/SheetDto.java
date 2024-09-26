@@ -45,9 +45,9 @@ public class SheetDto {
         PlayerResult player1Result = null;
         PlayerResult player2Result = null;
         for(PlayerResult playerResult : playerList){
-            if(playerResult.getPlayerName().equals(playerName1)){
+            if(playerResult.playerName().equals(playerName1)){
                 player1Result = playerResult;
-            } else if(playerResult.getPlayerName().equals(playerName2)){
+            } else if(playerResult.playerName().equals(playerName2)){
                 player2Result = playerResult;
             } else {
                 if(player1Result != null && player2Result != null) break;
@@ -60,7 +60,7 @@ public class SheetDto {
     public String toString(){
         StringBuilder sheetContent = new StringBuilder("Players :" + System.lineSeparator());
         for(PlayerResult p : playerList){
-            sheetContent.append(p.getPlayerName()).append(" : ").append(p.getScore()).append(System.lineSeparator());
+            sheetContent.append(p.playerName()).append(" : ").append(p.score()).append(System.lineSeparator());
         }
 
         return sheetContent.toString();

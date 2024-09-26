@@ -80,13 +80,14 @@ public class ExcelSheetWriter {
                     int startVerticalIndexP = rules.getAces().getSheetIndex().intValue() + 1;
                     int endVerticalIndexP = rules.getSixes().getSheetIndex().intValue() + 1;
 
-                    Function<FormulaSpec, String> formulaFunc = formulaSpec -> {
+                    Function<RangeFormulaSpec, String> formulaFunc = formulaSpec -> {
                         String sumFormula = this.writeSumFormula(formulaSpec);
-                        String totalFormula = "IF("+ sumFormula + ">" + (rules.getBonusCond() - 1) + ",";
-                        totalFormula += sumFormula + "+" + rules.getBonusVal() + ",";
-                        totalFormula += sumFormula;
-                        totalFormula += ")";
-                        return totalFormula;
+                        return String.format("IF(%s>%d,%s+%d,%s)",
+                                sumFormula,
+                                rules.getBonusCond() - 1,
+                                sumFormula,
+                                rules.getBonusVal(),
+                                sumFormula);
                     };
                     rowData.addAll(
                             range.processFormulaRowFill(startVerticalIndexP, endVerticalIndexP, formulaFunc)
@@ -99,7 +100,7 @@ public class ExcelSheetWriter {
                     int startVerticalIndexS = rules.getPartialSum().getSheetIndex().intValue() + 1;
                     int endVerticalIndexS = rules.getFinalSum().getSheetIndex().intValue();
 
-                    Function<FormulaSpec, String> formulaFuncS = this::writeSumFormula;
+                    Function<RangeFormulaSpec, String> formulaFuncS = this::writeSumFormula;
                     rowData.addAll(rangeS.
                             processFormulaRowFill(startVerticalIndexS, endVerticalIndexS, formulaFuncS));
                     break;
@@ -115,8 +116,8 @@ public class ExcelSheetWriter {
         workbook.write(fos);
     }
 
-    public String writeSumFormula(FormulaSpec spec) {
-        return "SUM(" + spec.toRangeString() + ")";
+    public String writeSumFormula(RangeFormulaSpec spec) {
+        return spec.defineFormulaFromSpec(ExcelFunctions.SUM.name());
     }
 
     private XSSFSheet createRowFromValues(XSSFSheet sheet, int rowIndex, boolean isFormulaRow, List<String> strings) {

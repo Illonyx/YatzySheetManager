@@ -17,9 +17,9 @@ public class UserPropertiesService extends PropertiesService {
     }
 
     public void writeUserProperties(UserProperties userProperties) {
-        this.writeUserCreationPath(userProperties.getSheetCreationPath());
-        this.writeApplicationLanguage(userProperties.getApplicationLanguage());
-        this.writeSheetDefaultRule(userProperties.getDefaultRulesFile());
+        this.writeUserCreationPath(userProperties.sheetCreationPath());
+        this.writeApplicationLanguage(userProperties.applicationLanguage());
+        this.writeSheetDefaultRule(userProperties.defaultRulesFile());
     }
 
     private String readUserCreationPath() {

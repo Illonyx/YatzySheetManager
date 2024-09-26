@@ -37,33 +37,27 @@ public class GameLoader {
                 List<PlayerResult> playerResults = new ArrayList<PlayerResult>();
 
                 for (String playerName : players) {
-                    PlayerResult playerResult = new PlayerResult();
-                    playerResult.setPlayerName(playerName);
+                    int playerScore = (rules.getFinalSum().getSheetIndex() != null) ? sheetReader.readScore(playerName) : 0;
 
-                    if (rules.getFinalSum().getSheetIndex() != null) {
-                        int playerScore = sheetReader.readScore(playerName);
-                        playerResult.setScore(playerScore);
+                    boolean hasYatzy = rules.getYahtzee() != null && rules.getYahtzee().getSheetIndex() != null && sheetReader.readYatzy(playerName) == rules.getYahtzee().getMaxValue().intValue();
+
+                    boolean hasBonus = rules.getPartialSum().getSheetIndex() != null && sheetReader.readBonus(playerName) >= rules.getBonusCond();
+
+                    if (playerScore > 0) {
+                        playerResults.add(new PlayerResult(playerName, playerScore, hasYatzy, hasBonus, false));
                     }
-
-                    if (rules.getYahtzee() != null && rules.getYahtzee().getSheetIndex() != null) {
-                        playerResult.setHasYatzy(sheetReader.readYatzy(playerName) == this.rules.getYahtzee().getMaxValue().intValue());
-                    }
-
-                    if (rules.getPartialSum().getSheetIndex() != null) {
-                        playerResult.setHasBonus(sheetReader.readBonus(playerName) >= this.rules.getBonusCond());
-                    }
-                    //Ne pas ajouter la partie d'un joueur qui a 0 dans son score
-                    if (playerResult.getScore() > 0)
-                        playerResults.add(playerResult);
-
                 }
 
-                int bestScore = playerResults.stream().map(PlayerResult::getScore).max(Integer::compareTo).orElse(0);
-                playerResults = playerResults.stream().map(playerResult -> {
-                    int score = playerResult.getScore();
-                    playerResult.setWinner(score == bestScore);
-                    return playerResult;
-                }).sorted(Comparator.comparingInt(PlayerResult::getScore).reversed()).collect(Collectors.toList());
+                int bestScore = playerResults.stream()
+                        .mapToInt(PlayerResult::score)
+                        .max()
+                        .orElse(0);
+
+                // Rebuild the list of player results with winner information in one pass
+                playerResults = playerResults.stream()
+                        .map(playerResult -> playerResult.withWinner(playerResult.score() == bestScore))
+                        .sorted(Comparator.comparingInt(PlayerResult::score).reversed())
+                        .toList();
 
                 SheetDto sheetDto = new SheetDto(sheetReader.getSheetName(), playerResults, bestScore);
                 sheetDtoList.add(sheetDto);

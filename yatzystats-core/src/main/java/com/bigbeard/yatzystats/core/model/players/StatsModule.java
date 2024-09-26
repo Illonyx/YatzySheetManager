@@ -27,7 +27,7 @@ public class StatsModule {
 
     public double getMean(List<PlayerResult> playerResults){
         return playerResults.stream()
-                .mapToDouble(PlayerResult::getScore)
+                .mapToDouble(PlayerResult::score)
                 .average()
                 .getAsDouble();
     }
@@ -43,14 +43,14 @@ public class StatsModule {
     public int getHighestScore(List<PlayerResult> playerResults)
     {
         return playerResults.stream()
-                .map(PlayerResult::getScore)
+                .map(PlayerResult::score)
                 .max(Integer::compare).get();
     }
 
     public List<String> getHighestScores(int limit, List<PlayerResult> playerResults)
     {
         return playerResults.stream()
-                .map(PlayerResult::getScore)
+                .map(PlayerResult::score)
                 .sorted(Comparator.reverseOrder())
                 .limit(limit)
                 .map(Object::toString)
@@ -59,7 +59,7 @@ public class StatsModule {
 
     public int getLowestScore(List<PlayerResult> playerResults){
         return playerResults.stream()
-                .map(PlayerResult::getScore)
+                .map(PlayerResult::score)
                 .min(Integer::compare).get();
     }
 
@@ -69,7 +69,7 @@ public class StatsModule {
 
     public String getYatzyRate(List<PlayerResult> playerResults) {
         long yatzyNum = playerResults.stream()
-                .map(PlayerResult::isHasYatzy)
+                .map(PlayerResult::hasYatzy)
                 .filter(aBoolean -> aBoolean.equals(true))
                 .count();
         return this.givePercentageOf((int)yatzyNum, playerResults.size());
@@ -85,7 +85,7 @@ public class StatsModule {
 
     public String getBonusRate(List<PlayerResult> playerResults) {
         long yatzyNum = playerResults.stream()
-                .map(PlayerResult::isHasBonus)
+                .map(PlayerResult::hasBonus)
                 .filter(aBoolean -> aBoolean.equals(true))
                 .count();
         return this.givePercentageOf((int)yatzyNum, playerResults.size());
@@ -99,7 +99,7 @@ public class StatsModule {
         SummaryStatistics stats = new SummaryStatistics();
         double mean = this.getMean(playerResults);
         playerResults.stream()
-                .map(PlayerResult::getScore)
+                .map(PlayerResult::score)
                 .map(Integer::doubleValue)
                 .forEach(stats::addValue);
         return Math.round(stats.getStandardDeviation());

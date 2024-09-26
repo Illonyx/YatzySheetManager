@@ -75,7 +75,7 @@ public class GamemodeScene extends UiScene {
 
         //1. Choix du fichier
 
-        String savedPath = getModel().getUserProperties().getSheetCreationPath();
+        String savedPath = getModel().getUserProperties().sheetCreationPath();
         if (savedPath != null) {
             selectedFilePathTextField.setText(savedPath);
         }
@@ -83,7 +83,7 @@ public class GamemodeScene extends UiScene {
 
         //2. Choix du mode de jeu
 
-        String savedUserRule = getModel().getUserProperties().getDefaultRulesFile();
+        String savedUserRule = getModel().getUserProperties().defaultRulesFile();
         SheetRulesIdentifiers savedRuleIdentifier = SheetRulesIdentifiers.fromPath(savedUserRule);
         SheetRulesIdentifiers defaultIdentifier = savedRuleIdentifier != null ? savedRuleIdentifier : SheetRulesIdentifiers.YATZY;
 

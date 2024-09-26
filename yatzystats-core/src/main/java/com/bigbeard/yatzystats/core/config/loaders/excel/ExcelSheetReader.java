@@ -34,7 +34,7 @@ public class ExcelSheetReader implements SheetReader {
 
     @Override
     public List<String> readPlayerNames() throws CellNotFoundException {
-        return new ExcelSheetFacade().reachPlayersList(this.sheet);
+        return new ExcelSheetFacade().getPlayersList(this.sheet);
     }
 
     @Override

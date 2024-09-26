@@ -40,8 +40,8 @@ public class StatsSheetsUserModel {
     public void loadSheetAnalysis() throws RulesNotLoadedException, FileNotLoadedException {
         GameRules gameRules = this.globalController.loadGameRules(this.chosenRules);
         GameLoadingStatus status = this.globalController.loadExcelSheet(this.yatzyFilePath, gameRules);
-        this.sheets = status.getSheetDtoList();
-        this.loadingErrors = status.getLoadingErrors();
+        this.sheets = status.sheetDtoList();
+        this.loadingErrors = status.loadingErrors();
     }
 
     // -----------------------------------------------------
@@ -54,14 +54,14 @@ public class StatsSheetsUserModel {
                 .flatMap(List::stream)
                 .toList();
         List<String> playerNames = playerResults.stream()
-                .map(PlayerResult::getPlayerName)
+                .map(PlayerResult::playerName)
                 .distinct()
                 .collect(Collectors.toList());
         this.playerNames = playerNames;
         this.resultsPerPlayers = new HashMap<>();
         playerNames.forEach(playerName -> {
             resultsPerPlayers.put(playerName, playerResults.stream()
-                    .filter(playerResult -> playerResult.getPlayerName().equals(playerName))
+                    .filter(playerResult -> playerResult.playerName().equals(playerName))
                     .collect(Collectors.toList()));
         });
     }

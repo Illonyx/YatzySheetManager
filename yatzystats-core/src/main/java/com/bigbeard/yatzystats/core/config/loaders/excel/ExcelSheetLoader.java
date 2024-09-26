@@ -16,21 +16,19 @@ import java.util.stream.Collectors;
 
 public class ExcelSheetLoader implements SheetLoader {
 
-    private List<Sheet> allSheets = new ArrayList<Sheet>();
-    private Workbook workbook;
+    private final List<Sheet> allSheets;
+    private final FormulaEvaluator formulaEvaluator;
 
     public ExcelSheetLoader(String filePath) throws IOException {
-        File file = new File(filePath);
-        this.workbook = WorkbookFactory.create(file);
-
-        for(int i=0; i<this.workbook.getNumberOfSheets(); i++){
-            Sheet sheet = this.workbook.getSheetAt(i);
-            allSheets.add(sheet);
+        try (Workbook workbook = WorkbookFactory.create(new File(filePath))) {
+            this.allSheets = new ArrayList<>();
+            workbook.sheetIterator().forEachRemaining(allSheets::add);
+            this.formulaEvaluator = workbook.getCreationHelper().createFormulaEvaluator();
         }
     }
 
     public FormulaEvaluator getFormulaEvaluator(){
-        return this.workbook.getCreationHelper().createFormulaEvaluator();
+        return this.formulaEvaluator;
     }
 
     /**
@@ -39,7 +37,7 @@ public class ExcelSheetLoader implements SheetLoader {
      * @return sheet names
      */
     public List<String> getAllSheetNames(List<Sheet> sheets) {
-        return sheets.stream().map(Sheet::getSheetName).collect(Collectors.toList());
+        return sheets.stream().map(Sheet::getSheetName).toList();
     }
 
     /**

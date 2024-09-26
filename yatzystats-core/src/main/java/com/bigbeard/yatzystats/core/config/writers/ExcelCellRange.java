@@ -1,13 +1,15 @@
 package com.bigbeard.yatzystats.core.config.writers;
 
-import java.util.ArrayList;
+import org.apache.poi.ss.util.CellReference;
+
 import java.util.List;
 import java.util.function.Function;
+import java.util.stream.IntStream;
 
 public class ExcelCellRange {
 
-    private int startHorizontalIndex, endHorizontalIndex;
-    private String currentColumnExcelName = "";
+    private final int startHorizontalIndex;
+    private final int endHorizontalIndex;
 
     public ExcelCellRange(int startHorizontalIndex, int endHorizontalIndex) {
         this.startHorizontalIndex = startHorizontalIndex;
@@ -15,18 +17,11 @@ public class ExcelCellRange {
     }
 
     public List<String> processFormulaRowFill(int formulaVerticalStartIndex, int formulaVerticalEndIndex,
-                                              Function<FormulaSpec, String> formulaFonc) {
-        List<String> rowFormulaValues = new ArrayList<>();
-        for (int i = startHorizontalIndex; i<endHorizontalIndex; i++) {
-            FormulaSpec formulaSpec = new FormulaSpec(mapCurrentPosWithExcelColumnName(i),
+                                              Function<RangeFormulaSpec, String> formulaFonc) {
+        return IntStream.range(startHorizontalIndex, endHorizontalIndex).mapToObj(i -> {
+            var formulaSpec = new RangeFormulaSpec(CellReference.convertNumToColString(i),
                     formulaVerticalStartIndex, formulaVerticalEndIndex);
-            rowFormulaValues.add(formulaFonc.apply(formulaSpec));
-        }
-        return rowFormulaValues;
-    }
-
-    public static String mapCurrentPosWithExcelColumnName(int currentPos) {
-        int asciiCode = currentPos + 65;
-        return Character.toString ((char) asciiCode);
+            return formulaFonc.apply(formulaSpec);
+        }).toList();
     }
 }

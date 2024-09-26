@@ -5,82 +5,54 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.StreamSupport;
 
 public class ExcelSheetFacade {
 
-	public ExcelSheetFacade(){
-		
-	}
+    private static final int PLAYER_COLUMN_INDEX = 0;
 
-	//Renvoi d'exception à faire
-	public int findPlayerIndex(Sheet sheet, String playerName){
-		return this.findCellIndex(sheet, 0, playerName);
-	}
+    public ExcelSheetFacade() {
 
-	public List<String> reachPlayersList(org.apache.poi.ss.usermodel.Sheet sheet) throws CellNotFoundException {
+    }
 
-		List<String> playersInGame = new ArrayList<String>();
-		Row initialRow = sheet.getRow(0);
-		if(initialRow == null) throw new CellNotFoundException("player", 0);
-		java.util.Iterator<Cell> it = initialRow.iterator();
+    public int findPlayerIndex(Sheet sheet, String playerName) throws CellNotFoundException {
+        return this.findCellIndex(sheet, PLAYER_COLUMN_INDEX, playerName);
+    }
 
-
-		while(it.hasNext()) {
-			Cell currentCell = it.next();
-			if(currentCell != null && currentCell.getColumnIndex() != 0){
-				playersInGame.add(currentCell.getStringCellValue());
-			}
-		}
-
-		return playersInGame;
-	}
+    public List<String> getPlayersList(org.apache.poi.ss.usermodel.Sheet sheet) throws CellNotFoundException {
+        Row initialRow = getRowOrThrow(sheet, PLAYER_COLUMN_INDEX);
+        return StreamSupport.stream(initialRow.spliterator(), false)
+                .filter(cell -> cell.getColumnIndex() != PLAYER_COLUMN_INDEX)
+                .map(Cell::getStringCellValue)
+                .toList();
+    }
 
 
-	//Simple Readers
-	public Cell readCell(org.apache.poi.ss.usermodel.Sheet sheet, int row, int column)
-	{
-		Cell cellToReturn = null;
-		Row yatzyRow = sheet.getRow(--row);
-		java.util.Iterator<Cell> itYatzy = yatzyRow.iterator();
-		while(itYatzy.hasNext()) {
-			Cell currentCell = itYatzy.next();
-			if(currentCell.getColumnIndex() == column)
-			{
-				cellToReturn=currentCell;
-				break;
-			}
-		}
-		return cellToReturn;
-	}
-	
-	public List<Cell> readCells(org.apache.poi.ss.usermodel.Sheet sheet, int row)
-	{
-		List<Cell> cellsToReturn = new ArrayList<Cell>();
-		Row yatzyRow = sheet.getRow(row);
-		java.util.Iterator<Cell> itYatzy = yatzyRow.iterator();
-		while(itYatzy.hasNext()) {
-			Cell currentCell = itYatzy.next();
-			cellsToReturn.add(currentCell);
-		}
-		return cellsToReturn;
-	}
-	
-	public int findCellIndex(org.apache.poi.ss.usermodel.Sheet sheet, int row, Object item)
-	{
-		int searchedItemIndex = 0;
-		Row initialRow = sheet.getRow(row);
-		java.util.Iterator<Cell> it = initialRow.iterator();
-		
-		while(it.hasNext()) {
-			Cell currentCell = it.next();
-			if(item.equals(currentCell.getStringCellValue())){ 
-				searchedItemIndex = currentCell.getColumnIndex();
-				break;
-			}
-		}
-		return searchedItemIndex;
-	}
+    //Simple Readers
+    public Cell readCell(org.apache.poi.ss.usermodel.Sheet sheet, int row, int column) throws CellNotFoundException {
+        Row yatzyRow = getRowOrThrow(sheet, --row);
+
+        return StreamSupport.stream(yatzyRow.spliterator(), false)
+                .filter(cell -> cell.getColumnIndex() == column)
+                .findFirst().orElse(null);
+    }
+
+    public Integer findCellIndex(org.apache.poi.ss.usermodel.Sheet sheet, int row, String item) throws CellNotFoundException {
+        Row initialRow = getRowOrThrow(sheet, row);
+
+        return StreamSupport.stream(initialRow.spliterator(), false)
+                .filter(cell -> item.equals(cell.getStringCellValue()))
+                .findFirst()
+                .map(Cell::getColumnIndex).orElse(null);
+    }
+
+    private Row getRowOrThrow(Sheet sheet, int rowIndex) throws CellNotFoundException {
+        Row row = sheet.getRow(rowIndex);
+        if (row == null) {
+            throw new CellNotFoundException("Row " + rowIndex + " not found.", rowIndex);
+        }
+        return row;
+    }
 
 }

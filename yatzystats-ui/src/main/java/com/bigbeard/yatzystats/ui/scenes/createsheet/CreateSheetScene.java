@@ -73,7 +73,7 @@ public class CreateSheetScene extends UiScene {
         UITheming.getInstance().applyTextTheming(playersText, theming);
 
         // Folder
-        String savedPath = getModel().getUserProperties().getSheetCreationPath();
+        String savedPath = getModel().getUserProperties().sheetCreationPath();
         if(savedPath != null) {
             this.directoryTextfield.setText(savedPath);
         }
@@ -99,7 +99,7 @@ public class CreateSheetScene extends UiScene {
         });
 
         // Rules
-        String savedUserRule = getModel().getUserProperties().getDefaultRulesFile();
+        String savedUserRule = getModel().getUserProperties().defaultRulesFile();
         SheetRulesIdentifiers savedRuleIdentifier = SheetRulesIdentifiers.fromPath(savedUserRule);
         SheetRulesIdentifiers defaultIdentifier = savedRuleIdentifier != null ? savedRuleIdentifier : SheetRulesIdentifiers.YATZY;
 
