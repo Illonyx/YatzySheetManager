@@ -1,6 +1,6 @@
 package com.bigbeard.yatzystats.ui.scenes.createsheet;
 
-import com.bigbeard.yatzystats.core.model.rules.SheetRulesIdentifiers;
+import com.bigbeard.yatzystats.core.model.rules.GameRules;
 import com.bigbeard.yatzystats.ui.UiScene;
 import com.bigbeard.yatzystats.ui.UiSceneRole;
 import com.bigbeard.yatzystats.ui.WindowNavigation;
@@ -21,9 +21,7 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class CreateSheetScene extends UiScene {
     private List<String> players;
@@ -45,7 +43,7 @@ public class CreateSheetScene extends UiScene {
     @FXML ListView<String> playersListView;
 
     @FXML Text rulesText;
-    @FXML ComboBox<String> rulesCombobox;
+    @FXML ComboBox<GameRules> rulesCombobox;
 
     @FXML Button ruleInfoButton;
 
@@ -99,23 +97,16 @@ public class CreateSheetScene extends UiScene {
         });
 
         // Rules
-        String savedUserRule = getModel().getUserProperties().defaultRulesFile();
-        SheetRulesIdentifiers savedRuleIdentifier = SheetRulesIdentifiers.fromPath(savedUserRule);
-        SheetRulesIdentifiers defaultIdentifier = savedRuleIdentifier != null ? savedRuleIdentifier : SheetRulesIdentifiers.YATZY;
-
-        ObservableList<String> options =
-                FXCollections.observableList(
-                        Arrays.stream(SheetRulesIdentifiers.values())
-                                .map(SheetRulesIdentifiers::getValue)
-                                .collect(Collectors.toList())
-                );
-        rulesCombobox.setItems(options);
-        rulesCombobox.setValue(defaultIdentifier.getValue());
+        List<GameRules> availableGameRules = getModel().getAvailableGameRules();
+        GameRules defaultRulesValue = availableGameRules.stream()
+                .filter(gameRules -> gameRules.formatId().equals(getModel().getUserProperties().defaultRulesFile()))
+                .findFirst()
+                .orElse(availableGameRules.get(0));
+        rulesCombobox.setItems(FXCollections.observableList(availableGameRules));
+        rulesCombobox.setValue(defaultRulesValue);
 
         ruleInfoButton.setOnAction(actionEvent -> {
-            SheetRulesIdentifiers ruleIdentifier = SheetRulesIdentifiers.fromValue(rulesCombobox.getValue());
-            assert ruleIdentifier != null;
-            RulesDialog rulesAlert = new RulesDialog(ruleIdentifier);
+            RulesDialog rulesAlert = new RulesDialog(rulesCombobox.getValue());
             rulesAlert.getDialog().showAndWait();
         });
 
@@ -147,14 +138,14 @@ public class CreateSheetScene extends UiScene {
         // Set Data
         this.model.setPlayers(playersListView.getItems());
         this.model.setSheetNumber(sheetNumberCombobox.getValue());
-        this.model.setChosenRules(SheetRulesIdentifiers.fromValue(rulesCombobox.getValue()));
+        this.model.setChosenRules(rulesCombobox.getValue());
         this.model.confirmFinalWritingPath(directoryTextfield.getText());
 
         this.model.writeExcelSheet();
         return true;
     }
 
-    private void setDirectoryChooserHandler(Stage stage){
+    private void setDirectoryChooserHandler(Stage stage) {
         final DirectoryChooser directoryChooser = new DirectoryChooser();
         browseDirectoryButton.setOnAction(
                 e -> {

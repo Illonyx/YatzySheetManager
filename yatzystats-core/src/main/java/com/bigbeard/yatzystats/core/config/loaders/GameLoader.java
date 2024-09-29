@@ -1,8 +1,9 @@
-package com.bigbeard.yatzystats.core.model.rules;
+package com.bigbeard.yatzystats.core.config.loaders;
 
 import com.bigbeard.yatzystats.core.exceptions.CellNotFoundException;
 import com.bigbeard.yatzystats.core.exceptions.FileNotLoadedException;
 import com.bigbeard.yatzystats.core.model.players.PlayerResult;
+import com.bigbeard.yatzystats.core.model.rules.GameRules;
 import com.bigbeard.yatzystats.core.model.sheets.SheetDto;
 import com.bigbeard.yatzystats.core.model.sheets.SheetLoader;
 import com.bigbeard.yatzystats.core.model.sheets.SheetReader;
@@ -10,7 +11,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * La responsabilité de cet objet est de charger les bonnes règles selon les règles du jeu
@@ -34,7 +34,7 @@ public class GameLoader {
         for (SheetReader sheetReader : this.sheetLoader.createSheetReaders(this.rules)) {
             try {
                 List<String> players = sheetReader.readPlayerNames();
-                List<PlayerResult> playerResults = new ArrayList<PlayerResult>();
+                List<PlayerResult> playerResults = new ArrayList<>();
 
                 for (String playerName : players) {
                     int playerScore = (rules.getFinalSum().getSheetIndex() != null) ? sheetReader.readScore(playerName) : 0;
@@ -74,8 +74,11 @@ public class GameLoader {
         }
 
         logger.info("Nombre de parties chargées : " + sheetDtoList.size() + "/" + this.sheetLoader.getSheetNumber());
-        if (sheetDtoList.isEmpty() || !listDuplicateUsingSet(sheetDtoList).isEmpty())
+        if (sheetDtoList.isEmpty())
             throw new FileNotLoadedException("Le nombre de parties chargées est de 0", "Vérifiez bien si le format des parties enregistrées dans le fichier Excel est cohérent avec celui des règles utilisées");
+        if(!listDuplicateUsingSet(sheetDtoList).isEmpty())
+            // TODO: Envoyer une erreur
+            logger.error("Duplications présentes dans le fichier soumis");
         return sheetDtoList;
     }
 

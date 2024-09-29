@@ -1,9 +1,6 @@
 package com.bigbeard.yatzystats.ui.scenes.common;
 
-import com.bigbeard.yatzystats.core.config.GameRulesLoader;
-import com.bigbeard.yatzystats.core.exceptions.RulesNotLoadedException;
 import com.bigbeard.yatzystats.core.model.rules.GameRules;
-import com.bigbeard.yatzystats.core.model.rules.SheetRulesIdentifiers;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.*;
@@ -13,20 +10,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class RulesDialog {
-
     Dialog dialog;
     GameRules rules;
 
-    public RulesDialog(SheetRulesIdentifiers identifiers) {
+    public RulesDialog(GameRules gameRules) {
         this.dialog = new Dialog<>();
-        try {
-            GameRulesLoader loader = new GameRulesLoader(identifiers);
-            this.rules = loader.getGameRules();
-            this.dialog.setTitle(rules.getFormatName());
-            this.initDialog();
-        } catch (RulesNotLoadedException e) {
-            throw new RuntimeException(e);
-        }
+        this.rules = gameRules;
+        this.dialog.setTitle(rules.formatDescription());
+        this.initDialog();
     }
 
     private void initDialog() {

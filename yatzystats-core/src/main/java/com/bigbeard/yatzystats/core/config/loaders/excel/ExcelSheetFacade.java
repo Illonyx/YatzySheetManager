@@ -20,6 +20,15 @@ public class ExcelSheetFacade {
         return this.findCellIndex(sheet, PLAYER_COLUMN_INDEX, playerName);
     }
 
+    public Integer findCellIndex(org.apache.poi.ss.usermodel.Sheet sheet, int row, String item) throws CellNotFoundException {
+        Row initialRow = getRowOrThrow(sheet, row);
+
+        return StreamSupport.stream(initialRow.spliterator(), false)
+                .filter(cell -> item.equals(cell.getStringCellValue()))
+                .findFirst()
+                .map(Cell::getColumnIndex).orElse(null);
+    }
+
     public List<String> getPlayersList(org.apache.poi.ss.usermodel.Sheet sheet) throws CellNotFoundException {
         Row initialRow = getRowOrThrow(sheet, PLAYER_COLUMN_INDEX);
         return StreamSupport.stream(initialRow.spliterator(), false)
@@ -28,23 +37,15 @@ public class ExcelSheetFacade {
                 .toList();
     }
 
-
     //Simple Readers
-    public Cell readCell(org.apache.poi.ss.usermodel.Sheet sheet, int row, int column) throws CellNotFoundException {
-        Row yatzyRow = getRowOrThrow(sheet, --row);
+    public Cell readCell(org.apache.poi.ss.usermodel.Sheet sheet, int techRowId, int column) throws CellNotFoundException {
+        // Tech column id declared in json files starts from 1, so let's minus one it
+        int rowId = techRowId - 1;
+        Row row = getRowOrThrow(sheet, rowId);
 
-        return StreamSupport.stream(yatzyRow.spliterator(), false)
+        return StreamSupport.stream(row.spliterator(), false)
                 .filter(cell -> cell.getColumnIndex() == column)
                 .findFirst().orElse(null);
-    }
-
-    public Integer findCellIndex(org.apache.poi.ss.usermodel.Sheet sheet, int row, String item) throws CellNotFoundException {
-        Row initialRow = getRowOrThrow(sheet, row);
-
-        return StreamSupport.stream(initialRow.spliterator(), false)
-                .filter(cell -> item.equals(cell.getStringCellValue()))
-                .findFirst()
-                .map(Cell::getColumnIndex).orElse(null);
     }
 
     private Row getRowOrThrow(Sheet sheet, int rowIndex) throws CellNotFoundException {

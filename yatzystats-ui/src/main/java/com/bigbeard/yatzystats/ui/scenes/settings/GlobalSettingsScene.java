@@ -1,7 +1,7 @@
 package com.bigbeard.yatzystats.ui.scenes.settings;
 
 import com.bigbeard.yatzystats.core.model.players.UserProperties;
-import com.bigbeard.yatzystats.core.model.rules.SheetRulesIdentifiers;
+import com.bigbeard.yatzystats.core.model.rules.GameRules;
 import com.bigbeard.yatzystats.ui.UiScene;
 import com.bigbeard.yatzystats.ui.UiSceneRole;
 import com.bigbeard.yatzystats.ui.WindowNavigation;
@@ -14,7 +14,6 @@ import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.Tab;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.GridPane;
@@ -44,7 +43,7 @@ public class GlobalSettingsScene extends UiScene {
     @FXML
     Text rulesText;
     @FXML
-    ComboBox<String> rulesCombobox;
+    ComboBox<GameRules> rulesCombobox;
     @FXML
     Button ruleInfoButton;
     @FXML
@@ -67,10 +66,10 @@ public class GlobalSettingsScene extends UiScene {
 
         String sheetDefaultPath = this.directoryTextfield.getText();
         String applicationLanguage = this.languagesCombobox.getValue();
-        SheetRulesIdentifiers sheetRulesIdentifiers = SheetRulesIdentifiers.fromValue(this.rulesCombobox.getValue());
-        String rulesPath = sheetRulesIdentifiers.getPath();
+        GameRules gameRules = this.rulesCombobox.getValue();
+        String rulesId = gameRules.formatId();
 
-        UserProperties userProperties = new UserProperties(sheetDefaultPath, applicationLanguage, rulesPath);
+        UserProperties userProperties = new UserProperties(sheetDefaultPath, applicationLanguage, rulesId);
         getModel().setUserProperties(userProperties);
         return true;
     }
@@ -98,21 +97,16 @@ public class GlobalSettingsScene extends UiScene {
         languagesCombobox.setValue(savedApplicationLanguage != null ? savedApplicationLanguage : "fr");
 
         // Rules
-        SheetRulesIdentifiers savedRuleIdentifier = SheetRulesIdentifiers.fromPath(userProperties.defaultRulesFile());
-        SheetRulesIdentifiers rulesIdentifiers = savedRuleIdentifier != null ? savedRuleIdentifier : SheetRulesIdentifiers.YATZY;
-        ObservableList<String> options =
-                FXCollections.observableList(
-                        Arrays.stream(SheetRulesIdentifiers.values())
-                                .map(SheetRulesIdentifiers::getValue)
-                                .collect(Collectors.toList())
-                );
-        rulesCombobox.setItems(options);
-        rulesCombobox.setValue(rulesIdentifiers.getValue());
+        List<GameRules> availableGameRules = getModel().getAvailableGameRules();
+        GameRules defaultRulesValue = availableGameRules.stream()
+                .filter(gameRules -> gameRules.formatId().equals(userProperties.defaultRulesFile()))
+                .findFirst()
+                .orElse(availableGameRules.get(0));
+        rulesCombobox.setItems(FXCollections.observableList(availableGameRules));
+        rulesCombobox.setValue(defaultRulesValue);
 
         ruleInfoButton.setOnAction(actionEvent -> {
-            SheetRulesIdentifiers ruleIdentifier = SheetRulesIdentifiers.fromValue(rulesCombobox.getValue());
-            assert ruleIdentifier != null;
-            RulesDialog rulesAlert = new RulesDialog(ruleIdentifier);
+            RulesDialog rulesAlert = new RulesDialog(rulesCombobox.getValue());
             rulesAlert.getDialog().showAndWait();
         });
 

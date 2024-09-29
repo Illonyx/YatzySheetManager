@@ -35,14 +35,14 @@ public class ExcelSheetWriter {
     public void writeSheets(int sheetNumber, GameRules rules) throws IOException {
 
         for(int i=1;i<=sheetNumber;i++) {
-            String sheetName = this.getSheetName(rules.getFormatName(), i);
+            String sheetName = this.getSheetName(rules.formatId(), i);
             writeSheet(sheetName,rules);
         }
         workbook.close();
     }
 
-    private String getSheetName(String formatName, int number) {
-        String sheetName = formatName.trim();
+    private String getSheetName(String formatId, int number) {
+        String sheetName = formatId.trim();
         sheetName += this.getFormattedTime();
         sheetName += "(" + number + ")";
         return sheetName;

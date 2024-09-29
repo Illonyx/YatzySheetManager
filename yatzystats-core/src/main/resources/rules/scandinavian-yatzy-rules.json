@@ -1,5 +1,6 @@
 {
-  "formatName": "Scandinavian Yatzy",
+  "formatId": "ScandinavianYatzy",
+  "formatDescription": "Yatzy - Scandinavian Yathzee",
   "bonus": {
     "bonusCond": 63,
     "bonusValue": 50

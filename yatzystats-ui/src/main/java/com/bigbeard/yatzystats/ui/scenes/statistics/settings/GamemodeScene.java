@@ -2,7 +2,7 @@ package com.bigbeard.yatzystats.ui.scenes.statistics.settings;
 
 import com.bigbeard.yatzystats.core.exceptions.FileNotLoadedException;
 import com.bigbeard.yatzystats.core.exceptions.RulesNotLoadedException;
-import com.bigbeard.yatzystats.core.model.rules.SheetRulesIdentifiers;
+import com.bigbeard.yatzystats.core.model.rules.GameRules;
 import com.bigbeard.yatzystats.ui.UiScene;
 import com.bigbeard.yatzystats.ui.UiSceneRole;
 import com.bigbeard.yatzystats.ui.WindowNavigation;
@@ -10,7 +10,6 @@ import com.bigbeard.yatzystats.ui.scenes.common.RulesDialog;
 import com.bigbeard.yatzystats.ui.theming.UIButtonTheming;
 import com.bigbeard.yatzystats.ui.theming.UITheming;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -25,8 +24,8 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.stream.Collectors;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * User has to select two items :
@@ -50,7 +49,7 @@ public class GamemodeScene extends UiScene {
     @FXML
     Text rulesText;
     @FXML
-    ComboBox<String> rulesCombobox;
+    ComboBox<GameRules> rulesCombobox;
     @FXML
     Button ruleInfoButton;
 
@@ -82,23 +81,16 @@ public class GamemodeScene extends UiScene {
         this.setBrowseButton(super.getStage());
 
         //2. Choix du mode de jeu
-
-        String savedUserRule = getModel().getUserProperties().defaultRulesFile();
-        SheetRulesIdentifiers savedRuleIdentifier = SheetRulesIdentifiers.fromPath(savedUserRule);
-        SheetRulesIdentifiers defaultIdentifier = savedRuleIdentifier != null ? savedRuleIdentifier : SheetRulesIdentifiers.YATZY;
-
-        ObservableList<String> options =
-                FXCollections.observableList(
-                        Arrays.stream(SheetRulesIdentifiers.values())
-                                .map(SheetRulesIdentifiers::getValue)
-                                .collect(Collectors.toList())
-                );
-        rulesCombobox.setValue(defaultIdentifier.getValue());
+        List<GameRules> availableGameRules = getModel().getAvailableGameRules();
+        GameRules defaultRulesValue = availableGameRules.stream()
+                .filter(gameRules -> gameRules.formatId().equals(getModel().getUserProperties().defaultRulesFile()))
+                .findFirst()
+                .orElse(availableGameRules.get(0));
+        rulesCombobox.setItems(FXCollections.observableList(availableGameRules));
+        rulesCombobox.setValue(defaultRulesValue);
 
         ruleInfoButton.setOnAction(actionEvent -> {
-            SheetRulesIdentifiers ruleIdentifier = SheetRulesIdentifiers.fromValue(rulesCombobox.getValue());
-            assert ruleIdentifier != null;
-            RulesDialog rulesAlert = new RulesDialog(ruleIdentifier);
+            RulesDialog rulesAlert = new RulesDialog(rulesCombobox.getValue());
             rulesAlert.getDialog().showAndWait();
         });
 
@@ -110,9 +102,9 @@ public class GamemodeScene extends UiScene {
     @Override
     public boolean isViewValid() {
         String file = selectedFilePathTextField.getText();
-        String gameMode = (String) this.rulesCombobox.getValue();
+        GameRules gameMode = this.rulesCombobox.getValue();
         getModel().getStatsSheetsUserModel().setYatzyFilePath(file);
-        getModel().getStatsSheetsUserModel().setChosenRules(SheetRulesIdentifiers.fromValue(gameMode));
+        getModel().getStatsSheetsUserModel().setChosenRules(gameMode);
 
         //TODO : Dialogues d exception à afficher
         try {

@@ -12,7 +12,7 @@ public class PropertiesService {
     private final Path propertiesFilePath;
 
     public PropertiesService(String propertiesFileName) {
-        this.propertiesFilePath = getAppSupportFilePath(propertiesFileName);
+        this.propertiesFilePath = AppSupportFilePathUtil.getFilePath(propertiesFileName);
         loadProperties();
     }
 
@@ -51,27 +51,5 @@ public class PropertiesService {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-    }
-
-    // Utility method to get the file path in the Application Support directory
-    private Path getAppSupportFilePath(String fileName) {
-        String osName = System.getProperty("os.name").toLowerCase();
-        String userHome = System.getProperty("user.home");
-        String appConfigFolder = "YatzyCompanion";
-        Path appSupportDir;
-
-        if (osName.contains("mac")) {
-            appSupportDir = Paths.get(userHome, "Library", "Application Support", appConfigFolder);
-        } else if (osName.contains("win")) {
-            String appData = System.getenv("APPDATA");
-            if (appData == null) {
-                throw new IllegalStateException("APPDATA environment variable is not set.");
-            }
-            appSupportDir = Paths.get(appData, appConfigFolder);
-        } else {
-            throw new UnsupportedOperationException("Unsupported OS: " + osName);
-        }
-
-        return appSupportDir.resolve(fileName);
     }
 }

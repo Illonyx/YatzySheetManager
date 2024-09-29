@@ -6,7 +6,6 @@ import com.bigbeard.yatzystats.core.model.players.ConfrontationDTO;
 import com.bigbeard.yatzystats.core.model.players.PlayerResult;
 import com.bigbeard.yatzystats.core.model.rules.GameLoadingStatus;
 import com.bigbeard.yatzystats.core.model.rules.GameRules;
-import com.bigbeard.yatzystats.core.model.rules.SheetRulesIdentifiers;
 import com.bigbeard.yatzystats.core.model.sheets.SheetDto;
 import com.bigbeard.yatzystats.ui.GlobalController;
 import org.apache.logging.log4j.LogManager;
@@ -21,7 +20,7 @@ public class StatsSheetsUserModel {
     private final GlobalController globalController = new GlobalController();
 
     // Infos 1er écran
-    private SheetRulesIdentifiers chosenRules;
+    private GameRules chosenRules;
     private String yatzyFilePath;
 
     //Infos 2eme ecran : Choix feuilles yatzee
@@ -38,8 +37,7 @@ public class StatsSheetsUserModel {
     // -------------------------------------------------
 
     public void loadSheetAnalysis() throws RulesNotLoadedException, FileNotLoadedException {
-        GameRules gameRules = this.globalController.loadGameRules(this.chosenRules);
-        GameLoadingStatus status = this.globalController.loadExcelSheet(this.yatzyFilePath, gameRules);
+        GameLoadingStatus status = this.globalController.loadExcelSheet(this.yatzyFilePath, chosenRules);
         this.sheets = status.sheetDtoList();
         this.loadingErrors = status.loadingErrors();
     }
@@ -94,8 +92,8 @@ public class StatsSheetsUserModel {
         this.selectedSheets = selectedSheets;
     }
 
-    public void setChosenRules(SheetRulesIdentifiers sheetRulesIdentifiers) {
-        this.chosenRules = sheetRulesIdentifiers;
+    public void setChosenRules(GameRules chosenRules) {
+        this.chosenRules = chosenRules;
     }
 
     public void setYatzyFilePath(String file) {

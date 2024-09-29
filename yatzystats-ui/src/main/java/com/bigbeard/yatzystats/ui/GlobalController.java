@@ -1,13 +1,12 @@
 package com.bigbeard.yatzystats.ui;
 
-import com.bigbeard.yatzystats.core.config.GameRulesLoader;
+import com.bigbeard.yatzystats.core.config.GameRulesLoaderV2;
 import com.bigbeard.yatzystats.core.config.loaders.excel.ExcelSheetLoader;
 import com.bigbeard.yatzystats.core.exceptions.FileNotLoadedException;
 import com.bigbeard.yatzystats.core.exceptions.RulesNotLoadedException;
-import com.bigbeard.yatzystats.core.model.rules.GameLoader;
+import com.bigbeard.yatzystats.core.config.loaders.GameLoader;
 import com.bigbeard.yatzystats.core.model.rules.GameLoadingStatus;
 import com.bigbeard.yatzystats.core.model.rules.GameRules;
-import com.bigbeard.yatzystats.core.model.rules.SheetRulesIdentifiers;
 import com.bigbeard.yatzystats.core.model.sheets.SheetDto;
 
 import java.io.IOException;
@@ -32,9 +31,9 @@ public class GlobalController {
         }
     }
 
-    public GameRules loadGameRules(SheetRulesIdentifiers sheetRules) throws RulesNotLoadedException {
-        GameRulesLoader gameRulesLoader = new GameRulesLoader(sheetRules);
-        return gameRulesLoader.getGameRules();
+    public List<GameRules> loadAllGameRules() throws RulesNotLoadedException, IOException {
+        GameRulesLoaderV2 gameRulesLoaderV2 = new GameRulesLoaderV2();
+        return gameRulesLoaderV2.getGameRuleFiles();
     }
 
 }

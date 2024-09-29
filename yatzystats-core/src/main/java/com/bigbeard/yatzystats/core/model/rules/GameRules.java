@@ -5,35 +5,20 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-class Bonus {
-    Long bonusCond;
-    Long bonusValue;
-}
-
-public class GameRules {
-
-    private String formatName;
-
-    //Bonus
-    private Bonus bonus;
-
-    // Values
-    private List<ColumnDescription> values = new ArrayList<>();
-
-    // Combinations
-    private List<ColumnDescription> combinations = new ArrayList<>();
-
-    public GameRules() {
-    }
+public record GameRules(String formatId, String formatDescription, Bonus bonus,
+                              List<ColumnDescription> values, List<ColumnDescription> combinations) {
 
     @Override
     public String toString() {
-        String rulesStr = "GameRules : " + System.lineSeparator();
-        rulesStr += "BonusRow : " + this.getPartialSum().getSheetIndex() + System.lineSeparator();
-        rulesStr += "BonusCond : " + this.bonus.bonusCond + System.lineSeparator();
-        rulesStr += "BonusVal : " + this.bonus.bonusValue + System.lineSeparator();
-        rulesStr += "Sixes TechColumnId : " + this.getSixes().getTechColumnId() + System.lineSeparator();
-        return rulesStr;
+        return this.formatDescription;
+    }
+
+    public Long getBonusCond() {
+        return this.bonus.bonusCond();
+    }
+
+    public Long getBonusVal() {
+        return this.bonus.bonusValue();
     }
 
     public List<ColumnDescription> getColumnsList() {
@@ -43,18 +28,6 @@ public class GameRules {
         return descriptions.stream()
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
-    }
-
-    public String getFormatName() {
-        return formatName;
-    }
-
-    public Long getBonusCond() {
-        return this.bonus.bonusCond;
-    }
-
-    public Long getBonusVal() {
-        return this.bonus.bonusValue;
     }
 
     public ColumnDescription getAces() {

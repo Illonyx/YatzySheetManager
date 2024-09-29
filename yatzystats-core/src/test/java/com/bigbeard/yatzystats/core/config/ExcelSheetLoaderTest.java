@@ -3,9 +3,8 @@ package com.bigbeard.yatzystats.core.config;
 import com.bigbeard.yatzystats.core.config.loaders.excel.ExcelSheetLoader;
 import com.bigbeard.yatzystats.core.exceptions.FileNotLoadedException;
 import com.bigbeard.yatzystats.core.exceptions.RulesNotLoadedException;
-import com.bigbeard.yatzystats.core.model.rules.GameLoader;
+import com.bigbeard.yatzystats.core.config.loaders.GameLoader;
 import com.bigbeard.yatzystats.core.model.rules.GameRules;
-import com.bigbeard.yatzystats.core.model.rules.SheetRulesIdentifiers;
 import com.bigbeard.yatzystats.core.model.sheets.SheetDto;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -57,8 +56,10 @@ public class ExcelSheetLoaderTest {
             Assertions.assertFalse(listStr.isEmpty());
             logger.debug(String.join(",", listStr));
 
-            GameRulesLoader gameRulesLoader = new GameRulesLoader(SheetRulesIdentifiers.YATZY);
-            GameRules rules = gameRulesLoader.getGameRules();
+            GameRulesLoaderV2 gameRulesLoaderV2 = new GameRulesLoaderV2();
+            GameRules rules = gameRulesLoaderV2.getGameRuleFiles().stream().filter(
+                    gameRules -> "ScandinavianYatzy".equals(gameRules.formatId())
+            ).findFirst().orElseThrow();
             GameLoader gameLoader = new GameLoader(rules, excelSheetLoader);
             List<SheetDto> foundSheets = gameLoader.loadGamesFromMode();
             logger.debug("FSize : " + foundSheets.size());

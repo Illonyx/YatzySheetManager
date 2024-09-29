@@ -3,7 +3,6 @@ package com.bigbeard.yatzystats.core.config;
 import com.bigbeard.yatzystats.core.config.writers.ExcelSheetWriter;
 import com.bigbeard.yatzystats.core.exceptions.RulesNotLoadedException;
 import com.bigbeard.yatzystats.core.model.rules.GameRules;
-import com.bigbeard.yatzystats.core.model.rules.SheetRulesIdentifiers;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Assertions;
@@ -13,7 +12,6 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 public class ExcelSheetWriterTest {
@@ -43,8 +41,10 @@ public class ExcelSheetWriterTest {
             List<String> players = List.of("Alexis", "Arnaud", "Maman", "Papa");
 
             // Rules
-            GameRulesLoader gameRulesLoader = new GameRulesLoader(SheetRulesIdentifiers.YATZY);
-            GameRules rules = gameRulesLoader.getGameRules();
+            GameRulesLoaderV2 gameRulesLoaderV2 = new GameRulesLoaderV2();
+            GameRules rules = gameRulesLoaderV2.getGameRuleFiles().stream().filter(
+                    gameRules -> "ScandinavianYatzy".equals(gameRules.formatId())
+            ).findFirst().orElseThrow();
 
             ExcelSheetWriter writer = new ExcelSheetWriter(path, players);
             writer.writeSheets(2, rules);
@@ -67,8 +67,10 @@ public class ExcelSheetWriterTest {
             List<String> players = List.of("Alexis", "Arnaud", "Maman", "Papa");
 
             // Rules
-            GameRulesLoader gameRulesLoader = new GameRulesLoader(SheetRulesIdentifiers.MAXI_YATZY);
-            GameRules rules = gameRulesLoader.getGameRules();
+            GameRulesLoaderV2 gameRulesLoaderV2 = new GameRulesLoaderV2();
+            GameRules rules = gameRulesLoaderV2.getGameRuleFiles().stream().filter(
+                    gameRules -> "ScandinavianYatzy".equals(gameRules.formatId())
+            ).findFirst().orElseThrow();
 
             ExcelSheetWriter writer = new ExcelSheetWriter(path, players);
             writer.writeSheets(2, rules);

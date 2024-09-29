@@ -1,5 +1,6 @@
 {
-  "formatName": "Maxi Yatzy",
+  "formatId": "MaxiYatzy",
+  "formatDescription": "Maxi Yatzy - 6 dice Scandinavian Yathzee",
   "bonus": {
     "bonusCond": 84,
     "bonusValue": 100
