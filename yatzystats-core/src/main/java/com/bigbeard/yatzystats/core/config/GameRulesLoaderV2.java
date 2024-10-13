@@ -1,9 +1,7 @@
 package com.bigbeard.yatzystats.core.config;
 
 import com.bigbeard.yatzystats.core.config.properties.AppSupportFilePathUtil;
-import com.bigbeard.yatzystats.core.config.properties.UserPropertiesService;
 import com.bigbeard.yatzystats.core.exceptions.RulesNotLoadedException;
-import com.bigbeard.yatzystats.core.model.players.UserProperties;
 import com.bigbeard.yatzystats.core.model.rules.GameRules;
 
 import com.google.gson.Gson;

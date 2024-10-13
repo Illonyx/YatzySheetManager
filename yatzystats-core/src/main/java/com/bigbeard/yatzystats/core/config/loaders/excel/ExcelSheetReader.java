@@ -1,6 +1,7 @@
 package com.bigbeard.yatzystats.core.config.loaders.excel;
 
 import com.bigbeard.yatzystats.core.exceptions.CellNotFoundException;
+import com.bigbeard.yatzystats.core.model.rules.ColumnDescription;
 import com.bigbeard.yatzystats.core.model.rules.GameRules;
 import com.bigbeard.yatzystats.core.model.sheets.SheetReader;
 import org.apache.logging.log4j.LogManager;
@@ -38,6 +39,41 @@ public class ExcelSheetReader implements SheetReader {
     }
 
     @Override
+    public Integer readAces(String targetName) throws CellNotFoundException {
+        return readAnyCellValue(targetName, this.gameRules.getAces());
+    }
+
+    @Override
+    public Integer readTwos(String targetName) throws CellNotFoundException {
+        return readAnyCellValue(targetName, this.gameRules.getTwos());
+    }
+
+    @Override
+    public Integer readThrees(String targetName) throws CellNotFoundException {
+        return readAnyCellValue(targetName, this.gameRules.getThrees());
+    }
+
+    @Override
+    public Integer readFours(String targetName) throws CellNotFoundException {
+        return readAnyCellValue(targetName, this.gameRules.getFours());
+    }
+
+    @Override
+    public Integer readFives(String targetName) throws CellNotFoundException {
+        return readAnyCellValue(targetName, this.gameRules.getFives());
+    }
+
+    @Override
+    public Integer readSixes(String targetName) throws CellNotFoundException {
+        return readAnyCellValue(targetName, this.gameRules.getSixes());
+    }
+
+    @Override
+    public Integer readBonus(String targetName) throws CellNotFoundException {
+        return readAnyCellValue(targetName, this.gameRules.getPartialSum());
+    }
+
+    @Override
     public Integer readYatzy(String targetName) throws CellNotFoundException {
         final int playerIndex = facade.findPlayerIndex(this.sheet, targetName);
         try {
@@ -53,17 +89,6 @@ public class ExcelSheetReader implements SheetReader {
     }
 
     @Override
-    public Integer readBonus(String targetName) throws CellNotFoundException {
-        final int playerIndex = facade.findPlayerIndex(this.sheet, targetName);
-        try {
-            Cell cell = facade.readCell(this.sheet, this.gameRules.getPartialSum().getSheetIndex().intValue(), playerIndex);
-            return (int) cell.getNumericCellValue();
-        } catch(Exception e){
-            throw new CellNotFoundException("bonus", this.gameRules.getPartialSum().getSheetIndex().intValue());
-        }
-    }
-
-    @Override
     public Integer readScore(String targetName) throws CellNotFoundException {
         final int playerIndex = facade.findPlayerIndex(this.sheet, targetName);
         try {
@@ -73,6 +98,16 @@ public class ExcelSheetReader implements SheetReader {
             return sumVal;
         } catch(Exception e){
             throw new CellNotFoundException("score", this.gameRules.getFinalSum().getSheetIndex().intValue());
+        }
+    }
+
+    private Integer readAnyCellValue(String targetPlayer, ColumnDescription columnDescription) throws CellNotFoundException {
+        final int playerIndex = facade.findPlayerIndex(this.sheet, targetPlayer);
+        try {
+            Cell cell = facade.readCell(this.sheet, columnDescription.getSheetIndex().intValue(), playerIndex);
+            return (int) cell.getNumericCellValue();
+        } catch(Exception e) {
+            throw new CellNotFoundException(columnDescription.getColumnLabel(), columnDescription.getSheetIndex().intValue());
         }
     }
 

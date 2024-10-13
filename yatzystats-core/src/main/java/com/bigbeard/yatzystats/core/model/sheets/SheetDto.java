@@ -4,65 +4,40 @@ import com.bigbeard.yatzystats.core.model.players.ConfrontationDTO;
 import com.bigbeard.yatzystats.core.model.players.PlayerResult;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
-public class SheetDto {
+public record SheetDto(String sheetName, List<PlayerResult> playerList, int bestScore) {
 
-    private String sheetName;
-    private List<PlayerResult> playerList;
-    private Integer bestScore;
-
-    public SheetDto(String sheetName, List<PlayerResult> playerList, int bestScore){
-        this.sheetName = sheetName;
-        this.playerList = playerList;
-        this.bestScore = bestScore;
+    public SheetDto {
+        // Defensive copy of playerList to ensure immutability
+        playerList = List.copyOf(playerList);
     }
 
-    public String getSheetName() {
-        return sheetName;
+    /**
+     * Finds the confrontation between two players, if both exist in the list.
+     * Returns an Optional of ConfrontationDTO.
+     */
+    public Optional<ConfrontationDTO> findConfrontation(String playerName1, String playerName2) {
+        var player1Result = playerList.stream()
+                .filter(p -> p.playerName().equals(playerName1))
+                .findFirst();
+        var player2Result = playerList.stream()
+                .filter(p -> p.playerName().equals(playerName2))
+                .findFirst();
+
+        return player1Result.isPresent() && player2Result.isPresent()
+                ? Optional.of(new ConfrontationDTO(player1Result.get(), player2Result.get()))
+                : Optional.empty();
     }
 
-    public void setSheetName(String sheetName) {
-        this.sheetName = sheetName;
-    }
-
-    public List<PlayerResult> getPlayerList() {
-        return playerList;
-    }
-
-    public void setPlayerList(List<PlayerResult> playerList) {
-        this.playerList = playerList;
-    }
-
-    public Integer getBestScore() {
-        return bestScore;
-    }
-
-    public void setBestScore(Integer bestScore) {
-        this.bestScore = bestScore;
-    }
-
-    public ConfrontationDTO findConfrontation(String playerName1, String playerName2){
-        PlayerResult player1Result = null;
-        PlayerResult player2Result = null;
-        for(PlayerResult playerResult : playerList){
-            if(playerResult.playerName().equals(playerName1)){
-                player1Result = playerResult;
-            } else if(playerResult.playerName().equals(playerName2)){
-                player2Result = playerResult;
-            } else {
-                if(player1Result != null && player2Result != null) break;
-            }
-        }
-        return (player1Result != null && player2Result != null) ? new ConfrontationDTO(player1Result, player2Result) : null;
-    }
-
+    /**
+     * Builds a string representing all players and their scores.
+     */
     @Override
-    public String toString(){
-        StringBuilder sheetContent = new StringBuilder("Players :" + System.lineSeparator());
-        for(PlayerResult p : playerList){
-            sheetContent.append(p.playerName()).append(" : ").append(p.score()).append(System.lineSeparator());
-        }
-
-        return sheetContent.toString();
+    public String toString() {
+        return playerList.stream()
+                .map(p -> p.playerName() + " : " + p.score())
+                .collect(Collectors.joining(System.lineSeparator(), "Players:" + System.lineSeparator(), ""));
     }
 }

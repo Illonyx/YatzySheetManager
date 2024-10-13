@@ -19,7 +19,7 @@ public class GameLoader {
 
     SheetLoader sheetLoader;
     GameRules rules;
-    List<String> errors = new ArrayList<String>();
+    List<String> errors = new ArrayList<>();
     private final Logger logger = LogManager.getLogger(GameLoader.class);
 
     public GameLoader(GameRules rules, SheetLoader sheetLoader) {
@@ -30,13 +30,22 @@ public class GameLoader {
     public List<SheetDto> loadGamesFromMode() throws FileNotLoadedException {
         logger.info("Chargement des parties avec les règles suivantes :" + this.rules);
 
-        List<SheetDto> sheetDtoList = new ArrayList<SheetDto>();
+        List<SheetDto> sheetDtoList = new ArrayList<>();
         for (SheetReader sheetReader : this.sheetLoader.createSheetReaders(this.rules)) {
             try {
                 List<String> players = sheetReader.readPlayerNames();
                 List<PlayerResult> playerResults = new ArrayList<>();
 
                 for (String playerName : players) {
+
+                    // Dice values
+                    int acesScore = sheetReader.readAces(playerName);
+                    int twosScore = sheetReader.readTwos(playerName);
+                    int threesScore = sheetReader.readThrees(playerName);
+                    int foursScore = sheetReader.readFours(playerName);
+                    int fivesScore = sheetReader.readFives(playerName);
+                    int sixesScore = sheetReader.readSixes(playerName);
+
                     int playerScore = (rules.getFinalSum().getSheetIndex() != null) ? sheetReader.readScore(playerName) : 0;
 
                     boolean hasYatzy = rules.getYahtzee() != null && rules.getYahtzee().getSheetIndex() != null && sheetReader.readYatzy(playerName) == rules.getYahtzee().getMaxValue().intValue();
@@ -44,7 +53,8 @@ public class GameLoader {
                     boolean hasBonus = rules.getPartialSum().getSheetIndex() != null && sheetReader.readBonus(playerName) >= rules.getBonusCond();
 
                     if (playerScore > 0) {
-                        playerResults.add(new PlayerResult(playerName, playerScore, hasYatzy, hasBonus, false));
+                        playerResults.add(new PlayerResult(playerName, playerScore, acesScore, twosScore, threesScore, foursScore, fivesScore, sixesScore,
+                                hasYatzy, hasBonus, false));
                     }
                 }
 
@@ -76,9 +86,7 @@ public class GameLoader {
         logger.info("Nombre de parties chargées : " + sheetDtoList.size() + "/" + this.sheetLoader.getSheetNumber());
         if (sheetDtoList.isEmpty())
             throw new FileNotLoadedException("Le nombre de parties chargées est de 0", "Vérifiez bien si le format des parties enregistrées dans le fichier Excel est cohérent avec celui des règles utilisées");
-        if(!listDuplicateUsingSet(sheetDtoList).isEmpty())
-            // TODO: Envoyer une erreur
-            logger.error("Duplications présentes dans le fichier soumis");
+        checkForDuplicates(sheetDtoList);
         return sheetDtoList;
     }
 
@@ -86,20 +94,54 @@ public class GameLoader {
         return errors;
     }
 
-    List<PlayerResult> listDuplicateUsingSet(List<SheetDto> list) {
-        List<PlayerResult> duplicates = new ArrayList<>();
-        Set<PlayerResult> set = new HashSet<>();
-        for (SheetDto i : list) {
-            for(PlayerResult pr: i.getPlayerList()){
-                if (set.contains(pr)) {
-                    duplicates.add(pr);
+    // Method to find duplicates and return a mapping of PlayerResult to sheet names
+    public static Map<PlayerResult, List<String>> listDuplicateUsingSet(List<SheetDto> sheetDtoList) {
+        Map<PlayerResult, String> playerToSheetMap = new HashMap<>(); // Maps PlayerResult to the first sheet it appears in
+        Map<PlayerResult, List<String>> duplicatesMap = new HashMap<>(); // Maps PlayerResult to all sheets where it appears
+
+        for (SheetDto sheet : sheetDtoList) {
+            String sheetName = sheet.sheetName();
+
+            for (PlayerResult playerResult : sheet.playerList()) {
+                // If playerResult is already in the map, we have a duplicate
+                if (playerToSheetMap.containsKey(playerResult)) {
+                    // Add the current sheet name to the duplicates map
+                    duplicatesMap.computeIfAbsent(playerResult, k -> new ArrayList<>())
+                            .add(playerToSheetMap.get(playerResult)); // Add the original sheet
+                    duplicatesMap.get(playerResult).add(sheetName); // Add the current sheet
                 } else {
-                    set.add(pr);
+                    // Map this playerResult to the current sheet name
+                    playerToSheetMap.put(playerResult, sheetName);
                 }
             }
         }
-        return duplicates;
+
+        return duplicatesMap; // Return all duplicates found
     }
+
+    public void checkForDuplicates(List<SheetDto> sheetDtoList) {
+        Map<PlayerResult, List<String>> duplicates = listDuplicateUsingSet(sheetDtoList);
+
+        if (!duplicates.isEmpty()) {
+            StringBuilder errorMessage = new StringBuilder("Duplications présentes dans les feuilles:\n");
+
+            // Build the error message for logging
+            for (Map.Entry<PlayerResult, List<String>> entry : duplicates.entrySet()) {
+                PlayerResult playerResult = entry.getKey();
+                List<String> sheets = entry.getValue();
+                errorMessage.append("Player: ").append(playerResult.playerName())
+                        .append(" found in sheets: ").append(String.join(", ", sheets))
+                        .append("\n");
+            }
+
+            // Log the error with details of duplicates
+            logger.error(errorMessage.toString());
+
+            // Optionally throw an exception or handle error as needed
+            // throw new YourCustomException("Duplicate PlayerResult found: " + errorMessage);
+        }
+    }
+
 
 }
 

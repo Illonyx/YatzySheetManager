@@ -10,8 +10,6 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -20,7 +18,6 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.GridPane;
-import javafx.stage.Stage;
 import javafx.util.Callback;
 
 import java.util.HashMap;
@@ -30,9 +27,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class GamesChoiceScene extends UiScene {
-
-    private Stage stage;
-    private final StatsSheetsUserModel model;
     private GridPane gridPane;
     private TextArea textArea;
     private final Map<String, Boolean> listCheckboxValues = new HashMap<>();
@@ -40,7 +34,6 @@ public class GamesChoiceScene extends UiScene {
     public GamesChoiceScene(WindowNavigation navigation){
         super(navigation, UiSceneRole.GAMES_CHOICE_SCENE);
         this.initComponents();
-        this.model = getModel().getStatsSheetsUserModel();
     }
 
     private void initComponents(){
@@ -54,23 +47,23 @@ public class GamesChoiceScene extends UiScene {
         this.gridPane.add(textArea, 6, 0 , 7, 8);
 
         //Initialize listview with found sheet values
-        ListView<String> list = new ListView<String>();
+        ListView<String> list = new ListView<>();
         ObservableList<String> items = FXCollections.observableList (
-                getModel().getStatsSheetsUserModel().getSheets().stream().map(SheetDto::getSheetName).toList());
+                getModel().getStatsSheetsUserModel().getSheets().stream().map(SheetDto::sheetName).toList());
         list.setItems(items);
 
         //When an element is clicked on, display it on textArea
         list.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> updateTextarea(newValue));
 
         //Add checkbox to each item of the list, checkbox states are registered in property listCheckboxValues
-        list.setCellFactory(CheckBoxListCell.forListView(new Callback<String, ObservableValue<Boolean>>() {
+        list.setCellFactory(CheckBoxListCell.forListView(new Callback<>() {
             @Override
             public ObservableValue<Boolean> call(String item) {
                 BooleanProperty observable = new SimpleBooleanProperty();
-                if(listCheckboxValues.get(item) != null){
+                if (listCheckboxValues.get(item) != null) {
                     observable.setValue(listCheckboxValues.get(item));
                 } else observable.setValue(false);
-                observable.addListener((obs, wasSelected, isNowSelected) -> listCheckboxValues.put(item,isNowSelected));
+                observable.addListener((obs, wasSelected, isNowSelected) -> listCheckboxValues.put(item, isNowSelected));
                 return observable;
             }
         }));
@@ -81,20 +74,17 @@ public class GamesChoiceScene extends UiScene {
 
         //Master toogle
         Button selectAllButton = new Button("Tout sélectionner");
-        selectAllButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                list.getItems().forEach(item -> listCheckboxValues.put(item, true));
-                list.refresh();
-            }
+        selectAllButton.setOnAction(actionEvent -> {
+            list.getItems().forEach(item -> listCheckboxValues.put(item, true));
+            list.refresh();
         });
         this.gridPane.add(selectAllButton, 0,10, 3, 2);
     }
 
     private void updateTextarea(String selectedItem){
-        Optional<SheetDto> selectedSheet = getModel().getStatsSheetsUserModel().getSheets().stream().filter(sheet -> {
-            return sheet.getSheetName().equals(selectedItem);
-        }).findFirst();
+        Optional<SheetDto> selectedSheet = getModel().getStatsSheetsUserModel().getSheets()
+                .stream()
+                .filter(sheet -> sheet.sheetName().equals(selectedItem)).findFirst();
         selectedSheet.ifPresent(sheetDto -> textArea.setText(sheetDto.toString()));
     }
 
@@ -109,10 +99,10 @@ public class GamesChoiceScene extends UiScene {
             alert.showAndWait();
             return false;
         } else {
-            List<SheetDto> selectedSheetDto = model.getSheets().stream()
-                    .filter(sheetDto -> selectedSheets.contains(sheetDto.getSheetName()))
+            List<SheetDto> selectedSheetDto = getModel().getStatsSheetsUserModel().getSheets().stream()
+                    .filter(sheetDto -> selectedSheets.contains(sheetDto.sheetName()))
                     .collect(Collectors.toList());
-            model.setSelectedSheets(selectedSheetDto);
+            getModel().getStatsSheetsUserModel().setSelectedSheets(selectedSheetDto);
             return true;
         }
     }

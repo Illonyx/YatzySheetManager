@@ -18,6 +18,7 @@ It is possible to add some games to an existing Excel file.
     - 6 dice Yatzy, also called Maxi Yatzy
 
 Future improvements : 
+- Improve the UI/UX of this section
 - Currently, .xlsx is the only file format which can be used for sheet generation.  
 It will be possible to use .csv as well as a file extension
 
@@ -44,9 +45,11 @@ Some Yatzy sheets in the Excel file may not be not recognized by the companion.
 If this happens, these sheets will be appearing in a dialog with the problem encountered while the sheet reading.
 
 Future improvements :
+- Known "bug": when the file explorer is opened, it does not use the path given by the user to load the view
 - Currently, .xlsx is the only file format which can be used for sheet reading.  
   It will be possible to use .csv as well as a file extension
 - It will also be possible to get your files from Google Drive Cloud
+- Technical : improve "game loading" cinematic
 
 ### Yatzy sheets selector
 
@@ -56,7 +59,8 @@ All the sheets of the Excel file and only those with the applied rules are avail
 It is possible to consult info about the players and their scores. 
 
 Future improvements : 
- - Some filters will be available to allow a better selection of the games
+ - Some filters will be available to allow a better selection of the games : year, players in the game
+ - Sheets which have a loading problem will be accessible in a modal
 
 ### Global stats Tab
 
@@ -82,6 +86,8 @@ Future improvements :
 - Improve 3 last matches UI
 - Piechart is buggy
 
+A new tab is available since last version, documentation will be written on it. 
+
 ## Global settings tab
 
 ![Alt text](readme-resources/01-settings-scene.png)
@@ -94,11 +100,12 @@ _**Application is in French language and is not translated in English yet._**
 Some informations about the rules are available when clicking on Info button.
 
 Future improvements : 
+- Fix "preferences" color from black to white
 - Allow the users to include and import their own rules in the application
 
 ## Installing the project
 
 **For customers** : installation link will be included for MAC and Windows users.
 
-**For devs** : project has been developed in Java 17 with Maven, Java FX, Scenebuilder and IntelliJ. 
+**For devs** : project has been developed in Java 21 with Maven, Java FX, Scenebuilder and IntelliJ. 
 Project can be launched with the command **maven compile javafx:run**

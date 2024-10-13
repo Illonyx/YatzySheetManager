@@ -30,39 +30,56 @@ public record GameRules(String formatId, String formatDescription, Bonus bonus,
                 .collect(Collectors.toList());
     }
 
-    public ColumnDescription getAces() {
+    private ColumnDescription getColumnValueWithTechColumnId(GameRulesEnum gameRulesEnum) {
         return values.stream()
-                .filter(columnDescription -> GameRulesEnum.ACES.getValue().equals(columnDescription.getTechColumnId()))
+                .filter(columnDescription -> gameRulesEnum.getValue().equals(columnDescription.getTechColumnId()))
                 .findFirst()
                 .orElse(null);
+    }
+
+    private ColumnDescription getColumnCombinationWithTechColumnId(GameRulesEnum gameRulesEnum) {
+        return combinations.stream()
+                .filter(columnDescription -> gameRulesEnum.getValue().equals(columnDescription.getTechColumnId()))
+                .findFirst()
+                .orElse(null);
+    }
+
+
+    // TODO: Use a mapper object to improve readibility and mapping efficience
+    public ColumnDescription getAces() {
+        return getColumnValueWithTechColumnId(GameRulesEnum.ACES);
+    }
+
+    public ColumnDescription getTwos() {
+        return getColumnValueWithTechColumnId(GameRulesEnum.TWOS);
+    }
+
+    public ColumnDescription getThrees() {
+        return getColumnValueWithTechColumnId(GameRulesEnum.THREES);
+    }
+
+    public ColumnDescription getFours() {
+        return getColumnValueWithTechColumnId(GameRulesEnum.FOURS);
+    }
+
+    public ColumnDescription getFives() {
+        return getColumnValueWithTechColumnId(GameRulesEnum.FIVES);
     }
 
     public ColumnDescription getSixes() {
-        return values.stream()
-                .filter(columnDescription -> GameRulesEnum.SIXES.getValue().equals(columnDescription.getTechColumnId()))
-                .findFirst()
-                .orElse(null);
+        return getColumnValueWithTechColumnId(GameRulesEnum.SIXES);
     }
 
     public ColumnDescription getPartialSum() {
-        return values.stream()
-                .filter(columnDescription -> GameRulesEnum.PARTIAL_SUM.getValue().equals(columnDescription.getTechColumnId()))
-                .findFirst()
-                .orElse(null);
+        return getColumnValueWithTechColumnId(GameRulesEnum.PARTIAL_SUM);
     }
 
     public ColumnDescription getYahtzee() {
-        return combinations.stream()
-                .filter(columnDescription -> GameRulesEnum.YAHTZEE.getValue().equals(columnDescription.getTechColumnId()))
-                .findFirst()
-                .orElse(null);
+        return getColumnCombinationWithTechColumnId(GameRulesEnum.YAHTZEE);
     }
 
     public ColumnDescription getFinalSum() {
-        return combinations.stream()
-                .filter(columnDescription -> GameRulesEnum.FINAL_SUM.getValue().equals(columnDescription.getTechColumnId()))
-                .findFirst()
-                .orElse(null);
+        return getColumnCombinationWithTechColumnId(GameRulesEnum.FINAL_SUM);
     }
 
 }

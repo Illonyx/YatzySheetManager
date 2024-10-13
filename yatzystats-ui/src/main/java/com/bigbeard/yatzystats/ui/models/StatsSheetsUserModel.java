@@ -28,6 +28,7 @@ public class StatsSheetsUserModel {
     private List<String> loadingErrors;
 
     //Infos 3eme ecran : Choix des joueurs à analyser
+    private List<PlayerResult> allResults;
     private List<String> playerNames;
     private List<SheetDto> selectedSheets;
     private Map<String, List<PlayerResult>> resultsPerPlayers;
@@ -48,28 +49,26 @@ public class StatsSheetsUserModel {
 
     public void loadStats() {
         List<PlayerResult> playerResults = selectedSheets.stream()
-                .map(SheetDto::getPlayerList)
+                .map(SheetDto::playerList)
                 .flatMap(List::stream)
                 .toList();
+        this.allResults = playerResults;
         List<String> playerNames = playerResults.stream()
                 .map(PlayerResult::playerName)
                 .distinct()
                 .collect(Collectors.toList());
         this.playerNames = playerNames;
         this.resultsPerPlayers = new HashMap<>();
-        playerNames.forEach(playerName -> {
-            resultsPerPlayers.put(playerName, playerResults.stream()
-                    .filter(playerResult -> playerResult.playerName().equals(playerName))
-                    .collect(Collectors.toList()));
-        });
+        playerNames.forEach(playerName -> resultsPerPlayers.put(playerName, playerResults.stream()
+                .filter(playerResult -> playerResult.playerName().equals(playerName))
+                .collect(Collectors.toList())));
     }
 
     public List<ConfrontationDTO> makeConfrontations(List<SheetDto> selectedSheets, String currentPlayerName, String opponentPlayerName) {
-        List<ConfrontationDTO> confrontations = selectedSheets.stream()
+        return selectedSheets.stream()
                 .map(sheetDto -> sheetDto.findConfrontation(currentPlayerName, opponentPlayerName))
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
-        return confrontations;
+                .flatMap(Optional::stream)  // Filters out empty Optionals and unwraps non-empty ones
+                .toList();
     }
 
     // -----------------------------------------------------
@@ -82,6 +81,10 @@ public class StatsSheetsUserModel {
 
     public Map<String, List<PlayerResult>> getResultsPerPlayers() {
         return resultsPerPlayers;
+    }
+
+    public List<PlayerResult> getAllResults() {
+        return allResults;
     }
 
     public List<SheetDto> getSelectedSheets() {
