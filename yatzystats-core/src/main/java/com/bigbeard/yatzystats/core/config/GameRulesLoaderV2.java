@@ -2,7 +2,7 @@ package com.bigbeard.yatzystats.core.config;
 
 import com.bigbeard.yatzystats.core.config.properties.AppSupportFilePathUtil;
 import com.bigbeard.yatzystats.core.exceptions.RulesNotLoadedException;
-import com.bigbeard.yatzystats.core.model.rules.GameRules;
+import com.bigbeard.yatzystats.core.model.dto.GameRulesDTO;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -18,7 +18,7 @@ import java.util.List;
 
 public class GameRulesLoaderV2 {
 
-    private final List<GameRules> gameRuleFiles;
+    private final List<GameRulesDTO> gameRuleFiles;
     private Logger logger = LogManager.getLogger(GameRulesLoaderV2.class);
 
     public GameRulesLoaderV2() throws IOException, RulesNotLoadedException {
@@ -38,7 +38,7 @@ public class GameRulesLoaderV2 {
         this.gameRuleFiles = this.loadRulesInFolder(rulesFolderPath.toString());
     }
 
-    private List<GameRules> loadRulesInFolder(String folderPath) throws IOException, RulesNotLoadedException {
+    private List<GameRulesDTO> loadRulesInFolder(String folderPath) throws IOException, RulesNotLoadedException {
         try (var filesStream = Files.walk(Path.of(folderPath))) {
             return filesStream
                     .filter(Files::isRegularFile)
@@ -60,12 +60,12 @@ public class GameRulesLoaderV2 {
         }
     }
 
-    private GameRules loadGameRules(Path path) throws RulesNotLoadedException {
+    private GameRulesDTO loadGameRules(Path path) throws RulesNotLoadedException {
         try {
             final Gson gson = new GsonBuilder().create();
             InputStream inputStream = Files.newInputStream(Path.of(path.toString()));
             Reader reader = new InputStreamReader(inputStream);
-            return gson.fromJson(reader, GameRules.class);
+            return gson.fromJson(reader, GameRulesDTO.class);
         } catch(JsonSyntaxException | JsonIOException ex) {
             throw new RulesNotLoadedException("Règles non chargées", "Exception déclenchée" + ex);
         } catch (Exception ex) {
@@ -86,7 +86,7 @@ public class GameRulesLoaderV2 {
         }
     }
 
-    public List<GameRules> getGameRuleFiles() {
+    public List<GameRulesDTO> getGameRuleFiles() {
         return gameRuleFiles;
     }
 }

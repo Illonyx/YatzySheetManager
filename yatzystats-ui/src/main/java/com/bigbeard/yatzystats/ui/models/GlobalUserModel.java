@@ -3,6 +3,7 @@ package com.bigbeard.yatzystats.ui.models;
 import com.bigbeard.yatzystats.core.config.properties.UserPropertiesService;
 import com.bigbeard.yatzystats.core.exceptions.RulesNotLoadedException;
 import com.bigbeard.yatzystats.core.model.players.UserProperties;
+import com.bigbeard.yatzystats.core.model.dto.GameRulesDTO;
 import com.bigbeard.yatzystats.core.model.rules.GameRules;
 import com.bigbeard.yatzystats.ui.GlobalController;
 

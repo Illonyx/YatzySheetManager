@@ -1,6 +1,7 @@
 package com.bigbeard.yatzystats.ui.models;
 
 import com.bigbeard.yatzystats.core.config.writers.ExcelSheetWriter;
+import com.bigbeard.yatzystats.core.model.dto.GameRulesDTO;
 import com.bigbeard.yatzystats.core.model.rules.GameRules;
 
 import java.io.IOException;

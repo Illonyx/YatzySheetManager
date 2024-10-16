@@ -22,9 +22,7 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class GlobalSettingsScene extends UiScene {
 
@@ -101,7 +99,7 @@ public class GlobalSettingsScene extends UiScene {
         GameRules defaultRulesValue = availableGameRules.stream()
                 .filter(gameRules -> gameRules.formatId().equals(userProperties.defaultRulesFile()))
                 .findFirst()
-                .orElse(availableGameRules.get(0));
+                .orElse(availableGameRules.getFirst());
         rulesCombobox.setItems(FXCollections.observableList(availableGameRules));
         rulesCombobox.setValue(defaultRulesValue);
 

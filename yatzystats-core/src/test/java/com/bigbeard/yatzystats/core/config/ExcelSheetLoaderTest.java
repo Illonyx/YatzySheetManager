@@ -4,6 +4,7 @@ import com.bigbeard.yatzystats.core.config.loaders.excel.ExcelSheetLoader;
 import com.bigbeard.yatzystats.core.exceptions.FileNotLoadedException;
 import com.bigbeard.yatzystats.core.exceptions.RulesNotLoadedException;
 import com.bigbeard.yatzystats.core.config.loaders.GameLoader;
+import com.bigbeard.yatzystats.core.model.dto.GameRulesDTO;
 import com.bigbeard.yatzystats.core.model.rules.GameRules;
 import com.bigbeard.yatzystats.core.model.sheets.SheetDto;
 import com.google.gson.Gson;
@@ -36,7 +37,7 @@ public class ExcelSheetLoaderTest {
             FileReader reader = new FileReader(filePath.getPath());
             final Gson gson = new GsonBuilder().create();
 
-            GameRules object = gson.fromJson(reader, GameRules.class);
+            GameRulesDTO object = gson.fromJson(reader, GameRulesDTO.class);
             logger.debug("Contenu fichier JSON : "+ object);
 
         } catch (IOException e) {
@@ -57,10 +58,10 @@ public class ExcelSheetLoaderTest {
             logger.debug(String.join(",", listStr));
 
             GameRulesLoaderV2 gameRulesLoaderV2 = new GameRulesLoaderV2();
-            GameRules rules = gameRulesLoaderV2.getGameRuleFiles().stream().filter(
+            GameRulesDTO rules = gameRulesLoaderV2.getGameRuleFiles().stream().filter(
                     gameRules -> "ScandinavianYatzy".equals(gameRules.formatId())
             ).findFirst().orElseThrow();
-            GameLoader gameLoader = new GameLoader(rules, excelSheetLoader);
+            GameLoader gameLoader = new GameLoader(new GameRules(rules), excelSheetLoader);
             List<SheetDto> foundSheets = gameLoader.loadGamesFromMode();
             logger.debug("FSize : " + foundSheets.size());
 

@@ -1,6 +1,7 @@
 package com.bigbeard.yatzystats.ui.scenes.common;
 
 import com.bigbeard.yatzystats.core.model.rules.GameRules;
+import com.bigbeard.yatzystats.core.model.rules.GameRulesEnum;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.*;
@@ -43,9 +44,9 @@ public class RulesDialog {
         // Create and configure a dialog
         StringBuffer buff = new StringBuffer();
         buff.append("Le bonus est d'une valeur de ");
-        buff.append(rules.getBonusVal());
+        buff.append(rules.bonusVal());
         buff.append(" et est accordé si la somme des premières colonnes est supérieure ou égale à ");
-        buff.append(rules.getBonusCond());
+        buff.append(rules.bonusCond());
         dialog.setHeaderText(buff.toString());
 
         // Set the content of the dialog to the TableView
@@ -57,14 +58,15 @@ public class RulesDialog {
     }
 
     private List<CombinationData> getCombinationsData() {
-        return this.rules.getColumnsList().stream().filter(columnDescription ->
-                !columnDescription.getTechColumnId().equals("partialSum") && !columnDescription.getTechColumnId().equals("finalSum")
+        List<String> combinationsNotDisplayed = List.of(GameRulesEnum.PARTIAL_SUM.getValue(), GameRulesEnum.FINAL_SUM.getValue());
+        return this.rules.getColumnDescriptionsFromMap().stream().filter(columnDescription ->
+                !combinationsNotDisplayed.contains(columnDescription.techColumnId())
         ).map(columnDescription -> {
-            String combinationLabel = columnDescription.getColumnLabel();
-            String adaptedFixedValueLabel = columnDescription.isFixedValue() ? "" : "Jusqu'à ";
-            String valueLabel = adaptedFixedValueLabel.concat(columnDescription.getMaxValue().toString());
+            String combinationLabel = columnDescription.columnLabel();
+            String adaptedFixedValueLabel = columnDescription.fixedValue() ? "" : "Jusqu'à ";
+            String valueLabel = adaptedFixedValueLabel.concat(columnDescription.maxValue().toString());
             return new CombinationData(combinationLabel, valueLabel);
-        }).collect(Collectors.toList());
+        }).toList();
     }
 
     public Dialog getDialog() {

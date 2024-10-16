@@ -110,7 +110,7 @@ public class StatsModScene extends UiScene {
         player2Combobox.setItems(FXCollections.observableList(model.getPlayerNames()));
         player2Combobox.setValue(model.getPlayerNames().get(1));
 
-        duelButton.setOnAction(new EventHandler<ActionEvent>() {
+        duelButton.setOnAction(new EventHandler<>() {
             @Override
             public void handle(ActionEvent actionEvent) {
                 generateConfrontations();
@@ -132,7 +132,7 @@ public class StatsModScene extends UiScene {
 
         allResults.stream()
                 .sorted(Comparator.comparing(PlayerResult::score).reversed())  // Sort by score in reverse order
-                .limit(10)  // Limit to top 5
+                .limit(5)  // Limit to top 5
                 .forEach(res -> {
                     // Use the helper method to create and add the data
                     XYChart.Data<String, Number> barData = createBarData(index.getAndIncrement(), res);
@@ -158,7 +158,7 @@ public class StatsModScene extends UiScene {
             if (newNode != null) {
                 // Now the bar is fully initialized, we can add the label
                 StackPane bar = (StackPane) newNode;
-                String label = String.format("%s - %s", res.playerName(), res.score());
+                String label = String.format("%s - %s (%s)", res.playerName(), res.score(), res.year());
                 Text dataLabel = new Text(label);
 
                 // Rotate the label to be vertical

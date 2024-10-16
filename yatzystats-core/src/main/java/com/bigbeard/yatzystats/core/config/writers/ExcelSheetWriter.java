@@ -1,6 +1,6 @@
 package com.bigbeard.yatzystats.core.config.writers;
 
-import com.bigbeard.yatzystats.core.model.rules.ColumnDescription;
+import com.bigbeard.yatzystats.core.model.dto.ColumnDescription;
 import com.bigbeard.yatzystats.core.model.rules.GameRules;
 import com.bigbeard.yatzystats.core.model.rules.GameRulesEnum;
 import org.apache.logging.log4j.LogManager;
@@ -68,25 +68,25 @@ public class ExcelSheetWriter {
         playersRowData.addAll(this.playerNames);
         this.createRowFromValues(sheet, 0, false, playersRowData);
 
-        for (ColumnDescription columnDescription : rules.getColumnsList()) {
-            List<String> rowData = new ArrayList<>(List.of(columnDescription.getColumnLabel()));
+        for (ColumnDescription columnDescription : rules.getColumnDescriptionsFromMap()) {
+            List<String> rowData = new ArrayList<>(List.of(columnDescription.columnLabel()));
             boolean isFormula = false;
-            GameRulesEnum rulesEnum = GameRulesEnum.fromValue(columnDescription.getTechColumnId());
+            GameRulesEnum rulesEnum = GameRulesEnum.fromValue(columnDescription.techColumnId());
 
             switch (rulesEnum) {
                 case PARTIAL_SUM:
                     isFormula=true;
                     ExcelCellRange range = new ExcelCellRange(1, maxSizeSheet);
-                    int startVerticalIndexP = rules.getAces().getSheetIndex().intValue() + 1;
-                    int endVerticalIndexP = rules.getSixes().getSheetIndex().intValue() + 1;
+                    int startVerticalIndexP = rules.getColumnWithIdentfier(GameRulesEnum.ACES).sheetIndex().intValue() + 1;
+                    int endVerticalIndexP = rules.getColumnWithIdentfier(GameRulesEnum.SIXES).sheetIndex().intValue() + 1;
 
                     Function<RangeFormulaSpec, String> formulaFunc = formulaSpec -> {
                         String sumFormula = this.writeSumFormula(formulaSpec);
                         return String.format("IF(%s>%d,%s+%d,%s)",
                                 sumFormula,
-                                rules.getBonusCond() - 1,
+                                rules.bonusCond() - 1,
                                 sumFormula,
-                                rules.getBonusVal(),
+                                rules.bonusVal(),
                                 sumFormula);
                     };
                     rowData.addAll(
@@ -97,8 +97,8 @@ public class ExcelSheetWriter {
                 case FINAL_SUM:
                     isFormula=true;
                     ExcelCellRange rangeS = new ExcelCellRange(1, maxSizeSheet);
-                    int startVerticalIndexS = rules.getPartialSum().getSheetIndex().intValue() + 1;
-                    int endVerticalIndexS = rules.getFinalSum().getSheetIndex().intValue();
+                    int startVerticalIndexS = rules.getColumnWithIdentfier(GameRulesEnum.PARTIAL_SUM).sheetIndex().intValue() + 1;
+                    int endVerticalIndexS = rules.getColumnWithIdentfier(GameRulesEnum.FINAL_SUM).sheetIndex().intValue();
 
                     Function<RangeFormulaSpec, String> formulaFuncS = this::writeSumFormula;
                     rowData.addAll(rangeS.
@@ -108,7 +108,7 @@ public class ExcelSheetWriter {
                 default:
                     break;
             }
-            this.createRowFromValues(sheet, columnDescription.getSheetIndex().intValue(),
+            this.createRowFromValues(sheet, columnDescription.sheetIndex().intValue(),
                     isFormula, rowData);
         }
 

@@ -33,7 +33,7 @@ public class GlobalController {
 
     public List<GameRules> loadAllGameRules() throws RulesNotLoadedException, IOException {
         GameRulesLoaderV2 gameRulesLoaderV2 = new GameRulesLoaderV2();
-        return gameRulesLoaderV2.getGameRuleFiles();
+        return gameRulesLoaderV2.getGameRuleFiles().stream().map(GameRules::new).toList();
     }
 
 }
