@@ -3,32 +3,24 @@ package com.bigbeard.yatzystats.ui.scenes.statistics.statsmod;
 import com.bigbeard.yatzystats.core.model.players.ConfrontationDTO;
 import com.bigbeard.yatzystats.core.model.players.PlayerResult;
 import com.bigbeard.yatzystats.core.model.players.StatsModule;
-import com.bigbeard.yatzystats.core.model.sheets.SheetDto;
 import com.bigbeard.yatzystats.ui.UiScene;
 import com.bigbeard.yatzystats.ui.models.StatsSheetsUserModel;
 import com.bigbeard.yatzystats.ui.UiSceneRole;
 import com.bigbeard.yatzystats.ui.WindowNavigation;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.chart.*;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.util.StringConverter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.poi.ss.usermodel.Sheet;
 
-import javax.swing.text.NumberFormatter;
 import java.text.NumberFormat;
 import java.util.Comparator;
 import java.util.List;
@@ -140,7 +132,7 @@ public class StatsModScene extends UiScene {
 
         allResults.stream()
                 .sorted(Comparator.comparing(PlayerResult::score).reversed())  // Sort by score in reverse order
-                .limit(5)  // Limit to top 5
+                .limit(10)  // Limit to top 5
                 .forEach(res -> {
                     // Use the helper method to create and add the data
                     XYChart.Data<String, Number> barData = createBarData(index.getAndIncrement(), res);
@@ -183,30 +175,6 @@ public class StatsModScene extends UiScene {
         return barData;
     }
 
-//    // Method to add data labels to the bars
-//    // Method to add data labels inside the bars (vertically)
-//    private void addDataLabels() {
-//        for (XYChart.Series<String, Number> series : barChart.getData()) {
-//            for (XYChart.Data<String, Number> data : series.getData()) {
-//                // Create the label (Text) for the data
-//                Text dataLabel = new Text(String.valueOf(data.getYValue()));
-//
-//                // Rotate the label vertically (90 degrees)
-//                dataLabel.setRotate(90);
-//
-//                // Get the StackPane representing the bar
-//                StackPane bar = (StackPane) data.getNode();
-//
-//                // Add the label to the bar
-//                bar.getChildren().add(dataLabel);
-//
-//                // Position the label inside the bar
-//                dataLabel.setTranslateX(-15); // Adjust horizontal position
-//                dataLabel.setTranslateY(10);  // Adjust vertical position to center
-//            }
-//        }
-//    }
-
     private void updateTextarea(Object newValue) {
         List<PlayerResult> prs = model.getResultsPerPlayers().get(newValue);
         statsArea.setText(this.showStats(prs));
@@ -220,6 +188,8 @@ public class StatsModScene extends UiScene {
         buff.append("Moyenne : ").append(StatsModule.getInstance().getMean(results)).append(System.lineSeparator());
         buff.append("Plus haut : ").append(StatsModule.getInstance().getHighestScore(results)).append(System.lineSeparator());
         buff.append("Plus bas : ").append(StatsModule.getInstance().getLowestScore(results)).append(System.lineSeparator());
+        buff.append("Scores à partir de 300 :").append(StatsModule.getInstance().get300Rate(results)).append(System.lineSeparator());
+        buff.append("Scores en dessous de 200 :").append(StatsModule.getInstance().getUnder200Rate(results)).append(System.lineSeparator());
         buff.append("Standard Deviation : ").append(StatsModule.getInstance().getStandardDeviation(results)).append(System.lineSeparator());
 
         buff.append("-- Combinaisons du joueur --").append(System.lineSeparator());
@@ -269,9 +239,7 @@ public class StatsModScene extends UiScene {
     String getPlayerLastScores(int limit, List<ConfrontationDTO> confrontations, String playerName) {
         return confrontations.stream().limit(limit)
                 .map(conf -> conf.getConfrontationScore(playerName))
-                .reduce(((s, s2) -> {
-                    return s2 + "," + s;
-                })).get();
+                .reduce(((s, s2) -> s2 + "," + s)).get();
     }
 
     @Override

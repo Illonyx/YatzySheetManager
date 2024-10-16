@@ -83,6 +83,22 @@ public class StatsModule {
         return this.givePercentageOf((int)yatzyNum, playerResults.size());
     }
 
+    public String get300Rate(List<PlayerResult> playerResults) {
+        long superior300 = playerResults.stream()
+                .map(PlayerResult::score)
+                .filter(score -> score >= 300)
+                .count();
+        return this.givePercentageOf((int)superior300, playerResults.size());
+    }
+
+    public String getUnder200Rate(List<PlayerResult> playerResults) {
+        long superior300 = playerResults.stream()
+                .map(PlayerResult::score)
+                .filter(score -> score < 200)
+                .count();
+        return this.givePercentageOf((int)superior300, playerResults.size());
+    }
+
     public String getBonusRate(List<PlayerResult> playerResults) {
         long yatzyNum = playerResults.stream()
                 .map(PlayerResult::hasBonus)

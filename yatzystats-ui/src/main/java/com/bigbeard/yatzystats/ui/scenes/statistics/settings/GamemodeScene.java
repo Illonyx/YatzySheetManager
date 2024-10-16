@@ -78,7 +78,7 @@ public class GamemodeScene extends UiScene {
         if (savedPath != null) {
             selectedFilePathTextField.setText(savedPath);
         }
-        this.setBrowseButton(super.getStage());
+        this.setBrowseButton(super.getStage(), savedPath);
 
         //2. Choix du mode de jeu
         List<GameRules> availableGameRules = getModel().getAvailableGameRules();
@@ -129,15 +129,16 @@ public class GamemodeScene extends UiScene {
         return new Scene(gridPane, super.getStage().getMinWidth(), super.getStage().getMinHeight());
     }
 
-    private void setBrowseButton(Stage stage) {
+    private void setBrowseButton(Stage stage, String defaultDirectoryPath) {
+        final String initialDirectoryPath = defaultDirectoryPath != null ? defaultDirectoryPath : System.getProperty("user.home");
         final FileChooser fileChooser = new FileChooser();
         selectFileButton.setOnAction(
                 new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(final ActionEvent e) {
-                        fileChooser.setTitle("Tu choisis une partie enculé?");
+                        fileChooser.setTitle("Veuillez choisir un fichier Excel");
                         fileChooser.setInitialDirectory(
-                                new File(System.getProperty("user.home"))
+                                new File(initialDirectoryPath)
                         );
                         if (fileChooser.getExtensionFilters().isEmpty()) {
                             fileChooser.getExtensionFilters().addAll(
