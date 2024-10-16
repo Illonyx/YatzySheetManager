@@ -1,9 +1,11 @@
 package com.bigbeard.yatzystats.core.config.loaders;
 
 import com.bigbeard.yatzystats.core.exceptions.CellNotFoundException;
+import com.bigbeard.yatzystats.core.exceptions.EmptyFileException;
 import com.bigbeard.yatzystats.core.exceptions.FileNotLoadedException;
 import com.bigbeard.yatzystats.core.model.players.PlayerResult;
 import com.bigbeard.yatzystats.core.model.rules.GameRules;
+import com.bigbeard.yatzystats.core.model.rules.GameRulesEnum;
 import com.bigbeard.yatzystats.core.model.sheets.SheetDto;
 import com.bigbeard.yatzystats.core.model.sheets.SheetLoader;
 import com.bigbeard.yatzystats.core.model.sheets.SheetReader;
@@ -39,24 +41,25 @@ public class GameLoader {
                 for (String playerName : players) {
 
                     // Dice values
-                    int acesScore = sheetReader.readAces(playerName);
-                    int twosScore = sheetReader.readTwos(playerName);
-                    int threesScore = sheetReader.readThrees(playerName);
-                    int foursScore = sheetReader.readFours(playerName);
-                    int fivesScore = sheetReader.readFives(playerName);
-                    int sixesScore = sheetReader.readSixes(playerName);
+                    int acesScore = sheetReader.readRuleScore(playerName, GameRulesEnum.ACES);
+                    int twosScore = sheetReader.readRuleScore(playerName, GameRulesEnum.TWOS);
+                    int threesScore = sheetReader.readRuleScore(playerName, GameRulesEnum.THREES);
+                    int foursScore = sheetReader.readRuleScore(playerName, GameRulesEnum.FOURS);
+                    int fivesScore = sheetReader.readRuleScore(playerName, GameRulesEnum.FIVES);
+                    int sixesScore = sheetReader.readRuleScore(playerName, GameRulesEnum.SIXES);
+                    int playerScore = sheetReader.readRuleScore(playerName, GameRulesEnum.FINAL_SUM);
 
-                    int playerScore = (rules.getFinalSum().getSheetIndex() != null) ? sheetReader.readScore(playerName) : 0;
-
-                    boolean hasYatzy = rules.getYahtzee() != null && rules.getYahtzee().getSheetIndex() != null && sheetReader.readYatzy(playerName) == rules.getYahtzee().getMaxValue().intValue();
-
-                    boolean hasBonus = rules.getPartialSum().getSheetIndex() != null && sheetReader.readBonus(playerName) >= rules.getBonusCond();
+                    // Special values
+                    boolean hasYatzy = sheetReader.readRuleScore(playerName, GameRulesEnum.YAHTZEE) != 0;
+                    boolean hasBonus = sheetReader.readRuleScore(playerName, GameRulesEnum.PARTIAL_SUM) >= rules.bonusCond();
 
                     if (playerScore > 0) {
                         playerResults.add(new PlayerResult(playerName, playerScore, acesScore, twosScore, threesScore, foursScore, fivesScore, sixesScore,
                                 hasYatzy, hasBonus, false));
                     }
                 }
+                // Si les scores des joueurs sont à 0, ne pas valider la partie
+                if(playerResults.isEmpty()) throw new EmptyFileException();
 
                 int bestScore = playerResults.stream()
                         .mapToInt(PlayerResult::score)
@@ -74,6 +77,10 @@ public class GameLoader {
 
             } catch (CellNotFoundException ex) {
                 String error = "Feuille non chargée : " + sheetReader.getSheetName() + " - raison :" + ex.getCellLabel();
+                logger.error(error);
+                this.errors.add(error);
+            } catch (EmptyFileException emptyFileException) {
+                String error = "Feuille non chargée : " + sheetReader.getSheetName() + " - raison - partie vide";
                 logger.error(error);
                 this.errors.add(error);
             } catch (Exception ex) {

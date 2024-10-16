@@ -2,6 +2,7 @@ package com.bigbeard.yatzystats.core.config;
 
 import com.bigbeard.yatzystats.core.config.writers.ExcelSheetWriter;
 import com.bigbeard.yatzystats.core.exceptions.RulesNotLoadedException;
+import com.bigbeard.yatzystats.core.model.dto.GameRulesDTO;
 import com.bigbeard.yatzystats.core.model.rules.GameRules;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -42,12 +43,12 @@ public class ExcelSheetWriterTest {
 
             // Rules
             GameRulesLoaderV2 gameRulesLoaderV2 = new GameRulesLoaderV2();
-            GameRules rules = gameRulesLoaderV2.getGameRuleFiles().stream().filter(
+            GameRulesDTO rulesDto = gameRulesLoaderV2.getGameRuleFiles().stream().filter(
                     gameRules -> "ScandinavianYatzy".equals(gameRules.formatId())
             ).findFirst().orElseThrow();
 
             ExcelSheetWriter writer = new ExcelSheetWriter(path, players);
-            writer.writeSheets(2, rules);
+            writer.writeSheets(2, new GameRules(rulesDto));
 
         } catch (IOException | RulesNotLoadedException ex) {
             logger.error("Erreur" + ex);
@@ -68,12 +69,12 @@ public class ExcelSheetWriterTest {
 
             // Rules
             GameRulesLoaderV2 gameRulesLoaderV2 = new GameRulesLoaderV2();
-            GameRules rules = gameRulesLoaderV2.getGameRuleFiles().stream().filter(
+            GameRulesDTO rules = gameRulesLoaderV2.getGameRuleFiles().stream().filter(
                     gameRules -> "ScandinavianYatzy".equals(gameRules.formatId())
             ).findFirst().orElseThrow();
 
             ExcelSheetWriter writer = new ExcelSheetWriter(path, players);
-            writer.writeSheets(2, rules);
+            writer.writeSheets(2, new GameRules(rules));
 
         } catch (IOException | RulesNotLoadedException ex) {
             logger.error("Erreur" + ex);

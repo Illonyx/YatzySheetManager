@@ -1,85 +1,59 @@
 package com.bigbeard.yatzystats.core.model.rules;
 
-import java.util.ArrayList;
+import com.bigbeard.yatzystats.core.model.dto.ColumnDescription;
+import com.bigbeard.yatzystats.core.model.dto.ColumnDescriptionDTO;
+import com.bigbeard.yatzystats.core.model.dto.GameRulesDTO;
+
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-public record GameRules(String formatId, String formatDescription, Bonus bonus,
-                              List<ColumnDescription> values, List<ColumnDescription> combinations) {
+public record GameRules(String formatId, String formatDescription, Long bonusCond, Long bonusVal,
+                        Map<String, ColumnDescription> combinationsByIdentifier) {
 
     @Override
     public String toString() {
-        return this.formatDescription;
+        return formatDescription;
     }
 
-    public Long getBonusCond() {
-        return this.bonus.bonusCond();
+    public GameRules(GameRulesDTO gameRulesDTO) {
+        this(gameRulesDTO.formatId(),
+                gameRulesDTO.formatDescription(),
+                gameRulesDTO.bonus().bonusCond(),
+                gameRulesDTO.bonus().bonusValue(),
+                createCombinationsByIdentifier(gameRulesDTO.values(), gameRulesDTO.combinations()));
     }
 
-    public Long getBonusVal() {
-        return this.bonus.bonusValue();
+    public ColumnDescription getColumnWithIdentfier(GameRulesEnum gameRulesEnum) {
+        return combinationsByIdentifier.get(gameRulesEnum.getValue());
     }
 
-    public List<ColumnDescription> getColumnsList() {
-        List<ColumnDescription> descriptions = new ArrayList<>();
-        descriptions.addAll(values);
-        descriptions.addAll(combinations);
-        return descriptions.stream()
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
+    // Method to get a List<ColumnDescription> from the combinationsByIdentifier Map
+    public List<ColumnDescription> getColumnDescriptionsFromMap() {
+
+        // Extract the values from the map and collect them into a List
+        return combinationsByIdentifier
+                .values()
+                .stream()
+                .sorted(Comparator.comparingLong(ColumnDescription::sheetIndex))
+                .toList();
     }
 
-    private ColumnDescription getColumnValueWithTechColumnId(GameRulesEnum gameRulesEnum) {
-        return values.stream()
-                .filter(columnDescription -> gameRulesEnum.getValue().equals(columnDescription.getTechColumnId()))
-                .findFirst()
-                .orElse(null);
+    // Method to create Map<String, ColumnDescription> from values and combinations
+    private static Map<String, ColumnDescription> createCombinationsByIdentifier(
+            List<ColumnDescriptionDTO> values,
+            List<ColumnDescriptionDTO> combinations) {
+
+        // Combine both lists and collect them into a Map with techColumnId as the key
+        return Stream.concat(values.stream(), combinations.stream())
+                .filter(Objects::nonNull) // Avoid potential nulls
+                .collect(Collectors.toMap(
+                        ColumnDescriptionDTO::techColumnId,
+                        ColumnDescription::new,
+                        (existing, replacement) -> existing)); // Handle duplicate keys (keep the existing)
     }
-
-    private ColumnDescription getColumnCombinationWithTechColumnId(GameRulesEnum gameRulesEnum) {
-        return combinations.stream()
-                .filter(columnDescription -> gameRulesEnum.getValue().equals(columnDescription.getTechColumnId()))
-                .findFirst()
-                .orElse(null);
-    }
-
-
-    // TODO: Use a mapper object to improve readibility and mapping efficience
-    public ColumnDescription getAces() {
-        return getColumnValueWithTechColumnId(GameRulesEnum.ACES);
-    }
-
-    public ColumnDescription getTwos() {
-        return getColumnValueWithTechColumnId(GameRulesEnum.TWOS);
-    }
-
-    public ColumnDescription getThrees() {
-        return getColumnValueWithTechColumnId(GameRulesEnum.THREES);
-    }
-
-    public ColumnDescription getFours() {
-        return getColumnValueWithTechColumnId(GameRulesEnum.FOURS);
-    }
-
-    public ColumnDescription getFives() {
-        return getColumnValueWithTechColumnId(GameRulesEnum.FIVES);
-    }
-
-    public ColumnDescription getSixes() {
-        return getColumnValueWithTechColumnId(GameRulesEnum.SIXES);
-    }
-
-    public ColumnDescription getPartialSum() {
-        return getColumnValueWithTechColumnId(GameRulesEnum.PARTIAL_SUM);
-    }
-
-    public ColumnDescription getYahtzee() {
-        return getColumnCombinationWithTechColumnId(GameRulesEnum.YAHTZEE);
-    }
-
-    public ColumnDescription getFinalSum() {
-        return getColumnCombinationWithTechColumnId(GameRulesEnum.FINAL_SUM);
-    }
-
 }
+

@@ -5,6 +5,7 @@ import com.bigbeard.yatzystats.core.exceptions.RulesNotLoadedException;
 import com.bigbeard.yatzystats.core.model.players.ConfrontationDTO;
 import com.bigbeard.yatzystats.core.model.players.PlayerResult;
 import com.bigbeard.yatzystats.core.model.rules.GameLoadingStatus;
+import com.bigbeard.yatzystats.core.model.dto.GameRulesDTO;
 import com.bigbeard.yatzystats.core.model.rules.GameRules;
 import com.bigbeard.yatzystats.core.model.sheets.SheetDto;
 import com.bigbeard.yatzystats.ui.GlobalController;

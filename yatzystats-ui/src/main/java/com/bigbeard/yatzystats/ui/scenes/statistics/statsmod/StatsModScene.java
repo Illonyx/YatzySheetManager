@@ -110,7 +110,7 @@ public class StatsModScene extends UiScene {
         player2Combobox.setItems(FXCollections.observableList(model.getPlayerNames()));
         player2Combobox.setValue(model.getPlayerNames().get(1));
 
-        duelButton.setOnAction(new EventHandler<ActionEvent>() {
+        duelButton.setOnAction(new EventHandler<>() {
             @Override
             public void handle(ActionEvent actionEvent) {
                 generateConfrontations();

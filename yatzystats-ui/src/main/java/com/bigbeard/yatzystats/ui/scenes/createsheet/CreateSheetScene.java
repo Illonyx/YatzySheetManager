@@ -1,5 +1,6 @@
 package com.bigbeard.yatzystats.ui.scenes.createsheet;
 
+import com.bigbeard.yatzystats.core.model.dto.GameRulesDTO;
 import com.bigbeard.yatzystats.core.model.rules.GameRules;
 import com.bigbeard.yatzystats.ui.UiScene;
 import com.bigbeard.yatzystats.ui.UiSceneRole;
@@ -75,7 +76,7 @@ public class CreateSheetScene extends UiScene {
         if(savedPath != null) {
             this.directoryTextfield.setText(savedPath);
         }
-        this.setDirectoryChooserHandler(super.getStage());
+        this.setDirectoryChooserHandler(super.getStage(), savedPath);
 
         // Sheet number
         ObservableList<Integer> numberOptions =
@@ -145,14 +146,13 @@ public class CreateSheetScene extends UiScene {
         return true;
     }
 
-    private void setDirectoryChooserHandler(Stage stage) {
+    private void setDirectoryChooserHandler(Stage stage, String defaultDirectoryPath) {
+        final String initialDirectoryPath = defaultDirectoryPath != null ? defaultDirectoryPath : System.getProperty("user.home");
         final DirectoryChooser directoryChooser = new DirectoryChooser();
         browseDirectoryButton.setOnAction(
                 e -> {
                     directoryChooser.setTitle("Choix du répertoire de création");
-                    directoryChooser.setInitialDirectory(
-                            new File(System.getProperty("user.home"))
-                    );
+                    directoryChooser.setInitialDirectory(new File(initialDirectoryPath));
                     File file = directoryChooser.showDialog(stage);
                     if (file != null) {
                         directoryTextfield.setText(file.getAbsolutePath());
