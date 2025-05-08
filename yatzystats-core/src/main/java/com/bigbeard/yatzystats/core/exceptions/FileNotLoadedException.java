@@ -2,14 +2,14 @@ package com.bigbeard.yatzystats.core.exceptions;
 
 public class FileNotLoadedException extends Exception {
 
-    private String mainReason;
+    private final ErrorCode errorCode;
 
-    public FileNotLoadedException(String header, String content){
+    public FileNotLoadedException(ErrorCode errorCode, String content) {
         super(content);
-        this.mainReason=header;
+        this.errorCode=errorCode;
     }
 
-    public String getMainReason() {
-        return mainReason;
+    public ErrorCode getErrorCode() {
+        return this.errorCode;
     }
 }

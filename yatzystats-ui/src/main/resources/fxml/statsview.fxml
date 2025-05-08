@@ -37,12 +37,12 @@
                           </rowConstraints>
                            <children>
                               <ComboBox fx:id="playersCombobox" prefHeight="26.0" prefWidth="228.0" GridPane.columnIndex="2" />
-                              <Text fx:id="selectPlayerText" strokeType="OUTSIDE" strokeWidth="0.0" text="Sélection du joueur" GridPane.columnIndex="1">
+                              <Text fx:id="selectPlayerText" strokeType="OUTSIDE" strokeWidth="0.0" text="%sheet.stats.player" GridPane.columnIndex="1">
                                  <GridPane.margin>
                                     <Insets left="40.0" />
                                  </GridPane.margin>
                               </Text>
-                              <Button fx:id="goBackButton" mnemonicParsing="false" text="&lt; Retour" GridPane.halignment="LEFT">
+                              <Button fx:id="goBackButton" mnemonicParsing="false" text="%sheet.stats.goback" GridPane.halignment="LEFT">
                                  <GridPane.margin>
                                     <Insets left="40.0" />
                                  </GridPane.margin>
@@ -79,10 +79,9 @@
                            <children>
                               <ComboBox fx:id="player1Combobox" prefWidth="150.0" GridPane.rowIndex="1" />
                               <ComboBox fx:id="player2Combobox" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Joueur 1" />
-                              <Text fx:id="player1Text" strokeType="OUTSIDE" strokeWidth="0.0" text="Joueur 1" />
-                              <Text fx:id="player2Text" strokeType="OUTSIDE" strokeWidth="0.0" text="Joueur 2" GridPane.columnIndex="2" />
-                              <Button fx:id="duelButton" alignment="TOP_LEFT" contentDisplay="CENTER" mnemonicParsing="false" text="Generer" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+                              <Text fx:id="player1Text" strokeType="OUTSIDE" strokeWidth="0.0" text="%sheet.duel.player1" />
+                              <Text fx:id="player2Text" strokeType="OUTSIDE" strokeWidth="0.0" text="%sheet.duel.player2" GridPane.columnIndex="2" />
+                              <Button fx:id="duelButton" alignment="TOP_LEFT" contentDisplay="CENTER" mnemonicParsing="false" text="%sheet.duel.generate" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
                            </children>
                         </GridPane>
                      </children>

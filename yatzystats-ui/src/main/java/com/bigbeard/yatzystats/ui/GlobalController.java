@@ -19,16 +19,11 @@ public class GlobalController {
     }
 
     public GameLoadingStatus loadExcelSheet(String yatzyFilePath, GameRules gameRules) throws FileNotLoadedException {
-        try {
             ExcelSheetLoader excelSheetLoader = new ExcelSheetLoader(yatzyFilePath);
             GameLoader gameLoader = new GameLoader(gameRules, excelSheetLoader);
             List<SheetDto> foundSheets = gameLoader.loadGamesFromMode();
             List<String> loadingErrors = gameLoader.getErrors();
             return new GameLoadingStatus(loadingErrors, foundSheets);
-        } catch (IOException ex) {
-            throw new FileNotLoadedException("Le fichier demandé n'a pas pu être ouvert",
-                    "Vérifiez bien si le fichier n'est pas ouvert sous Excel ou si l'extension est bonne (xlsx)");
-        }
     }
 
     public List<GameRules> loadAllGameRules() throws RulesNotLoadedException, IOException {

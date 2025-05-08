@@ -1,0 +1,10 @@
+package com.bigbeard.yatzystats.core.exceptions;
+
+public enum ErrorCode {
+    RULES_JSON_PROCESSING_ERROR,
+    RULES_UNREACHABLE_PATH,
+    SHEET_FILE_INVALID_FILE_FORMAT,
+    SHEET_FILE_INVALID_READ_SHEET_OPERATION,
+    SHEET_FILE_EMPTY_CONTENT,
+
+}

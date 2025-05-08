@@ -61,14 +61,6 @@ public abstract class UiScene {
     // Common UI components
     // --------------------------------------------------------
 
-    public Alert createErrorAlert(String title, String header, String content){
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(title);
-        alert.setHeaderText(header);
-        alert.setContentText(content);
-        return alert;
-    }
-
     //Méthode générique permettant de créer un bouton pour aller dans une autre vue
     public Button getWindowNavigationButton(String buttonName, boolean needsValidation, UiSceneRole targetSceneRole){
         Button navButton = new Button(buttonName);

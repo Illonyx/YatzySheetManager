@@ -7,6 +7,7 @@ import com.bigbeard.yatzystats.ui.scenes.settings.GlobalSettingsScene;
 import com.bigbeard.yatzystats.ui.scenes.statistics.settings.GamemodeScene;
 import com.bigbeard.yatzystats.ui.scenes.statistics.settings.GamesChoiceScene;
 import com.bigbeard.yatzystats.ui.scenes.statistics.statsmod.StatsModScene;
+import com.bigbeard.yatzystats.ui.utils.LocaleUtils;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.stage.Stage;
@@ -14,6 +15,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 public class WindowNavigation {
 
@@ -23,7 +26,7 @@ public class WindowNavigation {
     private Logger logger = LogManager.getLogger(WindowNavigation.class);
 
 
-    public WindowNavigation(Stage stage){
+    public WindowNavigation(Stage stage) {
         this.stage = stage;
         this.model = new GlobalUserModel();
     }
@@ -42,9 +45,9 @@ public class WindowNavigation {
         return model;
     }
 
-    public void loadScene(UiSceneRole role){
+    public void loadScene(UiSceneRole role) {
         UiScene lastScene = this.currentScene;
-        switch (role){
+        switch (role) {
 
             case STARTING_SCENE:
                 this.currentScene = new StartingScene(this);
@@ -57,6 +60,7 @@ public class WindowNavigation {
 
             case GAMES_CHOICE_SCENE:
                 this.currentScene = new GamesChoiceScene(this);
+                this.currentScene.setParent(getFXMLComponents("selectsheets.fxml"));
                 break;
 
             case STATS_MODE_SCENE:
@@ -78,12 +82,14 @@ public class WindowNavigation {
                 logger.warn("Problème de chargement de scène");
                 break;
         }
-        if(this.currentScene != null && lastScene != this.currentScene) this.stage.setScene(this.currentScene.getViewScene());
+        if (this.currentScene != null && lastScene != this.currentScene)
+            this.stage.setScene(this.currentScene.getViewScene());
     }
 
     public Parent getFXMLComponents(String fxmlFileName) {
         String fxmlPath = "fxml" + File.separator + fxmlFileName;
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource(fxmlPath));
+        ResourceBundle resourceBundle = this.getModel().getResourceBundle();
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource(fxmlPath), resourceBundle);
         fxmlLoader.setController(this.currentScene);
         Parent parent = null;
         try {

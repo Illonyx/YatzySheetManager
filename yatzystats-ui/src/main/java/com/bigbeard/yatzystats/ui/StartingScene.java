@@ -16,6 +16,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
 import java.net.URL;
+import java.util.ResourceBundle;
 
 public class StartingScene extends UiScene {
 
@@ -82,15 +83,17 @@ public class StartingScene extends UiScene {
     }
 
     private void createScenarioButton(UIButtonTheming uiButtonTheming) {
+        String sheetCreationLabel = this.getModel().getResourceBundle().getString("menu.sheetcreation.button");
         this.goToCreationScenarioButton =
-                this.getWindowNavigationButton("Création de feuilles", false, UiSceneRole.CREATE_SHEET_SCENE);
+                this.getWindowNavigationButton(sheetCreationLabel, false, UiSceneRole.CREATE_SHEET_SCENE);
         UITheming.getInstance().applyThemingForButton(this.goToCreationScenarioButton, (UIButtonTheming) uiButtonTheming.clone());
     }
 
 
     private void createStatsButton(UIButtonTheming uiButtonTheming) {
+        String statsLabel = this.getModel().getResourceBundle().getString("menu.statistics.button");
         this.goToStatisticsModButton =
-                this.getWindowNavigationButton("Statistiques", false, UiSceneRole.GAME_MODE_SCENE);
+                this.getWindowNavigationButton(statsLabel, false, UiSceneRole.GAME_MODE_SCENE);
         UIButtonTheming uiButtonTheming1 = (UIButtonTheming) uiButtonTheming.clone();
         uiButtonTheming1.setFxBackgroundColor("#000000");
         UITheming.getInstance().applyThemingForButton(this.goToStatisticsModButton, uiButtonTheming1);

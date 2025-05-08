@@ -8,24 +8,39 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.ResourceBundle;
 
 public class RulesDialog {
     Dialog dialog;
     GameRules rules;
+    ResourceBundle resourceBundle;
 
-    public RulesDialog(GameRules gameRules) {
+    String untilValueLabel;
+    String bonusConditionLabel;
+    String combinationsColumnLabel;
+    String valuesColumnLabel;
+
+    public RulesDialog(GameRules gameRules, ResourceBundle resourceBundle) {
         this.dialog = new Dialog<>();
         this.rules = gameRules;
+        this.resourceBundle = resourceBundle;
         this.dialog.setTitle(rules.formatDescription());
+        this.initI18N();
         this.initDialog();
+    }
+
+    private void initI18N() {
+        this.untilValueLabel = this.resourceBundle.getString("dialog.rules.untilvalue");
+        this.bonusConditionLabel = this.resourceBundle.getString("dialog.rules.bonuscond");
+        this.combinationsColumnLabel = this.resourceBundle.getString("dialog.rules.combinationscol");
+        this.valuesColumnLabel = this.resourceBundle.getString("dialog.rules.valuescol");
     }
 
     private void initDialog() {
         // Create a TableView with two columns
         TableView<CombinationData> tableView = new TableView<>();
-        TableColumn<CombinationData, String> combinationsColumn = new TableColumn<>("Combinaisons");
-        TableColumn<CombinationData, String> valeursColumn = new TableColumn<>("Valeurs");
+        TableColumn<CombinationData, String> combinationsColumn = new TableColumn<>(combinationsColumnLabel);
+        TableColumn<CombinationData, String> valeursColumn = new TableColumn<>(valuesColumnLabel);
 
         // Set the cell value factories for the columns
         combinationsColumn.setCellValueFactory(new PropertyValueFactory<>("combinations"));
@@ -42,12 +57,8 @@ public class RulesDialog {
         tableView.setItems(data);
 
         // Create and configure a dialog
-        StringBuffer buff = new StringBuffer();
-        buff.append("Le bonus est d'une valeur de ");
-        buff.append(rules.bonusVal());
-        buff.append(" et est accordé si la somme des premières colonnes est supérieure ou égale à ");
-        buff.append(rules.bonusCond());
-        dialog.setHeaderText(buff.toString());
+        String bonusConditionString = String.format(bonusConditionLabel, rules.bonusVal(), rules.bonusCond());
+        dialog.setHeaderText(bonusConditionString);
 
         // Set the content of the dialog to the TableView
         dialog.getDialogPane().setContent(tableView);
@@ -63,7 +74,7 @@ public class RulesDialog {
                 !combinationsNotDisplayed.contains(columnDescription.techColumnId())
         ).map(columnDescription -> {
             String combinationLabel = columnDescription.columnLabel();
-            String adaptedFixedValueLabel = columnDescription.fixedValue() ? "" : "Jusqu'à ";
+            String adaptedFixedValueLabel = columnDescription.fixedValue() ? "" : untilValueLabel + " ";
             String valueLabel = adaptedFixedValueLabel.concat(columnDescription.maxValue().toString());
             return new CombinationData(combinationLabel, valueLabel);
         }).toList();

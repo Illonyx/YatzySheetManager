@@ -2,15 +2,15 @@ package com.bigbeard.yatzystats.core.exceptions;
 
 public class RulesNotLoadedException extends Exception {
 
-    private String mainReason;
+    private final ErrorCode errorCode;
 
-    public RulesNotLoadedException(String header, String content){
+    public RulesNotLoadedException(ErrorCode errorCode, String content){
         super(content);
-        this.mainReason=header;
+        this.errorCode = errorCode;
     }
 
-    public String getMainReason() {
-        return mainReason;
+    public ErrorCode getErrorCode() {
+        return errorCode;
     }
 
 }

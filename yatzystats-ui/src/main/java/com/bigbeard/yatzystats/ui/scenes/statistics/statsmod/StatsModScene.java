@@ -2,7 +2,11 @@ package com.bigbeard.yatzystats.ui.scenes.statistics.statsmod;
 
 import com.bigbeard.yatzystats.core.model.players.ConfrontationDTO;
 import com.bigbeard.yatzystats.core.model.players.PlayerResult;
-import com.bigbeard.yatzystats.core.model.players.StatsModule;
+import com.bigbeard.yatzystats.core.model.stats.CombinationsStats;
+import com.bigbeard.yatzystats.core.model.stats.PlayerStats;
+import com.bigbeard.yatzystats.core.model.stats.ScoreStats;
+import com.bigbeard.yatzystats.core.model.stats.subelements.DoubleData;
+import com.bigbeard.yatzystats.core.stats.StatsModule;
 import com.bigbeard.yatzystats.ui.UiScene;
 import com.bigbeard.yatzystats.ui.models.StatsSheetsUserModel;
 import com.bigbeard.yatzystats.ui.UiSceneRole;
@@ -158,7 +162,8 @@ public class StatsModScene extends UiScene {
             if (newNode != null) {
                 // Now the bar is fully initialized, we can add the label
                 StackPane bar = (StackPane) newNode;
-                String label = String.format("%s - %s (%s)", res.playerName(), res.score(), res.year());
+                String label = String.format("%s - %s", res.playerName(), res.score());
+                if(res.year() != null) label +=  "(" + res.year() + ")";
                 Text dataLabel = new Text(label);
 
                 // Rotate the label to be vertical
@@ -181,24 +186,58 @@ public class StatsModScene extends UiScene {
     }
 
     private String showStats(List<PlayerResult> results) {
-        List<String> top5high = StatsModule.getInstance().getHighestScores(5, results);
-        StringBuilder buff = new StringBuilder();
 
-        buff.append("-- Score du joueur --").append(System.lineSeparator());
-        buff.append("Moyenne : ").append(StatsModule.getInstance().getMean(results)).append(System.lineSeparator());
-        buff.append("Plus haut : ").append(StatsModule.getInstance().getHighestScore(results)).append(System.lineSeparator());
-        buff.append("Plus bas : ").append(StatsModule.getInstance().getLowestScore(results)).append(System.lineSeparator());
-        buff.append("Scores à partir de 300 :").append(StatsModule.getInstance().get300Rate(results)).append(System.lineSeparator());
-        buff.append("Scores en dessous de 200 :").append(StatsModule.getInstance().getUnder200Rate(results)).append(System.lineSeparator());
-        buff.append("Standard Deviation : ").append(StatsModule.getInstance().getStandardDeviation(results)).append(System.lineSeparator());
+        ScoreStats scoreStats = new ScoreStats(
+                this.getModel().getResourceBundle().getString("sheet.stats.score.title"),
+                StatsModule.getInstance().getMean(
+                        this.getModel().getResourceBundle().getString("sheet.stats.score.mean"),
+                        results
+                ),
+                StatsModule.getInstance().getHighestScore(
+                        this.getModel().getResourceBundle().getString("sheet.stats.score.highest"),
+                        results
+                ),
+                StatsModule.getInstance().getLowestScore(
+                        this.getModel().getResourceBundle().getString("sheet.stats.score.lowest"),
+                        results
+                ),
+                StatsModule.getInstance().get300Rate(
+                        this.getModel().getResourceBundle().getString("sheet.stats.above300"),
+                        results
+                ),
+                StatsModule.getInstance().getUnder200Rate(
+                        this.getModel().getResourceBundle().getString("sheet.stats.below200"),
+                        results
+                ),
+                StatsModule.getInstance().getHighestScores(
+                        this.getModel().getResourceBundle().getString("sheet.stats.score.top5"),
+                        5,
+                        results
+                ),
+                StatsModule.getInstance().getStandardInterval(
+                        this.getModel().getResourceBundle().getString("sheet.stats.standarddeviation"),
+                        results
+                )
+        );
 
-        buff.append("-- Combinaisons du joueur --").append(System.lineSeparator());
-        buff.append("Taux de victoires :").append(StatsModule.getInstance().getWinRate(results)).append(System.lineSeparator());
-        buff.append("Taux de yatzées :").append(StatsModule.getInstance().getYatzyRate(results)).append(System.lineSeparator());
-        buff.append("BonusRate :").append(StatsModule.getInstance().getBonusRate(results)).append(System.lineSeparator());
-        buff.append("Top 5 scores :").append(String.join(",", top5high)).append(System.lineSeparator());
+        CombinationsStats combinationsStats = new CombinationsStats(
+                this.getModel().getResourceBundle().getString("sheet.stats.combinations.title"),
+                StatsModule.getInstance().getWinRate(
+                        this.getModel().getResourceBundle().getString("sheet.stats.combinations.winrate"),
+                        results
+                ),
+                StatsModule.getInstance().getYatzyRate(
+                        this.getModel().getResourceBundle().getString("sheet.stats.combinations.yatzyrate"),
+                        results
+                ),
+                StatsModule.getInstance().getBonusRate(
+                        this.getModel().getResourceBundle().getString("sheet.stats.combinations.bonusrate"),
+                        results
+                )
+        );
 
-        return buff.toString();
+        PlayerStats playerStats = new PlayerStats(scoreStats, combinationsStats);
+        return playerStats.toString();
     }
 
     public void generateConfrontations() {

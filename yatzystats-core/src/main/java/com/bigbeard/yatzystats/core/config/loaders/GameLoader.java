@@ -2,6 +2,7 @@ package com.bigbeard.yatzystats.core.config.loaders;
 
 import com.bigbeard.yatzystats.core.exceptions.CellNotFoundException;
 import com.bigbeard.yatzystats.core.exceptions.EmptyFileException;
+import com.bigbeard.yatzystats.core.exceptions.ErrorCode;
 import com.bigbeard.yatzystats.core.exceptions.FileNotLoadedException;
 import com.bigbeard.yatzystats.core.model.players.PlayerResult;
 import com.bigbeard.yatzystats.core.model.rules.GameRules;
@@ -36,8 +37,14 @@ public class GameLoader {
         for (SheetReader sheetReader : this.sheetLoader.createSheetReaders(this.rules)) {
             try {
                 List<String> players = sheetReader.readPlayerNames();
-                String sheetYear = sheetReader.getSheetYear();
                 List<PlayerResult> playerResults = new ArrayList<>();
+
+                String sheetYear = null;
+                String tempSheetYear = sheetReader.getSheetYear();
+
+                if (tempSheetYear != null && tempSheetYear.matches("[0-9]+")) {
+                    sheetYear = tempSheetYear;
+                }
 
                 for (String playerName : players) {
 
@@ -86,14 +93,14 @@ public class GameLoader {
                 this.errors.add(error);
             } catch (Exception ex) {
                 logger.error("Error" + ex);
-                throw new FileNotLoadedException("Une erreur est survenue lors de la lecture du fichier", ex.getMessage());
+                throw new FileNotLoadedException(ErrorCode.SHEET_FILE_INVALID_READ_SHEET_OPERATION, ex.getMessage());
             }
 
         }
 
         logger.info("Nombre de parties chargées : " + sheetDtoList.size() + "/" + this.sheetLoader.getSheetNumber());
         if (sheetDtoList.isEmpty())
-            throw new FileNotLoadedException("Le nombre de parties chargées est de 0", "Vérifiez bien si le format des parties enregistrées dans le fichier Excel est cohérent avec celui des règles utilisées");
+            throw new FileNotLoadedException(ErrorCode.SHEET_FILE_EMPTY_CONTENT, "");
         checkForDuplicates(sheetDtoList);
         return sheetDtoList;
     }

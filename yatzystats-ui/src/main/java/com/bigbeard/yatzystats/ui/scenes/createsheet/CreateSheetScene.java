@@ -7,6 +7,7 @@ import com.bigbeard.yatzystats.ui.UiSceneRole;
 import com.bigbeard.yatzystats.ui.WindowNavigation;
 import com.bigbeard.yatzystats.ui.models.CreateSheetsUserModel;
 import com.bigbeard.yatzystats.ui.scenes.common.RulesDialog;
+import com.bigbeard.yatzystats.ui.scenes.common.UserValidationWarningCode;
 import com.bigbeard.yatzystats.ui.theming.UIButtonTheming;
 import com.bigbeard.yatzystats.ui.theming.UITheming;
 import javafx.collections.FXCollections;
@@ -102,12 +103,12 @@ public class CreateSheetScene extends UiScene {
         GameRules defaultRulesValue = availableGameRules.stream()
                 .filter(gameRules -> gameRules.formatId().equals(getModel().getUserProperties().defaultRulesFile()))
                 .findFirst()
-                .orElse(availableGameRules.get(0));
+                .orElse(availableGameRules.getFirst());
         rulesCombobox.setItems(FXCollections.observableList(availableGameRules));
         rulesCombobox.setValue(defaultRulesValue);
 
         ruleInfoButton.setOnAction(actionEvent -> {
-            RulesDialog rulesAlert = new RulesDialog(rulesCombobox.getValue());
+            RulesDialog rulesAlert = new RulesDialog(rulesCombobox.getValue(), this.getModel().getResourceBundle());
             rulesAlert.getDialog().showAndWait();
         });
 
@@ -131,7 +132,7 @@ public class CreateSheetScene extends UiScene {
     public boolean isViewValid() {
         // Check
         if(playersListView.getItems().isEmpty()) {
-            Alert alert = super.createErrorAlert("Pas de choix de joueurs", "", "Aucune joueur n'a été sélectionné.");
+            Alert alert = getModel().getExceptionAlertBuilder().getWarningAlert(UserValidationWarningCode.SHEET_CREATION_NO_PLAYER_SELECTION);
             alert.showAndWait();
             return false;
         }

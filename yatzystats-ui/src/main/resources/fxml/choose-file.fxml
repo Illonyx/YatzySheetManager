@@ -27,13 +27,13 @@
   </rowConstraints>
    <children>
       <ComboBox id="rulesCombobox" fx:id="rulesCombobox" prefHeight="26.0" prefWidth="380.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2" />
-      <Button fx:id="processNextStepButton" mnemonicParsing="false" text="Sélectionner" GridPane.columnIndex="3" GridPane.rowIndex="6">
+      <Button fx:id="processNextStepButton" mnemonicParsing="false" text="%sheet.selection.step1.continue" GridPane.columnIndex="3" GridPane.rowIndex="6">
          <GridPane.margin>
             <Insets left="15.0" />
          </GridPane.margin>
       </Button>
       <TextField fx:id="selectedFilePathTextField" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" />
-      <Button fx:id="selectFileButton" mnemonicParsing="false" text="Parcourir" GridPane.columnIndex="3" GridPane.rowIndex="1">
+      <Button fx:id="selectFileButton" mnemonicParsing="false" text="%global.folder.browse" GridPane.columnIndex="3" GridPane.rowIndex="1">
          <GridPane.margin>
             <Insets left="15.0" />
          </GridPane.margin>
@@ -43,22 +43,22 @@
             <Insets left="15.0" />
          </GridPane.margin>
       </Button>
-      <Button id="goHomeButton" fx:id="goHomeButton" mnemonicParsing="false" text="Revenir à l'accueil" GridPane.rowIndex="6">
+      <Button id="goHomeButton" fx:id="goHomeButton" mnemonicParsing="false" text="%sheet.selection.step1.goback" GridPane.rowIndex="6">
          <GridPane.margin>
             <Insets left="15.0" />
          </GridPane.margin>
       </Button>
-      <Text id="folderCreationText" fx:id="folderSelectionText" strokeType="OUTSIDE" strokeWidth="0.0" text="Fichier de parties" GridPane.rowIndex="1">
+      <Text id="folderCreationText" fx:id="folderSelectionText" strokeType="OUTSIDE" strokeWidth="0.0" text="%sheet.selection.step1.sheet" GridPane.rowIndex="1">
          <GridPane.margin>
             <Insets left="20.0" />
          </GridPane.margin>
       </Text>
-      <Text id="rulesText" fx:id="rulesText" strokeType="OUTSIDE" strokeWidth="0.0" text="Choix du mode de jeu" GridPane.rowIndex="2">
+      <Text id="rulesText" fx:id="rulesText" strokeType="OUTSIDE" strokeWidth="0.0" text="%sheet.selection.step1.rules" GridPane.rowIndex="2">
          <GridPane.margin>
             <Insets left="20.0" />
          </GridPane.margin>
       </Text>
-      <Text id="folderCreationText" fx:id="stepText" strokeType="OUTSIDE" strokeWidth="0.0" text="Etape 1 : Sélection du fichier de parties et du mode de jeu" GridPane.columnSpan="2147483647">
+      <Text id="folderCreationText" fx:id="stepText" strokeType="OUTSIDE" strokeWidth="0.0" text="%sheet.selection.step1.title" GridPane.columnSpan="2147483647">
          <GridPane.margin>
             <Insets left="20.0" />
          </GridPane.margin>

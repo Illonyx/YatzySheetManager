@@ -30,14 +30,14 @@
   </rowConstraints>
    <children>
       <ComboBox id="rulesCombobox" fx:id="rulesCombobox" prefHeight="26.0" prefWidth="285.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="6" />
-      <Button fx:id="startSheetCreationButton" mnemonicParsing="false" text="Terminer" GridPane.columnIndex="3" GridPane.rowIndex="8">
+      <Button fx:id="startSheetCreationButton" mnemonicParsing="false" text="%sheet.creation.proceed" GridPane.columnIndex="3" GridPane.rowIndex="8">
          <GridPane.margin>
             <Insets left="15.0" />
          </GridPane.margin>
       </Button>
       <ComboBox fx:id="sheetNumberCombobox" prefHeight="26.0" prefWidth="171.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
       <TextField fx:id="directoryTextfield" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" />
-      <Button fx:id="browseDirectoryButton" mnemonicParsing="false" text="Parcourir" GridPane.columnIndex="3" GridPane.rowIndex="1">
+      <Button fx:id="browseDirectoryButton" mnemonicParsing="false" text="%global.folder.browse" GridPane.columnIndex="3" GridPane.rowIndex="1">
          <GridPane.margin>
             <Insets left="15.0" />
          </GridPane.margin>
@@ -48,7 +48,7 @@
          </GridPane.margin>
       </Button>
       <TextField fx:id="playerTextfield" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-      <Button fx:id="addPlayerButton" mnemonicParsing="false" text="Ajouter" GridPane.columnIndex="2" GridPane.rowIndex="3">
+      <Button fx:id="addPlayerButton" mnemonicParsing="false" text="%sheet.creation.players.add" GridPane.columnIndex="2" GridPane.rowIndex="3">
          <GridPane.margin>
             <Insets left="15.0" />
          </GridPane.margin>
@@ -58,31 +58,31 @@
             <Insets bottom="15.0" />
          </GridPane.margin>
       </ListView>
-      <Button id="goHomeButton" fx:id="goHomeButton" mnemonicParsing="false" text="Revenir à l'accueil" GridPane.rowIndex="8">
+      <Button id="goHomeButton" fx:id="goHomeButton" mnemonicParsing="false" text="%sheet.creation.goback" GridPane.rowIndex="8">
          <GridPane.margin>
             <Insets left="15.0" />
          </GridPane.margin>
       </Button>
-      <Text id="folderCreationText" fx:id="folderCreationText" strokeType="OUTSIDE" strokeWidth="0.0" text="Dossier de création" GridPane.rowIndex="1">
+      <Text id="folderCreationText" fx:id="folderCreationText" strokeType="OUTSIDE" strokeWidth="0.0" text="%sheet.creation.folder" GridPane.rowIndex="1">
          <GridPane.margin>
             <Insets left="30.0" />
          </GridPane.margin>
       </Text>
-      <Text id="rulesText" fx:id="rulesText" strokeType="OUTSIDE" strokeWidth="0.0" text="Règles" GridPane.rowIndex="6">
+      <Text id="rulesText" fx:id="rulesText" strokeType="OUTSIDE" strokeWidth="0.0" text="%sheet.creation.rules" GridPane.rowIndex="6">
          <GridPane.margin>
             <Insets left="30.0" />
          </GridPane.margin>
       </Text>
-      <Text fx:id="sheetNumberText" strokeType="OUTSIDE" strokeWidth="0.0" text="Nombre de feuilles" GridPane.rowIndex="2">
+      <Text fx:id="sheetNumberText" strokeType="OUTSIDE" strokeWidth="0.0" text="%sheet.creation.sheet.number" GridPane.rowIndex="2">
          <GridPane.margin>
             <Insets left="30.0" />
          </GridPane.margin>
       </Text>
-      <Text fx:id="playersText" strokeType="OUTSIDE" strokeWidth="0.0" text="Joueurs" GridPane.rowIndex="3">
+      <Text fx:id="playersText" strokeType="OUTSIDE" strokeWidth="0.0" text="%sheet.creation.players" GridPane.rowIndex="3">
          <GridPane.margin>
             <Insets left="30.0" />
          </GridPane.margin>
       </Text>
-      <Text fx:id="mainSheetCreationText" strokeType="OUTSIDE" strokeWidth="0.0" text="Création d'une feuille de Yahtzee" textAlignment="CENTER" wrappingWidth="597.7373046875" GridPane.columnSpan="2" />
+      <Text fx:id="mainSheetCreationText" strokeType="OUTSIDE" strokeWidth="0.0" text="%sheet.creation.title" textAlignment="CENTER" wrappingWidth="597.7373046875" GridPane.columnSpan="2" />
    </children>
 </GridPane>

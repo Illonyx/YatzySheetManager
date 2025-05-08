@@ -46,8 +46,8 @@ public class GlobalSettingsScene extends UiScene {
     Button ruleInfoButton;
     @FXML
     Button goHomeButton;
-    @FXML
-    Button saveButton;
+    @FXML Button saveButton;
+    @FXML Text mainSheetCreationText;
 
     public GlobalSettingsScene(WindowNavigation navigation) {
         super(navigation, UiSceneRole.SETTINGS_SCENE);
@@ -79,6 +79,7 @@ public class GlobalSettingsScene extends UiScene {
         UIButtonTheming theming = new UIButtonTheming();
 
         // Labels
+        UITheming.getInstance().applyTextTheming(mainSheetCreationText, theming);
         UITheming.getInstance().applyTextTheming(rulesText, theming);
         UITheming.getInstance().applyTextTheming(folderCreationText, theming);
         UITheming.getInstance().applyTextTheming(languageText, theming);
@@ -104,7 +105,7 @@ public class GlobalSettingsScene extends UiScene {
         rulesCombobox.setValue(defaultRulesValue);
 
         ruleInfoButton.setOnAction(actionEvent -> {
-            RulesDialog rulesAlert = new RulesDialog(rulesCombobox.getValue());
+            RulesDialog rulesAlert = new RulesDialog(rulesCombobox.getValue(), this.getModel().getResourceBundle());
             rulesAlert.getDialog().showAndWait();
         });
 

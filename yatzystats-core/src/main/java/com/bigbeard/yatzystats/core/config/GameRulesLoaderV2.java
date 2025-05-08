@@ -1,6 +1,7 @@
 package com.bigbeard.yatzystats.core.config;
 
 import com.bigbeard.yatzystats.core.config.properties.AppSupportFilePathUtil;
+import com.bigbeard.yatzystats.core.exceptions.ErrorCode;
 import com.bigbeard.yatzystats.core.exceptions.RulesNotLoadedException;
 import com.bigbeard.yatzystats.core.model.dto.GameRulesDTO;
 
@@ -67,9 +68,9 @@ public class GameRulesLoaderV2 {
             Reader reader = new InputStreamReader(inputStream);
             return gson.fromJson(reader, GameRulesDTO.class);
         } catch(JsonSyntaxException | JsonIOException ex) {
-            throw new RulesNotLoadedException("Règles non chargées", "Exception déclenchée" + ex);
+            throw new RulesNotLoadedException(ErrorCode.RULES_JSON_PROCESSING_ERROR, "Exception déclenchée" + ex);
         } catch (Exception ex) {
-            throw new RulesNotLoadedException("Le chemin vers les fichiers de configuration des règles est incorrect.", "Exception déclenchée" + ex);
+            throw new RulesNotLoadedException(ErrorCode.RULES_UNREACHABLE_PATH, "Exception déclenchée" + ex);
         }
     }
 

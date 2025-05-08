@@ -1,5 +1,7 @@
 package com.bigbeard.yatzystats.core.config.loaders.excel;
 
+import com.bigbeard.yatzystats.core.exceptions.ErrorCode;
+import com.bigbeard.yatzystats.core.exceptions.FileNotLoadedException;
 import com.bigbeard.yatzystats.core.model.rules.GameRules;
 import com.bigbeard.yatzystats.core.model.sheets.SheetLoader;
 import com.bigbeard.yatzystats.core.model.sheets.SheetReader;
@@ -19,11 +21,13 @@ public class ExcelSheetLoader implements SheetLoader {
     private final List<Sheet> allSheets;
     private final FormulaEvaluator formulaEvaluator;
 
-    public ExcelSheetLoader(String filePath) throws IOException {
+    public ExcelSheetLoader(String filePath) throws FileNotLoadedException {
         try (Workbook workbook = WorkbookFactory.create(new File(filePath))) {
             this.allSheets = new ArrayList<>();
             workbook.sheetIterator().forEachRemaining(allSheets::add);
             this.formulaEvaluator = workbook.getCreationHelper().createFormulaEvaluator();
+        } catch(IOException ioException) {
+            throw new FileNotLoadedException(ErrorCode.SHEET_FILE_INVALID_FILE_FORMAT, ioException.getMessage());
         }
     }
 

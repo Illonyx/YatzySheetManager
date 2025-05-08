@@ -84,12 +84,12 @@ public class GamemodeScene extends UiScene {
         GameRules defaultRulesValue = availableGameRules.stream()
                 .filter(gameRules -> gameRules.formatId().equals(getModel().getUserProperties().defaultRulesFile()))
                 .findFirst()
-                .orElse(availableGameRules.get(0));
+                .orElse(availableGameRules.getFirst());
         rulesCombobox.setItems(FXCollections.observableList(availableGameRules));
         rulesCombobox.setValue(defaultRulesValue);
 
         ruleInfoButton.setOnAction(actionEvent -> {
-            RulesDialog rulesAlert = new RulesDialog(rulesCombobox.getValue());
+            RulesDialog rulesAlert = new RulesDialog(rulesCombobox.getValue(), this.getModel().getResourceBundle());
             rulesAlert.getDialog().showAndWait();
         });
 
@@ -105,18 +105,15 @@ public class GamemodeScene extends UiScene {
         getModel().getStatsSheetsUserModel().setYatzyFilePath(file);
         getModel().getStatsSheetsUserModel().setChosenRules(gameMode);
 
-        //TODO : Dialogues d exception à afficher
         try {
             getModel().getStatsSheetsUserModel().loadSheetAnalysis();
             return true;
         } catch (RulesNotLoadedException exception) {
-            Alert alert = this.createErrorAlert("Mode de jeu non pris en compte", "Le mode de jeu demandé n'a pas été pris en compte",
-                    "Le fichier de règles pour le mode de jeu est inexistant ou n'a pas été trouvé sur le disque.");
+            Alert alert = getModel().getExceptionAlertBuilder().getErrorAlert(exception.getErrorCode());
             alert.showAndWait();
             return false;
         } catch (FileNotLoadedException fexception) {
-            Alert alert = this.createErrorAlert("Erreur d'ouverture du fichier", fexception.getMainReason(),
-                    fexception.getMessage());
+            Alert alert = getModel().getExceptionAlertBuilder().getErrorAlert(fexception.getErrorCode());
             alert.showAndWait();
             return false;
         }
